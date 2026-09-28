@@ -16,7 +16,6 @@
     }
     .custom-scroll::-webkit-scrollbar { height: 5px; width: 5px; }
     .custom-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-    /* Prevent mobile browser auto-zoom on input focus */
     input, select, textarea { font-size: 16px !important; }
     @media (min-width: 640px) {
       input, select, textarea { font-size: 13px !important; }
@@ -25,7 +24,7 @@
 </head>
 <body class="bg-slate-100 text-slate-800 min-h-screen flex flex-col pb-16 select-none">
 
-  <!-- TOP APP BAR (MOBILE OPTIMIZED) -->
+  <!-- TOP APP BAR -->
   <header class="bg-slate-900 text-white sticky top-0 z-40 shadow-md">
     <div class="max-w-7xl mx-auto px-3 sm:px-4 h-14 sm:h-16 flex items-center justify-between gap-2">
       <!-- Left: Menu + Brand -->
@@ -38,11 +37,11 @@
             <h1 class="text-sm sm:text-lg font-extrabold tracking-tight text-white truncate">MV INTAKE</h1>
             <span class="text-[9px] font-bold uppercase px-1.5 py-0.5 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 shrink-0">LIVE</span>
           </div>
-          <p class="text-[10px] text-slate-400 truncate hidden xs:block">Hatch Cargo Management</p>
+          <p class="text-[10px] text-slate-400 truncate hidden sm:block">Hatch Cargo Management</p>
         </div>
       </div>
 
-      <!-- Right: Quick Actions -->
+      <!-- Right: Quick Actions & Locked User Badge -->
       <div class="flex items-center space-x-1.5 shrink-0">
         <button id="btnHeaderUsers" onclick="openUserManagerModal()" class="h-9 px-2.5 rounded-xl bg-emerald-600 active:bg-emerald-700 text-xs font-bold flex items-center space-x-1.5 shadow-sm" title="Manage Admins & Members">
           <i class="fa-solid fa-users-gear"></i>
@@ -54,10 +53,11 @@
           <span class="hidden sm:inline">Links</span>
         </button>
 
-        <button onclick="openProfileModal()" id="userBadge" class="h-9 flex items-center space-x-1.5 px-2.5 rounded-xl bg-slate-800 active:bg-slate-700 border border-slate-700 text-xs max-w-[140px] sm:max-w-[200px]">
+        <!-- USER BADGE (LOCKED FOR INVITED USERS) -->
+        <button onclick="handleUserBadgeClick()" id="userBadge" class="h-9 flex items-center space-x-1.5 px-2.5 rounded-xl bg-slate-800 border border-slate-700 text-xs max-w-[155px] sm:max-w-[220px]">
           <span class="w-2 h-2 rounded-full bg-emerald-400 shrink-0"></span>
           <span id="userBadgeName" class="font-bold text-slate-200 truncate text-[11px] sm:text-xs">User</span>
-          <i class="fa-solid fa-chevron-down text-[9px] text-slate-400 shrink-0"></i>
+          <i id="userBadgeIcon" class="fa-solid fa-lock text-[10px] text-amber-400 shrink-0"></i>
         </button>
       </div>
     </div>
@@ -99,9 +99,10 @@
             <i class="fa-solid fa-link w-5 text-amber-600 text-sm"></i>
             <span>Invite & Share Links</span>
           </button>
-          <button onclick="openProfileModal(); closeMenu()" class="w-full flex items-center space-x-3 px-3 py-3 rounded-xl hover:bg-slate-100 active:bg-slate-200 text-slate-700">
+          <!-- Only visible to unlocked Super Admin -->
+          <button id="menuBtnSwitchProfile" onclick="openProfileModal(); closeMenu()" class="w-full flex items-center space-x-3 px-3 py-3 rounded-xl hover:bg-slate-100 active:bg-slate-200 text-slate-700">
             <i class="fa-solid fa-user-check w-5 text-slate-500 text-sm"></i>
-            <span>Switch Active Profile</span>
+            <span>Switch Active Profile (Test)</span>
           </button>
           <button onclick="saveManual(); closeMenu()" class="w-full flex items-center space-x-3 px-3 py-3 rounded-xl hover:bg-slate-100 active:bg-slate-200 text-slate-700">
             <i class="fa-solid fa-floppy-disk w-5 text-slate-500 text-sm"></i>
@@ -115,13 +116,13 @@
       </div>
 
       <div class="pt-3 border-t border-slate-100 text-[11px] text-slate-400 flex items-center justify-between">
-        <span>MV INTAKE v2.5</span>
+        <span>MV INTAKE v3.0</span>
         <button id="menuBtnReset" onclick="resetData(); closeMenu()" class="text-rose-500 font-semibold hover:underline">Reset All</button>
       </div>
     </div>
   </div>
 
-  <!-- NAVIGATION TABS (SCROLLABLE ON PHONE) -->
+  <!-- NAVIGATION TABS -->
   <nav id="mainNavBar" class="bg-white border-b border-slate-200 sticky top-14 sm:top-16 z-30 shadow-xs">
     <div class="max-w-7xl mx-auto px-3 sm:px-4 flex space-x-1.5 overflow-x-auto py-2 custom-scroll">
       <button onclick="switchTab('tabEntry')" id="btnTabEntry" class="tab-btn px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap bg-cyan-600 text-white shadow-xs flex items-center space-x-1.5">
@@ -146,7 +147,7 @@
   <!-- MAIN CONTENT AREA -->
   <main class="max-w-7xl mx-auto px-3 sm:px-4 mt-3 w-full flex-1 space-y-3">
 
-    <!-- ACTIVE VESSEL BANNER (COMPACT & MOBILE FRIENDLY) -->
+    <!-- ACTIVE VESSEL BANNER -->
     <div class="bg-white rounded-2xl border border-slate-200 p-3 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
       <div class="flex items-center space-x-2.5 min-w-0">
         <div class="w-9 h-9 rounded-xl bg-cyan-50 border border-cyan-200 text-cyan-600 flex items-center justify-center font-bold text-base shrink-0">
@@ -155,8 +156,8 @@
         <div class="min-w-0 flex-1">
           <div class="flex items-center space-x-1.5">
             <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Active Vessel Account</span>
-            <span id="lockBadge" class="hidden text-[9px] bg-amber-100 text-amber-700 font-bold px-1.5 py-0.2 rounded">
-              <i class="fa-solid fa-lock text-[8px]"></i> Locked
+            <span id="lockBadge" class="hidden text-[9px] bg-amber-100 text-amber-800 border border-amber-300 font-bold px-1.5 py-0.2 rounded">
+              <i class="fa-solid fa-lock text-[8px]"></i> Locked Account
             </span>
           </div>
           <div id="bannerBoatName" class="text-sm sm:text-base font-extrabold text-slate-800 truncate">Select Vessel</div>
@@ -174,7 +175,7 @@
 
     <!-- TAB 1: DATA ENTRY -->
     <section id="tabEntry" class="space-y-3">
-      <!-- STAT METRIC CARDS (2x2 GRID ON PHONE) -->
+      <!-- STAT METRIC CARDS -->
       <div class="grid grid-cols-2 lg:grid-cols-4 gap-2.5">
         <div class="bg-amber-500 text-white rounded-2xl p-3 shadow-xs">
           <div class="flex items-center justify-between text-[10px] font-bold opacity-90">
@@ -225,7 +226,7 @@
         </div>
       </div>
 
-      <!-- HATCH INTAKE FORM (OPTIMIZED FOR THUMB TAP ON PHONE) -->
+      <!-- HATCH INTAKE FORM -->
       <div class="bg-white rounded-2xl border border-slate-200 p-3.5 sm:p-5 shadow-xs">
         <div class="flex items-center justify-between pb-2.5 border-b border-slate-100 mb-3">
           <div class="flex items-center space-x-2">
@@ -276,7 +277,7 @@
             </div>
           </div>
 
-          <!-- HATCH NUMBER BUTTONS (LARGE TAP TARGETS) -->
+          <!-- HATCH NUMBER BUTTONS -->
           <div>
             <label class="block text-[11px] font-bold text-slate-600 uppercase mb-1.5">Select Hatch Number (H1 - H5)</label>
             <div class="grid grid-cols-5 gap-1.5 sm:gap-2">
@@ -339,7 +340,7 @@
         </form>
       </div>
 
-      <!-- SUBMITTED ENTRIES LIST (MOBILE CARDS + DESKTOP TABLE) -->
+      <!-- SUBMITTED ENTRIES LIST -->
       <div class="bg-white rounded-2xl border border-slate-200 p-3.5 sm:p-5 shadow-xs">
         <div class="flex items-center justify-between pb-2.5 border-b border-slate-100 mb-3">
           <div class="flex items-center space-x-2">
@@ -349,7 +350,6 @@
           <span id="badgeEntryCount" class="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-cyan-50 text-cyan-700 border border-cyan-200">0 records</span>
         </div>
 
-        <!-- Mobile-Friendly Responsive Table -->
         <div class="overflow-x-auto custom-scroll">
           <table class="w-full text-left text-xs">
             <thead>
@@ -554,7 +554,6 @@
           </div>
         </div>
 
-        <!-- Filter Tabs (All / Admins / Members) -->
         <div class="flex items-center justify-between border-b border-slate-200 pb-2">
           <span class="text-xs font-extrabold text-slate-600 uppercase">Registered Team List</span>
           <span id="countTeamTotal" class="text-[11px] font-bold text-slate-500">0 users</span>
@@ -646,22 +645,22 @@
   </div>
 
   <!-- ========================================== -->
-  <!-- MODAL 4: PROFILE & ROLE SWITCHER           -->
+  <!-- MODAL 4: PROFILE SWITCHER (SUPER ADMIN ONLY)-->
   <!-- ========================================== -->
   <div id="modalProfile" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-end sm:items-center justify-center p-0 sm:p-4">
     <div class="bg-white rounded-t-3xl sm:rounded-2xl max-w-md w-full max-h-[85vh] flex flex-col shadow-2xl overflow-hidden">
       <div class="p-4 bg-slate-900 text-white flex items-center justify-between">
         <div class="flex items-center space-x-2">
           <i class="fa-solid fa-user-shield text-cyan-400"></i>
-          <span class="font-bold text-sm">Select Your Name / Profile</span>
+          <span class="font-bold text-sm">Super Admin Profile Switcher</span>
         </div>
         <button onclick="closeProfileModal()" class="w-8 h-8 rounded-lg bg-slate-800 text-slate-300 flex items-center justify-center"><i class="fa-solid fa-xmark"></i></button>
       </div>
       <div class="p-4 overflow-y-auto space-y-2.5 custom-scroll">
         <div class="flex items-center justify-between">
-          <p class="text-xs text-slate-500 font-medium">Tap your name to enter:</p>
-          <button id="btnQuickManageTeam" onclick="closeProfileModal(); openUserManagerModal();" class="text-xs font-bold text-emerald-600 hover:underline">
-            <i class="fa-solid fa-user-plus mr-1"></i>Edit Team
+          <p class="text-xs text-slate-500 font-medium">Preview system as another user:</p>
+          <button onclick="closeProfileModal(); openUserManagerModal();" class="text-xs font-bold text-emerald-600 hover:underline">
+            <i class="fa-solid fa-user-plus mr-1"></i>Manage Team
           </button>
         </div>
         <div id="listProfiles" class="space-y-2"></div>
@@ -670,44 +669,53 @@
   </div>
 
   <!-- ========================================== -->
-  <!-- MODAL 5: INVITE & SHARE LINKS              -->
+  <!-- MODAL 5: UNIQUE INVITE LINKS PER USER      -->
   <!-- ========================================== -->
   <div id="modalShare" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-end sm:items-center justify-center p-0 sm:p-4">
-    <div class="bg-white rounded-t-3xl sm:rounded-2xl max-w-lg w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
-      <div class="p-4 bg-indigo-900 text-white flex items-center justify-between">
+    <div class="bg-white rounded-t-3xl sm:rounded-2xl max-w-lg w-full max-h-[92vh] flex flex-col shadow-2xl overflow-hidden">
+      <div class="p-4 bg-indigo-950 text-white flex items-center justify-between">
         <div class="flex items-center space-x-2">
-          <i class="fa-solid fa-share-nodes text-indigo-300"></i>
-          <span class="font-bold text-sm">Invite Links (By Account & Role)</span>
+          <i class="fa-solid fa-key text-amber-400"></i>
+          <div>
+            <div class="font-bold text-sm">Unique Personal Invite Links</div>
+            <div class="text-[10px] text-indigo-300">Each person gets a unique, role-locked link</div>
+          </div>
         </div>
-        <button onclick="closeShareModal()" class="w-8 h-8 rounded-lg bg-indigo-800 text-indigo-200 flex items-center justify-center"><i class="fa-solid fa-xmark"></i></button>
+        <button onclick="closeShareModal()" class="w-8 h-8 rounded-lg bg-indigo-900 text-indigo-200 flex items-center justify-center"><i class="fa-solid fa-xmark"></i></button>
       </div>
+
       <div class="p-4 overflow-y-auto space-y-4 custom-scroll text-xs">
-        <!-- GLOBAL ADMIN LINK -->
+        <!-- STEP 1: SELECT TARGET VESSEL FOR THE LINKS -->
+        <div class="bg-slate-100 border border-slate-300 rounded-2xl p-3 space-y-1.5">
+          <label class="block text-[10px] font-extrabold text-slate-600 uppercase">
+            1. Select Target Vessel Account for Invite Links:
+          </label>
+          <select id="shareModalBoatSelect" onchange="renderUniqueInviteLinks()" class="w-full h-11 bg-white border border-slate-300 rounded-xl px-3 font-extrabold text-slate-900">
+          </select>
+          <p class="text-[10px] text-slate-500">
+            <i class="fa-solid fa-lock text-amber-600 mr-1"></i>
+            အောက်ပါ Link များသည် ရွေးချယ်ထားသော သင်္ဘောနှင့် သတ်မှတ်ထားသော လူပုဂ္ဂိုလ်အတွက်သာ သီးသန့်ဖြစ်ပြီး အခြား Role သို့ လုံးဝ ပြောင်းကြည့်၍ မရပါ။
+          </p>
+        </div>
+
+        <!-- UNIQUE ADMIN LINKS (1 PER ADMIN) -->
         <div class="bg-indigo-50 border border-indigo-200 rounded-2xl p-3.5 space-y-2">
-          <div class="font-extrabold text-indigo-900 flex items-center justify-between">
-            <span>Admin Access Link (All Vessels)</span>
-            <span class="text-[10px] px-2 py-0.5 rounded bg-indigo-200 text-indigo-800 font-bold">Supervisors</span>
+          <div class="font-extrabold text-indigo-950 flex items-center justify-between">
+            <span><i class="fa-solid fa-user-tie mr-1.5 text-indigo-600"></i>Designated Admin Links</span>
+            <span class="text-[10px] px-2 py-0.5 rounded bg-indigo-200 text-indigo-900 font-bold">Role Locked</span>
           </div>
-          <div class="flex items-center space-x-2">
-            <input type="text" id="linkAdmin" readonly class="flex-1 h-10 bg-white border border-indigo-200 rounded-xl px-2.5 font-mono text-[11px] text-slate-700">
-            <button onclick="copyToClipboard('linkAdmin')" class="h-10 px-3.5 bg-indigo-600 active:bg-indigo-700 text-white rounded-xl font-bold shrink-0">Copy</button>
-          </div>
+          <p class="text-[11px] text-indigo-800">Admin တစ်ဦးချင်းစီအတွက် သီးသန့် Link များ (တစ်ယောက်နှင့်တစ်ယောက် မတူညီပါ) -</p>
+          <div id="listUniqueAdminLinks" class="space-y-2"></div>
         </div>
 
-        <!-- VESSEL SPECIFIC MEMBER LINKS -->
-        <div class="bg-cyan-50 border border-cyan-200 rounded-2xl p-3.5 space-y-2.5">
-          <div class="font-extrabold text-cyan-900 flex items-center justify-between">
-            <span>Vessel-Specific Member Links</span>
-            <span class="text-[10px] px-2 py-0.5 rounded bg-cyan-200 text-cyan-900 font-bold">1 Link Per Boat</span>
+        <!-- UNIQUE MEMBER LINKS (1 PER CHECKER) -->
+        <div class="bg-cyan-50 border border-cyan-200 rounded-2xl p-3.5 space-y-2">
+          <div class="font-extrabold text-cyan-950 flex items-center justify-between">
+            <span><i class="fa-solid fa-helmet-safety mr-1.5 text-cyan-600"></i>Member (Hatch Checker) Links</span>
+            <span class="text-[10px] px-2 py-0.5 rounded bg-cyan-200 text-cyan-900 font-bold">Data Entry Only</span>
           </div>
-          <p class="text-cyan-800 text-[11px]">Member များသည် သက်ဆိုင်ရာ သင်္ဘောတစ်စီးတည်းသို့သာ Lock ကျပြီး Data Entry တစ်ခုတည်းသာ မြင်ရပါမည် -</p>
-          <div id="listVesselSpecificLinks" class="space-y-2"></div>
-        </div>
-
-        <!-- PERSONALIZED CHECKER LINKS -->
-        <div class="bg-slate-50 border border-slate-200 rounded-2xl p-3.5 space-y-2">
-          <div class="font-extrabold text-slate-800">Direct Checker Login Links (Active Boat)</div>
-          <div id="listMemberPersonalLinks" class="space-y-1.5 max-h-44 overflow-y-auto custom-scroll"></div>
+          <p class="text-[11px] text-cyan-800">Member တစ်ဦးချင်းစီအတွက် သီးသန့် Link များ (Data Entry မှလွဲ၍ အခြားအပိုင်းများ လုံးဝ မမြင်ရပါ) -</p>
+          <div id="listUniqueMemberLinks" class="space-y-2 max-h-64 overflow-y-auto custom-scroll"></div>
         </div>
       </div>
     </div>
@@ -721,12 +729,17 @@
 
   <!-- JAVASCRIPT APPLICATION LOGIC -->
   <script>
-    const STORAGE_KEY = 'MV_INTAKE_DATA_V2';
+    const STORAGE_KEY = 'MV_INTAKE_DATA_V3';
+
+    function generateAccessKey(seed) {
+      return 'KEY-' + Math.abs(seed.split('').reduce((a, b) => ((a << 5) - a) + b.charCodeAt(0), 0)).toString(16).toUpperCase().padStart(6, '0');
+    }
 
     let appData = {
       activeBoatId: 'B-001',
       lockedBoatId: null,
-      currentUser: { id: 'U-001', name: 'Super Admin (Owner)', role: 'SUPER_ADMIN' },
+      sessionLocked: false, // True when entered via an Invite Link
+      currentUser: { id: 'U-001', name: 'Super Admin (Owner)', role: 'SUPER_ADMIN', accessKey: 'KEY-SUPER01' },
       boats: [
         { id: 'B-001', name: 'MV-GOLDEN STAR 01', unit: 'Bags', weight: '50 Kg' },
         { id: 'B-002', name: 'MV-AYEYARWADY 02', unit: 'Bags', weight: '25 Kg' },
@@ -734,16 +747,24 @@
       ],
       shippers: ['Alpha Logistics Co.', 'Myanmar Agrico Ltd.', 'Delta Global Trade', 'Everest Shipping'],
       users: [
-        { id: 'U-001', name: 'Super Admin (Owner)', role: 'SUPER_ADMIN' },
-        { id: 'U-002', name: 'U Thant Zin (Duty Admin)', role: 'ADMIN' },
-        { id: 'U-003', name: 'Ko Aung (Checker 1)', role: 'MEMBER' },
-        { id: 'U-004', name: 'Ko Kyaw (Checker 2)', role: 'MEMBER' },
-        { id: 'U-005', name: 'Ko Min (Checker 3)', role: 'MEMBER' },
-        { id: 'U-006', name: 'Ko Zaw (Checker 4)', role: 'MEMBER' },
-        { id: 'U-007', name: 'Ko Htun (Checker 5)', role: 'MEMBER' }
+        { id: 'U-001', name: 'Super Admin (Owner)', role: 'SUPER_ADMIN', accessKey: 'KEY-SUPER01' },
+        { id: 'U-002', name: 'U Thant Zin (Duty Admin)', role: 'ADMIN', accessKey: 'KEY-ADM002' },
+        { id: 'U-003', name: 'Ko Aung (Checker 1)', role: 'MEMBER', accessKey: 'KEY-MEM003' },
+        { id: 'U-004', name: 'Ko Kyaw (Checker 2)', role: 'MEMBER', accessKey: 'KEY-MEM004' },
+        { id: 'U-005', name: 'Ko Min (Checker 3)', role: 'MEMBER', accessKey: 'KEY-MEM005' },
+        { id: 'U-006', name: 'Ko Zaw (Checker 4)', role: 'MEMBER', accessKey: 'KEY-MEM006' },
+        { id: 'U-007', name: 'Ko Htun (Checker 5)', role: 'MEMBER', accessKey: 'KEY-MEM007' }
       ],
       records: []
     };
+
+    function ensureUserKeys() {
+      appData.users.forEach(u => {
+        if (!u.accessKey) {
+          u.accessKey = generateAccessKey(u.id + '_' + u.name);
+        }
+      });
+    }
 
     function loadData() {
       const stored = localStorage.getItem(STORAGE_KEY);
@@ -755,6 +776,7 @@
           console.error('Error parsing stored data', e);
         }
       }
+      ensureUserKeys();
     }
 
     function saveData() {
@@ -762,48 +784,120 @@
       updateLiveSync();
     }
 
+    // =========================================================
+    // STRICT UNIQUE INVITE LINK ROUTING & SESSION LOCKING
+    // =========================================================
     function handleRouting() {
       const url = new URL(window.location.href);
       const searchParams = url.searchParams;
-      const hash = window.location.hash.replace('#', '');
+      const hash = window.location.hash.replace(/^#/, '');
       const hashParams = new URLSearchParams(hash);
 
-      const mode = searchParams.get('mode') || hashParams.get('mode');
-      const userId = searchParams.get('user') || hashParams.get('user');
-      const boatId = searchParams.get('boat') || hashParams.get('boat');
+      const getParam = (k) => searchParams.get(k) || hashParams.get(k);
 
-      if (boatId && appData.boats.some(b => b.id === boatId)) {
-        appData.activeBoatId = boatId;
-        if (mode === 'member') {
-          appData.lockedBoatId = boatId;
-        }
+      const uid = getParam('uid');
+      const key = getParam('key');
+      const uName = getParam('uname');
+      const uRole = getParam('urole');
+      const boatId = getParam('boat');
+      const boatName = getParam('bname');
+      const boatUnit = getParam('bunit');
+      const boatWeight = getParam('bweight');
+      const shippersRaw = getParam('shippers');
+      const unlockMaster = getParam('master');
+
+      // Secret Super Admin recovery if needed (?master=unlock)
+      if (unlockMaster === 'unlock') {
+        appData.sessionLocked = false;
+        appData.lockedBoatId = null;
+        appData.currentUser = appData.users.find(u => u.role === 'SUPER_ADMIN') || appData.users[0];
+        saveData();
+        window.history.replaceState({}, document.title, window.location.pathname);
+        return;
       }
 
-      if (userId) {
-        const found = appData.users.find(u => u.id === userId);
-        if (found) {
-          appData.currentUser = found;
+      // If entering via a Unique Personal Invite Link
+      if (uid && key) {
+        // Sync shippers if passed in link
+        if (shippersRaw) {
+          try {
+            const sList = JSON.parse(atob(shippersRaw));
+            if (Array.isArray(sList) && sList.length > 0) {
+              sList.forEach(s => {
+                if (!appData.shippers.includes(s)) appData.shippers.push(s);
+              });
+            }
+          } catch (e) {}
+        }
+
+        // Sync target vessel account on this device if not present
+        if (boatId && boatName) {
+          const existingBoat = appData.boats.find(b => b.id === boatId);
+          if (!existingBoat) {
+            appData.boats.push({
+              id: boatId,
+              name: boatName,
+              unit: boatUnit || 'Bags',
+              weight: boatWeight || '50 Kg'
+            });
+          } else {
+            existingBoat.name = boatName;
+          }
+          appData.activeBoatId = boatId;
+        }
+
+        // Find or register this exact invited user on this device
+        let targetUser = appData.users.find(u => u.id === uid && u.accessKey === key);
+        if (!targetUser && uName && (uRole === 'MEMBER' || uRole === 'ADMIN')) {
+          targetUser = {
+            id: uid,
+            name: uName,
+            role: uRole,
+            accessKey: key
+          };
+          const existingIdx = appData.users.findIndex(u => u.id === uid);
+          if (existingIdx !== -1) appData.users[existingIdx] = targetUser;
+          else appData.users.push(targetUser);
+        }
+
+        if (targetUser) {
+          appData.currentUser = targetUser;
+          appData.sessionLocked = true; // Strictly lock this device to this user & role!
+          if (targetUser.role === 'MEMBER' && boatId) {
+            appData.lockedBoatId = boatId;
+          } else {
+            appData.lockedBoatId = null;
+          }
           saveData();
           return;
+        } else {
+          alert('Invalid or expired Invite Link! Please request a new personal link from Super Admin.');
         }
       }
 
-      if (mode === 'admin') {
-        const adminUser = appData.users.find(u => u.role === 'ADMIN' || u.role === 'SUPER_ADMIN');
-        if (adminUser) appData.currentUser = adminUser;
-        appData.lockedBoatId = null;
-      } else if (mode === 'member') {
-        const memberUser = appData.users.find(u => u.role === 'MEMBER');
-        if (memberUser) appData.currentUser = memberUser;
+      // Enforce lock if session was already locked previously on this phone
+      if (appData.sessionLocked && appData.currentUser) {
+        if (appData.currentUser.role === 'MEMBER' && appData.lockedBoatId) {
+          appData.activeBoatId = appData.lockedBoatId;
+        }
+        saveData();
       }
-      saveData();
     }
 
     let syncChannel;
     try {
       syncChannel = new BroadcastChannel('mv_intake_live_sync');
       syncChannel.onmessage = () => {
+        const currentLockedUser = appData.currentUser;
+        const currentSessionLocked = appData.sessionLocked;
+        const currentLockedBoat = appData.lockedBoatId;
         loadData();
+        // Preserve this tab's locked user identity
+        if (currentSessionLocked) {
+          appData.currentUser = currentLockedUser;
+          appData.sessionLocked = true;
+          appData.lockedBoatId = currentLockedBoat;
+        }
         renderAll();
       };
     } catch (e) {}
@@ -812,7 +906,6 @@
       if (syncChannel) syncChannel.postMessage('sync');
     }
 
-    // STRICT DD/MM/YYYY DATEPICKERS
     let pickerDate, pickerFrom, pickerTo;
     function initDatepickers() {
       const today = new Date();
@@ -850,6 +943,11 @@
     }
 
     function switchTab(tabId) {
+      // Members are strictly forbidden from switching away from tabEntry
+      if (appData.currentUser && appData.currentUser.role === 'MEMBER' && tabId !== 'tabEntry') {
+        tabId = 'tabEntry';
+      }
+
       ['tabEntry', 'tabPicker', 'tabTemplate', 'tabRecords'].forEach(id => {
         document.getElementById(id).classList.add('hidden');
       });
@@ -1054,6 +1152,9 @@
     }
 
     function getActiveBoat() {
+      if (appData.currentUser && appData.currentUser.role === 'MEMBER' && appData.lockedBoatId) {
+        return appData.boats.find(b => b.id === appData.lockedBoatId) || appData.boats[0];
+      }
       return appData.boats.find(b => b.id === appData.activeBoatId) || appData.boats[0];
     }
 
@@ -1074,16 +1175,40 @@
     }
 
     // ====================================================
-    // ROLE PERMISSIONS (SUPER_ADMIN vs ADMIN vs MEMBER)
+    // STRICT ROLE & PROFILE LOCK PERMISSIONS
     // ====================================================
+    function canSwitchProfile() {
+      // Only unlocked SUPER_ADMIN can switch profiles
+      return !appData.sessionLocked && appData.currentUser && appData.currentUser.role === 'SUPER_ADMIN';
+    }
+
+    function handleUserBadgeClick() {
+      if (canSwitchProfile()) {
+        openProfileModal();
+      } else {
+        showToast(`Locked to ${appData.currentUser.name} (${appData.currentUser.role})`);
+      }
+    }
+
     function applyRolePermissions() {
       const role = appData.currentUser ? appData.currentUser.role : 'MEMBER';
       const isMember = (role === 'MEMBER');
-      const isSuperAdmin = (role === 'SUPER_ADMIN');
+      const isSuperAdmin = (role === 'SUPER_ADMIN') && !appData.sessionLocked;
 
-      document.getElementById('menuRoleLabel').textContent = role;
+      document.getElementById('menuRoleLabel').textContent = `${role} ${appData.sessionLocked ? '(LOCKED)' : ''}`;
 
-      // Lock vessel selector & show lock badge for Members
+      // Update Top-Right User Badge Icon (Lock icon if locked, chevron if Super Admin)
+      const badgeIcon = document.getElementById('userBadgeIcon');
+      if (canSwitchProfile()) {
+        badgeIcon.className = 'fa-solid fa-chevron-down text-[9px] text-slate-400 shrink-0';
+      } else {
+        badgeIcon.className = 'fa-solid fa-lock text-[10px] text-amber-400 shrink-0';
+      }
+
+      // Hide Profile Switcher in Menu for all invited/locked users
+      document.getElementById('menuBtnSwitchProfile').style.display = canSwitchProfile() ? '' : 'none';
+
+      // Lock vessel selector for Members
       const selBoat = document.getElementById('selectActiveBoat');
       const lockBadge = document.getElementById('lockBadge');
       if (selBoat) {
@@ -1103,13 +1228,12 @@
       document.getElementById('btnTabRecords').style.display = isMember ? 'none' : '';
       if (isMember) switchTab('tabEntry');
 
-      // Super Admin Only: Team / Users Manager
+      // Super Admin Only Controls
       document.getElementById('btnHeaderUsers').style.display = isSuperAdmin ? '' : 'none';
       document.getElementById('menuBtnUsers').style.display = isSuperAdmin ? '' : 'none';
-      document.getElementById('btnQuickManageTeam').style.display = isSuperAdmin ? '' : 'none';
       document.getElementById('menuBtnReset').style.display = isSuperAdmin ? '' : 'none';
 
-      // Admin & Super Admin controls (hidden from Member)
+      // Admin & Super Admin Controls (Hidden from Member)
       document.getElementById('btnGearBoat').style.display = isMember ? 'none' : '';
       document.getElementById('btnManageShipper').style.display = isMember ? 'none' : '';
       document.getElementById('btnHeaderShare').style.display = isMember ? 'none' : '';
@@ -1120,10 +1244,10 @@
     }
 
     // ====================================================
-    // TEAM / USERS MANAGER (ADD / EDIT / DELETE FOR SUPER ADMIN)
+    // TEAM / USERS MANAGER (SUPER ADMIN ONLY)
     // ====================================================
     function openUserManagerModal() {
-      if (appData.currentUser.role !== 'SUPER_ADMIN') {
+      if (appData.currentUser.role !== 'SUPER_ADMIN' || appData.sessionLocked) {
         showToast('Only Super Admin can manage users');
         return;
       }
@@ -1154,7 +1278,7 @@
             <div class="font-extrabold text-slate-800 truncate">${u.name}</div>
             <div class="mt-1 flex items-center space-x-1.5">
               <span class="text-[9px] font-extrabold uppercase px-2 py-0.5 rounded-md border ${badgeColor}">${u.role}</span>
-              <span class="text-[10px] text-slate-400 font-mono">${u.id}</span>
+              <span class="text-[10px] text-slate-400 font-mono">${u.id} • ${u.accessKey}</span>
             </div>
           </div>
           <div class="flex items-center space-x-1.5 shrink-0">
@@ -1187,27 +1311,28 @@
           appData.users[idx].name = name;
           appData.users[idx].role = role;
 
-          // Update checkerName in existing logs
           appData.records.forEach(r => {
             if (r.checkerId === editId || r.checkerName === oldName) {
               r.checkerName = name;
             }
           });
 
-          // If editing currently logged in user, refresh currentUser
           if (appData.currentUser.id === editId) {
             appData.currentUser = { ...appData.users[idx] };
           }
-          showToast('User updated successfully');
+          showToast('User updated');
         }
       } else {
+        const newId = 'U-' + Date.now().toString().slice(-4);
+        const newKey = 'KEY-' + Math.random().toString(36).substring(2, 8).toUpperCase();
         const newUser = {
-          id: 'U-' + Date.now().toString().slice(-4),
+          id: newId,
           name,
-          role
+          role,
+          accessKey: newKey
         };
         appData.users.push(newUser);
-        showToast(`Added ${name} (${role})`);
+        showToast(`Added ${name} with unique key`);
       }
 
       saveData();
@@ -1283,13 +1408,23 @@
       const active = getActiveBoat();
       const sel = document.getElementById('selectActiveBoat');
       sel.innerHTML = '';
-      appData.boats.forEach(b => {
+
+      if (appData.currentUser && appData.currentUser.role === 'MEMBER' && active) {
+        // Members only see their locked vessel in the dropdown
         const opt = document.createElement('option');
-        opt.value = b.id;
-        opt.textContent = b.name;
-        if (active && b.id === active.id) opt.selected = true;
+        opt.value = active.id;
+        opt.textContent = active.name;
+        opt.selected = true;
         sel.appendChild(opt);
-      });
+      } else {
+        appData.boats.forEach(b => {
+          const opt = document.createElement('option');
+          opt.value = b.id;
+          opt.textContent = b.name;
+          if (active && b.id === active.id) opt.selected = true;
+          sel.appendChild(opt);
+        });
+      }
       document.getElementById('bannerBoatName').textContent = active ? active.name : 'No Active Vessel';
     }
 
@@ -1720,7 +1855,7 @@
       }
     }
 
-    // SHIPPER MODAL (INLINE EDIT + DELETE)
+    // SHIPPER MODAL
     function openShipperModal() {
       cancelShipperEdit();
       renderShipperList();
@@ -1799,8 +1934,12 @@
       }
     }
 
-    // PROFILE SWITCHER MODAL
+    // PROFILE SWITCHER MODAL (STRICTLY BLOCKED FOR INVITED USERS)
     function openProfileModal() {
+      if (!canSwitchProfile()) {
+        showToast('Profile switching is disabled for this link');
+        return;
+      }
       renderProfileList();
       document.getElementById('modalProfile').classList.remove('hidden');
     }
@@ -1815,18 +1954,17 @@
         const btn = document.createElement('button');
         btn.onclick = () => {
           appData.currentUser = u;
-          if (u.role !== 'MEMBER') appData.lockedBoatId = null;
           saveData();
           renderAll();
           closeProfileModal();
-          showToast(`Logged in as: ${u.name}`);
+          showToast(`Previewing as: ${u.name}`);
         };
         const isActive = appData.currentUser.id === u.id;
         btn.className = `w-full text-left p-3.5 rounded-2xl border flex items-center justify-between text-xs font-bold ${isActive ? 'bg-cyan-50 border-cyan-500 text-cyan-900' : 'bg-slate-50 border-slate-200 active:bg-slate-100 text-slate-700'}`;
         btn.innerHTML = `
           <div>
             <div class="font-extrabold text-sm">${u.name}</div>
-            <div class="text-[10px] text-slate-400 uppercase tracking-wider mt-0.5">${u.role}</div>
+            <div class="text-[10px] text-slate-400 uppercase tracking-wider mt-0.5">${u.role} • ${u.accessKey}</div>
           </div>
           ${isActive ? '<i class="fa-solid fa-circle-check text-cyan-600 text-base"></i>' : '<i class="fa-solid fa-chevron-right text-slate-300"></i>'}
         `;
@@ -1834,65 +1972,112 @@
       });
     }
 
-    // SHARE & INVITE MODAL
+    // ====================================================
+    // UNIQUE PERSONAL INVITE LINKS GENERATOR
+    // ====================================================
     function openShareModal() {
-      const origin = window.location.origin + window.location.pathname;
-      document.getElementById('linkAdmin').value = `${origin}#mode=admin`;
-
-      const vContainer = document.getElementById('listVesselSpecificLinks');
-      vContainer.innerHTML = '';
-      appData.boats.forEach(b => {
-        const link = `${origin}#mode=member&boat=${b.id}`;
-        const div = document.createElement('div');
-        div.className = 'p-3 rounded-xl bg-white border border-cyan-200 shadow-2xs flex items-center justify-between gap-2';
-        div.innerHTML = `
-          <div class="min-w-0 flex-1">
-            <div class="font-extrabold text-slate-800 text-xs flex items-center space-x-1.5">
-              <i class="fa-solid fa-ship text-cyan-600"></i>
-              <span class="truncate">${b.name}</span>
-            </div>
-            <div class="text-[10px] text-slate-400 font-mono truncate mt-0.5">${link}</div>
-          </div>
-          <button onclick="navigator.clipboard.writeText('${link}'); showToast('Copied link for ${b.name}')" class="h-9 px-3 bg-cyan-600 active:bg-cyan-700 text-white rounded-xl font-bold text-xs shrink-0">
-            Copy Link
-          </button>
-        `;
-        vContainer.appendChild(div);
-      });
-
-      const container = document.getElementById('listMemberPersonalLinks');
-      container.innerHTML = '';
+      const selBoat = document.getElementById('shareModalBoatSelect');
+      selBoat.innerHTML = '';
       const active = getActiveBoat();
-      appData.users.filter(u => u.role === 'MEMBER').forEach(m => {
-        const link = `${origin}#mode=member&boat=${active ? active.id : ''}&user=${m.id}`;
-        const div = document.createElement('div');
-        div.className = 'flex items-center justify-between p-2.5 rounded-xl bg-white border border-slate-200';
-        div.innerHTML = `
-          <span class="font-bold text-slate-700 truncate mr-2">${m.name}</span>
-          <button onclick="navigator.clipboard.writeText('${link}'); showToast('Copied link for ${m.name}')" class="h-8 px-2.5 bg-slate-800 text-white rounded-lg font-bold text-[10px] shrink-0">Copy</button>
-        `;
-        container.appendChild(div);
+      appData.boats.forEach(b => {
+        const opt = document.createElement('option');
+        opt.value = b.id;
+        opt.textContent = `${b.name} (${b.unit} - ${b.weight})`;
+        if (active && b.id === active.id) opt.selected = true;
+        selBoat.appendChild(opt);
       });
 
+      renderUniqueInviteLinks();
       document.getElementById('modalShare').classList.remove('hidden');
+    }
+
+    function buildPersonalInviteLink(user, boat) {
+      const origin = window.location.origin + window.location.pathname;
+      const shippersEncoded = btoa(unescape(encodeURIComponent(JSON.stringify(appData.shippers))));
+      const params = new URLSearchParams({
+        uid: user.id,
+        key: user.accessKey,
+        uname: user.name,
+        urole: user.role,
+        boat: boat.id,
+        bname: boat.name,
+        bunit: boat.unit,
+        bweight: boat.weight,
+        shippers: shippersEncoded
+      });
+      return `${origin}#${params.toString()}`;
+    }
+
+    function renderUniqueInviteLinks() {
+      const selectedBoatId = document.getElementById('shareModalBoatSelect').value;
+      const targetBoat = appData.boats.find(b => b.id === selectedBoatId) || getActiveBoat();
+      if (!targetBoat) return;
+
+      // 1. Unique Admin Links
+      const adminContainer = document.getElementById('listUniqueAdminLinks');
+      adminContainer.innerHTML = '';
+      const admins = appData.users.filter(u => u.role === 'ADMIN');
+      if (admins.length === 0) {
+        adminContainer.innerHTML = '<div class="text-slate-400 text-[11px] py-2">No Duty Admins added yet.</div>';
+      } else {
+        admins.forEach(adm => {
+          const link = buildPersonalInviteLink(adm, targetBoat);
+          const div = document.createElement('div');
+          div.className = 'p-2.5 rounded-xl bg-white border border-indigo-200 flex items-center justify-between gap-2 shadow-2xs';
+          div.innerHTML = `
+            <div class="min-w-0 flex-1">
+              <div class="font-extrabold text-slate-800 text-xs truncate">${adm.name}</div>
+              <div class="text-[10px] text-indigo-600 font-mono truncate">Key: ${adm.accessKey} • Boat: ${targetBoat.name}</div>
+            </div>
+            <button onclick="copyDirectLink('${link}', '${adm.name}')" class="h-9 px-3 bg-indigo-600 active:bg-indigo-700 text-white rounded-xl font-bold text-[11px] shrink-0 flex items-center space-x-1">
+              <i class="fa-solid fa-copy"></i>
+              <span>Copy Link</span>
+            </button>
+          `;
+          adminContainer.appendChild(div);
+        });
+      }
+
+      // 2. Unique Member Links
+      const memberContainer = document.getElementById('listUniqueMemberLinks');
+      memberContainer.innerHTML = '';
+      const members = appData.users.filter(u => u.role === 'MEMBER');
+      if (members.length === 0) {
+        memberContainer.innerHTML = '<div class="text-slate-400 text-[11px] py-2">No Members added yet.</div>';
+      } else {
+        members.forEach(mem => {
+          const link = buildPersonalInviteLink(mem, targetBoat);
+          const div = document.createElement('div');
+          div.className = 'p-2.5 rounded-xl bg-white border border-cyan-200 flex items-center justify-between gap-2 shadow-2xs';
+          div.innerHTML = `
+            <div class="min-w-0 flex-1">
+              <div class="font-extrabold text-slate-800 text-xs truncate">${mem.name}</div>
+              <div class="text-[10px] text-cyan-700 font-mono truncate">Key: ${mem.accessKey} • Locked: ${targetBoat.name}</div>
+            </div>
+            <button onclick="copyDirectLink('${link}', '${mem.name}')" class="h-9 px-3 bg-cyan-600 active:bg-cyan-700 text-white rounded-xl font-bold text-[11px] shrink-0 flex items-center space-x-1">
+              <i class="fa-solid fa-copy"></i>
+              <span>Copy Link</span>
+            </button>
+          `;
+          memberContainer.appendChild(div);
+        });
+      }
+    }
+
+    function copyDirectLink(link, userName) {
+      navigator.clipboard.writeText(link);
+      showToast(`Unique link copied for ${userName}`);
     }
 
     function closeShareModal() {
       document.getElementById('modalShare').classList.add('hidden');
     }
 
-    function copyToClipboard(elemId) {
-      const elem = document.getElementById(elemId);
-      elem.select();
-      navigator.clipboard.writeText(elem.value);
-      showToast('Link copied');
-    }
-
     function showToast(msg) {
       const t = document.getElementById('toast');
       document.getElementById('toastMsg').textContent = msg;
       t.classList.remove('hidden');
-      setTimeout(() => t.classList.add('hidden'), 2500);
+      setTimeout(() => t.classList.add('hidden'), 2600);
     }
 
     function saveManual() {
@@ -1903,6 +2088,7 @@
     function resetData() {
       if (confirm('Reset all system data to factory defaults?')) {
         localStorage.removeItem(STORAGE_KEY);
+        window.location.hash = '';
         location.reload();
       }
     }
