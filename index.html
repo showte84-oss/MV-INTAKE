@@ -24,40 +24,59 @@
 </head>
 <body class="bg-slate-100 text-slate-800 min-h-screen flex flex-col pb-16 select-none">
 
+  <!-- SUPER ADMIN PREVIEW BANNER (NEVER GET LOCKED OUT WHEN TESTING) -->
+  <div id="previewModeBanner" class="hidden bg-amber-500 text-slate-950 px-3 py-2 text-xs font-extrabold flex items-center justify-between shadow-sm z-50">
+    <div class="flex items-center space-x-2 truncate">
+      <i class="fa-solid fa-eye"></i>
+      <span class="truncate">Previewing as: <span id="previewBannerUser" class="underline">Member</span></span>
+    </div>
+    <button onclick="returnToSuperAdmin()" class="px-3 py-1 bg-slate-900 text-white rounded-lg text-[11px] font-extrabold shrink-0 shadow-xs active:scale-95">
+      <i class="fa-solid fa-rotate-left mr-1"></i>Return to Super Admin
+    </button>
+  </div>
+
   <!-- TOP APP BAR -->
   <header class="bg-slate-900 text-white sticky top-0 z-40 shadow-md">
     <div class="max-w-7xl mx-auto px-3 sm:px-4 h-14 sm:h-16 flex items-center justify-between gap-2">
       <!-- Left: Menu + Brand -->
-      <div class="flex items-center space-x-2.5 min-w-0">
+      <div class="flex items-center space-x-2 min-w-0">
         <button id="btnSystemMenu" onclick="toggleMenu()" class="w-10 h-10 rounded-xl bg-slate-800 active:bg-slate-700 text-slate-200 flex items-center justify-center shrink-0">
           <i class="fa-solid fa-bars text-base"></i>
         </button>
         <div class="truncate">
           <div class="flex items-center space-x-1.5">
             <h1 class="text-sm sm:text-lg font-extrabold tracking-tight text-white truncate">MV INTAKE</h1>
-            <span class="text-[9px] font-bold uppercase px-1.5 py-0.5 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 shrink-0">LIVE</span>
+            <button onclick="handleCloudClick()" id="badgeCloudStatus" class="text-[9px] font-bold uppercase px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 shrink-0 flex items-center space-x-1">
+              <span id="dotCloud" class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+              <span id="txtCloud">SYNC</span>
+            </button>
           </div>
           <p class="text-[10px] text-slate-400 truncate hidden sm:block">Hatch Cargo Management</p>
         </div>
       </div>
 
-      <!-- Right: Quick Actions & Locked User Badge -->
+      <!-- Right: Quick Actions & User Badge -->
       <div class="flex items-center space-x-1.5 shrink-0">
-        <button id="btnHeaderUsers" onclick="openUserManagerModal()" class="h-9 px-2.5 rounded-xl bg-emerald-600 active:bg-emerald-700 text-xs font-bold flex items-center space-x-1.5 shadow-sm" title="Manage Admins & Members">
+        <button id="btnHeaderCloud" onclick="openCloudModal()" class="h-9 px-2.5 rounded-xl bg-cyan-700 active:bg-cyan-800 text-xs font-bold flex items-center space-x-1 shadow-sm" title="Cloud Live Database">
+          <i class="fa-solid fa-cloud"></i>
+          <span class="hidden lg:inline">Cloud</span>
+        </button>
+
+        <button id="btnHeaderUsers" onclick="openUserManagerModal()" class="h-9 px-2.5 rounded-xl bg-emerald-600 active:bg-emerald-700 text-xs font-bold flex items-center space-x-1 shadow-sm" title="Manage Admins & Members">
           <i class="fa-solid fa-users-gear"></i>
           <span class="hidden md:inline">Team</span>
         </button>
 
-        <button id="btnHeaderShare" onclick="openShareModal()" class="h-9 px-2.5 rounded-xl bg-indigo-600 active:bg-indigo-700 text-xs font-bold flex items-center space-x-1.5 shadow-sm" title="Invite Links">
+        <button id="btnHeaderShare" onclick="openShareModal()" class="h-9 px-2.5 rounded-xl bg-indigo-600 active:bg-indigo-700 text-xs font-bold flex items-center space-x-1 shadow-sm" title="Invite Links">
           <i class="fa-solid fa-share-nodes"></i>
           <span class="hidden sm:inline">Links</span>
         </button>
 
         <!-- USER BADGE -->
-        <button onclick="handleUserBadgeClick()" id="userBadge" class="h-9 flex items-center space-x-1.5 px-2.5 rounded-xl bg-slate-800 border border-slate-700 text-xs max-w-[155px] sm:max-w-[220px]">
+        <button onclick="handleUserBadgeClick()" id="userBadge" class="h-9 flex items-center space-x-1.5 px-2.5 rounded-xl bg-slate-800 border border-slate-700 text-xs max-w-[145px] sm:max-w-[210px]">
           <span class="w-2 h-2 rounded-full bg-emerald-400 shrink-0"></span>
           <span id="userBadgeName" class="font-bold text-slate-200 truncate text-[11px] sm:text-xs">User</span>
-          <i id="userBadgeIcon" class="fa-solid fa-lock text-[10px] text-amber-400 shrink-0"></i>
+          <i id="userBadgeIcon" class="fa-solid fa-chevron-down text-[10px] text-slate-400 shrink-0"></i>
         </button>
       </div>
     </div>
@@ -66,7 +85,7 @@
   <!-- SLIDE-OUT SYSTEM MENU -->
   <div id="systemMenuDropdown" class="hidden fixed inset-0 z-50 bg-black/50 backdrop-blur-xs" onclick="closeMenu()">
     <div class="w-72 max-w-[85vw] bg-white h-full shadow-2xl p-4 flex flex-col justify-between" onclick="event.stopPropagation()">
-      <div class="space-y-4">
+      <div class="space-y-4 overflow-y-auto custom-scroll">
         <div class="flex items-center justify-between pb-3 border-b border-slate-100">
           <div class="flex items-center space-x-2">
             <div class="w-8 h-8 rounded-lg bg-cyan-600 text-white flex items-center justify-center">
@@ -83,6 +102,10 @@
         </div>
 
         <div class="space-y-1 text-xs font-bold">
+          <button id="menuBtnCloud" onclick="openCloudModal(); closeMenu()" class="w-full flex items-center space-x-3 px-3 py-3 rounded-xl bg-cyan-50 hover:bg-cyan-100 text-cyan-900">
+            <i class="fa-solid fa-cloud-arrow-up w-5 text-cyan-600 text-sm"></i>
+            <span>Cloud Live Sync Setup</span>
+          </button>
           <button id="menuBtnUsers" onclick="openUserManagerModal(); closeMenu()" class="w-full flex items-center space-x-3 px-3 py-3 rounded-xl hover:bg-slate-100 active:bg-slate-200 text-slate-700">
             <i class="fa-solid fa-users-gear w-5 text-emerald-600 text-sm"></i>
             <span>Team / Users Manager</span>
@@ -101,11 +124,11 @@
           </button>
           <button id="menuBtnSwitchProfile" onclick="openProfileModal(); closeMenu()" class="w-full flex items-center space-x-3 px-3 py-3 rounded-xl hover:bg-slate-100 active:bg-slate-200 text-slate-700">
             <i class="fa-solid fa-user-check w-5 text-slate-500 text-sm"></i>
-            <span>Switch Active Profile (Test)</span>
+            <span>Switch Role / Preview User</span>
           </button>
-          <button onclick="saveManual(); closeMenu()" class="w-full flex items-center space-x-3 px-3 py-3 rounded-xl hover:bg-slate-100 active:bg-slate-200 text-slate-700">
-            <i class="fa-solid fa-floppy-disk w-5 text-slate-500 text-sm"></i>
-            <span>Save Data Now</span>
+          <button onclick="forceCloudPull(); closeMenu()" class="w-full flex items-center space-x-3 px-3 py-3 rounded-xl hover:bg-slate-100 active:bg-slate-200 text-slate-700">
+            <i class="fa-solid fa-arrows-rotate w-5 text-blue-600 text-sm"></i>
+            <span>Refresh Live Data Now</span>
           </button>
           <button id="menuBtnExcel" onclick="downloadExcel(); closeMenu()" class="w-full flex items-center space-x-3 px-3 py-3 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-bold">
             <i class="fa-solid fa-file-excel w-5 text-emerald-600 text-sm"></i>
@@ -115,7 +138,7 @@
       </div>
 
       <div class="pt-3 border-t border-slate-100 text-[11px] text-slate-400 flex items-center justify-between">
-        <span>MV INTAKE v4.0 (Clean)</span>
+        <span>MV INTAKE v5.0 Live</span>
         <button id="menuBtnReset" onclick="resetData(); closeMenu()" class="text-rose-500 font-semibold hover:underline">Clear All Data</button>
       </div>
     </div>
@@ -347,7 +370,13 @@
             <i class="fa-solid fa-clock-rotate-left text-cyan-600"></i>
             <h3 class="font-extrabold text-slate-800 text-xs sm:text-sm">Submitted Records (Active Vessel)</h3>
           </div>
-          <span id="badgeEntryCount" class="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-cyan-50 text-cyan-700 border border-cyan-200">0 records</span>
+          <div class="flex items-center space-x-2">
+            <button onclick="forceCloudPull()" class="text-[11px] text-cyan-600 font-bold hover:underline flex items-center space-x-1">
+              <i class="fa-solid fa-arrows-rotate"></i>
+              <span>Sync</span>
+            </button>
+            <span id="badgeEntryCount" class="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-cyan-50 text-cyan-700 border border-cyan-200">0 records</span>
+          </div>
         </div>
 
         <div class="overflow-x-auto custom-scroll">
@@ -506,6 +535,48 @@
   </main>
 
   <!-- ========================================== -->
+  <!-- MODAL 0: CLOUD LIVE SYNC SETUP             -->
+  <!-- ========================================== -->
+  <div id="modalCloud" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-end sm:items-center justify-center p-0 sm:p-4">
+    <div class="bg-white rounded-t-3xl sm:rounded-2xl max-w-lg w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
+      <div class="p-4 bg-slate-900 text-white flex items-center justify-between">
+        <div class="flex items-center space-x-2">
+          <i class="fa-solid fa-cloud-bolt text-cyan-400"></i>
+          <span class="font-bold text-sm">Real-Time Cloud Sync (Multi-Phone Live)</span>
+        </div>
+        <button onclick="closeCloudModal()" class="w-8 h-8 rounded-lg bg-slate-800 text-slate-300 flex items-center justify-center"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <div class="p-4 overflow-y-auto space-y-4 custom-scroll text-xs">
+        <div class="bg-cyan-50 border border-cyan-200 p-3.5 rounded-2xl space-y-2 text-cyan-950">
+          <div class="font-extrabold flex items-center space-x-1.5">
+            <i class="fa-solid fa-circle-info text-cyan-600"></i>
+            <span>ဖုန်းအားလုံး တစ်ပြိုင်နက် Live ချိတ်ဆက်ရန် -</span>
+          </div>
+          <p class="text-[11px] leading-relaxed text-cyan-800">
+            Member များ၏ ဖုန်းမှ သွင်းလိုက်သော Data များ သင့်ဖုန်းသို့ အင်တာနက်မှတစ်ဆင့် တိုက်ရိုက်ရောက်ရှိလာစေရန် သင်၏ <b>Firebase Realtime Database URL</b> ကို အောက်တွင် ထည့်သွင်းပေးပါ။ (Invite Link ထုတ်သည့်အခါ ၎င်းချိတ်ဆက်မှုပါ တစ်ပါတည်း ပါဝင်သွားပါမည်)။
+          </p>
+        </div>
+
+        <div class="space-y-2">
+          <label class="block text-[11px] font-extrabold text-slate-600 uppercase">Firebase Realtime Database URL</label>
+          <input type="url" id="inputCloudUrl" placeholder="https://your-project-default-rtdb.firebaseio.com" class="w-full h-11 bg-slate-50 border border-slate-300 rounded-xl px-3 font-mono text-xs text-slate-800">
+          <p class="text-[10px] text-slate-400">ဥပမာ - https://cargo-preparation-default-rtdb.firebaseio.com</p>
+        </div>
+
+        <div class="flex items-center space-x-2 pt-1">
+          <button onclick="saveCloudConfig()" class="flex-1 h-11 bg-cyan-600 active:bg-cyan-700 text-white rounded-xl font-extrabold shadow-xs">
+            <i class="fa-solid fa-link mr-1"></i> Connect & Sync Now
+          </button>
+          <button onclick="disconnectCloud()" class="h-11 px-4 bg-slate-200 text-slate-700 rounded-xl font-bold">
+            Disconnect
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
   <!-- MODAL 1: TEAM / USERS MANAGER (SUPER ADMIN) -->
   <!-- ========================================== -->
   <div id="modalUserManager" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-end sm:items-center justify-center p-0 sm:p-4">
@@ -657,7 +728,7 @@
       </div>
       <div class="p-4 overflow-y-auto space-y-2.5 custom-scroll">
         <div class="flex items-center justify-between">
-          <p class="text-xs text-slate-500 font-medium">Preview system as another user:</p>
+          <p class="text-xs text-slate-500 font-medium">Test/Preview system as another user:</p>
           <button onclick="closeProfileModal(); openUserManagerModal();" class="text-xs font-bold text-emerald-600 hover:underline">
             <i class="fa-solid fa-user-plus mr-1"></i>Manage Team
           </button>
@@ -725,25 +796,25 @@
 
   <!-- JAVASCRIPT APPLICATION LOGIC -->
   <script>
-    // NEW STORAGE KEY FOR COMPLETELY CLEAN SLATE
-    const STORAGE_KEY = 'MV_INTAKE_CLEAN_V4';
+    const STORAGE_KEY = 'MV_INTAKE_CLEAN_V5';
 
     function generateAccessKey(seed) {
       return 'KEY-' + Math.abs(seed.split('').reduce((a, b) => ((a << 5) - a) + b.charCodeAt(0), 0)).toString(16).toUpperCase().padStart(6, '0');
     }
 
-    // COMPLETELY EMPTY INITIAL STATE (NO BOATS, NO SHIPPERS, NO EXTRA USERS, NO RECORDS)
     let appData = {
+      cloudUrl: '', // Firebase Realtime DB URL for Cross-Phone Live Sync
       activeBoatId: null,
       lockedBoatId: null,
-      sessionLocked: false,
+      sessionLocked: false, // ONLY true when user opened an Invite Link
       currentUser: { id: 'U-001', name: 'Super Admin (Owner)', role: 'SUPER_ADMIN', accessKey: 'KEY-SUPER01' },
       boats: [],
       shippers: [],
       users: [
         { id: 'U-001', name: 'Super Admin (Owner)', role: 'SUPER_ADMIN', accessKey: 'KEY-SUPER01' }
       ],
-      records: []
+      records: [],
+      lastUpdated: 0
     };
 
     function ensureUserKeys() {
@@ -767,11 +838,187 @@
       ensureUserKeys();
     }
 
-    function saveData() {
+    function saveData(skipCloudPush = false) {
+      appData.lastUpdated = Date.now();
       localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
       updateLiveSync();
+      if (!skipCloudPush && appData.cloudUrl) {
+        pushToCloud();
+      }
     }
 
+    // =========================================================
+    // REAL-TIME CLOUD SYNC ENGINE (ACROSS ALL 20 PHONES)
+    // =========================================================
+    let isSyncingCloud = false;
+
+    function normalizeCloudUrl(url) {
+      if (!url) return '';
+      let clean = url.trim().replace(/\/+$/, '');
+      if (!clean.startsWith('http')) clean = 'https://' + clean;
+      return clean;
+    }
+
+    async function pushToCloud() {
+      if (!appData.cloudUrl) return;
+      const endpoint = `${normalizeCloudUrl(appData.cloudUrl)}/mv_intake_master.json`;
+      const payload = {
+        boats: appData.boats || [],
+        shippers: appData.shippers || [],
+        users: appData.users || [],
+        records: appData.records || [],
+        lastUpdated: appData.lastUpdated || Date.now()
+      };
+      try {
+        await fetch(endpoint, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        updateCloudBadgeUI(true);
+      } catch (err) {
+        updateCloudBadgeUI(false);
+      }
+    }
+
+    async function pullFromCloud(showNotification = false) {
+      if (!appData.cloudUrl || isSyncingCloud) return;
+      isSyncingCloud = true;
+      const endpoint = `${normalizeCloudUrl(appData.cloudUrl)}/mv_intake_master.json`;
+      try {
+        const res = await fetch(endpoint + '?t=' + Date.now());
+        if (res.ok) {
+          const remote = await res.json();
+          if (remote) {
+            let changed = false;
+
+            // Merge Boats
+            if (Array.isArray(remote.boats)) {
+              if (JSON.stringify(remote.boats) !== JSON.stringify(appData.boats)) {
+                appData.boats = remote.boats;
+                if (!appData.activeBoatId && appData.boats.length > 0) {
+                  appData.activeBoatId = appData.boats[0].id;
+                }
+                changed = true;
+              }
+            }
+
+            // Merge Shippers
+            if (Array.isArray(remote.shippers)) {
+              if (JSON.stringify(remote.shippers) !== JSON.stringify(appData.shippers)) {
+                appData.shippers = remote.shippers;
+                changed = true;
+              }
+            }
+
+            // Merge Users
+            if (Array.isArray(remote.users) && remote.users.length > 0) {
+              if (JSON.stringify(remote.users) !== JSON.stringify(appData.users)) {
+                appData.users = remote.users;
+                changed = true;
+              }
+            }
+
+            // Merge Intake Records
+            const remoteRecords = Array.isArray(remote.records) ? remote.records : [];
+            if (JSON.stringify(remoteRecords) !== JSON.stringify(appData.records)) {
+              appData.records = remoteRecords;
+              changed = true;
+            }
+
+            if (changed) {
+              localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
+              renderAll();
+              if (document.getElementById('tabTemplate') && !document.getElementById('tabTemplate').classList.contains('hidden')) {
+                renderTemplateTable();
+              }
+              if (document.getElementById('tabRecords') && !document.getElementById('tabRecords').classList.contains('hidden')) {
+                renderAllRecordsTable();
+              }
+              if (document.getElementById('tabPicker') && !document.getElementById('tabPicker').classList.contains('hidden')) {
+                runShipperFilter();
+              }
+            }
+          }
+          updateCloudBadgeUI(true);
+          if (showNotification) showToast('Live data synced from Cloud');
+        }
+      } catch (e) {
+        updateCloudBadgeUI(false);
+      } finally {
+        isSyncingCloud = false;
+      }
+    }
+
+    function forceCloudPull() {
+      if (appData.cloudUrl) {
+        pullFromCloud(true);
+      } else {
+        loadData();
+        renderAll();
+        showToast('Refreshed local data');
+      }
+    }
+
+    function updateCloudBadgeUI(online) {
+      const dot = document.getElementById('dotCloud');
+      const txt = document.getElementById('txtCloud');
+      if (!appData.cloudUrl) {
+        dot.className = 'w-1.5 h-1.5 rounded-full bg-amber-400';
+        txt.textContent = 'LOCAL';
+        return;
+      }
+      if (online) {
+        dot.className = 'w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse';
+        txt.textContent = 'CLOUD LIVE';
+      } else {
+        dot.className = 'w-1.5 h-1.5 rounded-full bg-rose-400';
+        txt.textContent = 'OFFLINE';
+      }
+    }
+
+    function openCloudModal() {
+      document.getElementById('inputCloudUrl').value = appData.cloudUrl || '';
+      document.getElementById('modalCloud').classList.remove('hidden');
+    }
+    function closeCloudModal() {
+      document.getElementById('modalCloud').classList.add('hidden');
+    }
+    function handleCloudClick() {
+      if (!appData.sessionLocked && appData.currentUser.role === 'SUPER_ADMIN') {
+        openCloudModal();
+      } else {
+        forceCloudPull();
+      }
+    }
+    async function saveCloudConfig() {
+      const val = normalizeCloudUrl(document.getElementById('inputCloudUrl').value);
+      if (!val) {
+        showToast('Please enter a valid Firebase Database URL');
+        return;
+      }
+      appData.cloudUrl = val;
+      saveData(true);
+      await pushToCloud();
+      await pullFromCloud(true);
+      closeCloudModal();
+    }
+    function disconnectCloud() {
+      appData.cloudUrl = '';
+      saveData(true);
+      updateCloudBadgeUI(false);
+      closeCloudModal();
+      showToast('Disconnected from Cloud');
+    }
+
+    // Poll Cloud every 3 seconds for real-time updates across devices
+    setInterval(() => {
+      if (appData.cloudUrl) pullFromCloud(false);
+    }, 3000);
+
+    // =========================================================
+    // ROUTING & INVITE LINK HANDLER
+    // =========================================================
     function handleRouting() {
       const url = new URL(window.location.href);
       const searchParams = url.searchParams;
@@ -789,18 +1036,27 @@
       const boatUnit = getParam('bunit');
       const boatWeight = getParam('bweight');
       const shippersRaw = getParam('shippers');
+      const cloudParam = getParam('cloud');
       const unlockMaster = getParam('master');
 
+      // Always allow ?master=unlock or #master=unlock to restore Super Admin
       if (unlockMaster === 'unlock') {
         appData.sessionLocked = false;
         appData.lockedBoatId = null;
         appData.currentUser = appData.users.find(u => u.role === 'SUPER_ADMIN') || appData.users[0];
-        saveData();
+        saveData(true);
         window.history.replaceState({}, document.title, window.location.pathname);
         return;
       }
 
+      // If no invite link parameters in URL and user was merely previewing on Super Admin's phone, keep session unlocked
       if (uid && key) {
+        if (cloudParam) {
+          try {
+            appData.cloudUrl = decodeURIComponent(escape(atob(cloudParam)));
+          } catch (e) {}
+        }
+
         if (shippersRaw) {
           try {
             const sList = JSON.parse(decodeURIComponent(escape(atob(shippersRaw))));
@@ -842,16 +1098,15 @@
 
         if (targetUser) {
           appData.currentUser = targetUser;
-          appData.sessionLocked = true;
+          appData.sessionLocked = true; // Strictly lock because they entered via Invite Link
           if (targetUser.role === 'MEMBER' && boatId) {
             appData.lockedBoatId = boatId;
           } else {
             appData.lockedBoatId = null;
           }
-          saveData();
+          saveData(true);
+          if (appData.cloudUrl) pullFromCloud(false);
           return;
-        } else {
-          alert('Invalid or expired Invite Link! Please request a new link from Super Admin.');
         }
       }
 
@@ -859,10 +1114,10 @@
         if (appData.currentUser.role === 'MEMBER' && appData.lockedBoatId) {
           appData.activeBoatId = appData.lockedBoatId;
         }
-        saveData();
       }
     }
 
+    // Same-browser tab live sync
     let syncChannel;
     try {
       syncChannel = new BroadcastChannel('mv_intake_live_sync');
@@ -879,6 +1134,21 @@
         renderAll();
       };
     } catch (e) {}
+
+    window.addEventListener('storage', (ev) => {
+      if (ev.key === STORAGE_KEY) {
+        const currentLockedUser = appData.currentUser;
+        const currentSessionLocked = appData.sessionLocked;
+        const currentLockedBoat = appData.lockedBoatId;
+        loadData();
+        if (currentSessionLocked) {
+          appData.currentUser = currentLockedUser;
+          appData.sessionLocked = true;
+          appData.lockedBoatId = currentLockedBoat;
+        }
+        renderAll();
+      }
+    });
 
     function updateLiveSync() {
       if (syncChannel) syncChannel.postMessage('sync');
@@ -1015,14 +1285,14 @@
       const activeBoat = getActiveBoat();
       if (!activeBoat) {
         showToast('Please create & select a Vessel Account first!');
-        openAccountModal();
+        if (!appData.sessionLocked) openAccountModal();
         return;
       }
 
       const shipper = document.getElementById('selectShipper').value;
       if (!shipper) {
         showToast('Please add & select a Shipper / Company first!');
-        openShipperModal();
+        if (!appData.sessionLocked) openShipperModal();
         return;
       }
 
@@ -1055,11 +1325,11 @@
             ...appData.records[idx],
             date, shift, shipper, hatch, unit, weightOpt, otherKg, dTotal, totalKgs, totalTons, remarks
           };
-          showToast('Record updated');
+          showToast('Record updated & synced');
         }
       } else {
         const newRecord = {
-          id: 'REC-' + Date.now(),
+          id: 'REC-' + Date.now() + '-' + Math.random().toString(36).substring(2, 5),
           boatId: activeBoat.id,
           boatName: activeBoat.name,
           date,
@@ -1078,7 +1348,7 @@
           timestamp: new Date().toISOString()
         };
         appData.records.unshift(newRecord);
-        showToast('Hatch entry submitted');
+        showToast('Hatch entry submitted & synced');
       }
 
       saveData();
@@ -1155,12 +1425,26 @@
           updateWeightLogic();
         }
       }
-      saveData();
+      saveData(true);
       renderAll();
     }
 
+    // =========================================================
+    // FIXED: SUPER ADMIN NEVER GETS LOCKED OUT WHEN PREVIEWING
+    // =========================================================
     function canSwitchProfile() {
-      return !appData.sessionLocked && appData.currentUser && appData.currentUser.role === 'SUPER_ADMIN';
+      // As long as the device did NOT enter through a locked invite link, Super Admin can freely switch roles back & forth!
+      return !appData.sessionLocked;
+    }
+
+    function returnToSuperAdmin() {
+      const owner = appData.users.find(u => u.role === 'SUPER_ADMIN') || appData.users[0];
+      appData.currentUser = owner;
+      appData.sessionLocked = false;
+      appData.lockedBoatId = null;
+      saveData(true);
+      renderAll();
+      showToast('Returned to Super Admin mode');
     }
 
     function handleUserBadgeClick() {
@@ -1174,9 +1458,18 @@
     function applyRolePermissions() {
       const role = appData.currentUser ? appData.currentUser.role : 'MEMBER';
       const isMember = (role === 'MEMBER');
-      const isSuperAdmin = (role === 'SUPER_ADMIN') && !appData.sessionLocked;
+      const isSuperAdmin = (role === 'SUPER_ADMIN');
 
-      document.getElementById('menuRoleLabel').textContent = `${role} ${appData.sessionLocked ? '(LOCKED)' : ''}`;
+      document.getElementById('menuRoleLabel').textContent = `${role} ${appData.sessionLocked ? '(INVITE LOCKED)' : ''}`;
+
+      // Show yellow "Return to Super Admin" banner whenever owner is testing Member or Admin mode
+      const previewBanner = document.getElementById('previewModeBanner');
+      if (!appData.sessionLocked && role !== 'SUPER_ADMIN') {
+        previewBanner.classList.remove('hidden');
+        document.getElementById('previewBannerUser').textContent = `${appData.currentUser.name} (${role})`;
+      } else {
+        previewBanner.classList.add('hidden');
+      }
 
       const badgeIcon = document.getElementById('userBadgeIcon');
       if (canSwitchProfile()) {
@@ -1205,6 +1498,8 @@
       document.getElementById('btnTabRecords').style.display = isMember ? 'none' : '';
       if (isMember) switchTab('tabEntry');
 
+      document.getElementById('btnHeaderCloud').style.display = isSuperAdmin ? '' : 'none';
+      document.getElementById('menuBtnCloud').style.display = isSuperAdmin ? '' : 'none';
       document.getElementById('btnHeaderUsers').style.display = isSuperAdmin ? '' : 'none';
       document.getElementById('menuBtnUsers').style.display = isSuperAdmin ? '' : 'none';
       document.getElementById('menuBtnReset').style.display = isSuperAdmin ? '' : 'none';
@@ -1220,7 +1515,7 @@
 
     // TEAM / USERS MANAGER
     function openUserManagerModal() {
-      if (appData.currentUser.role !== 'SUPER_ADMIN' || appData.sessionLocked) {
+      if (appData.sessionLocked) {
         showToast('Only Super Admin can manage users');
         return;
       }
@@ -1363,6 +1658,7 @@
     // RENDERING UI
     function renderAll() {
       applyRolePermissions();
+      updateCloudBadgeUI(!!appData.cloudUrl);
       renderActiveBoatUI();
       renderStats();
       renderMyEntries();
@@ -1964,7 +2260,8 @@
         const btn = document.createElement('button');
         btn.onclick = () => {
           appData.currentUser = u;
-          saveData();
+          // Note: We do NOT set sessionLocked = true here so Super Admin can always switch back!
+          saveData(true);
           renderAll();
           closeProfileModal();
           showToast(`Previewing as: ${u.name}`);
@@ -2010,6 +2307,7 @@
     function buildPersonalInviteLink(user, boat) {
       const origin = window.location.origin + window.location.pathname;
       const shippersEncoded = btoa(unescape(encodeURIComponent(JSON.stringify(appData.shippers))));
+      const cloudEncoded = appData.cloudUrl ? btoa(unescape(encodeURIComponent(appData.cloudUrl))) : '';
       const params = new URLSearchParams({
         uid: user.id,
         key: user.accessKey,
@@ -2019,7 +2317,8 @@
         bname: boat.name,
         bunit: boat.unit,
         bweight: boat.weight,
-        shippers: shippersEncoded
+        shippers: shippersEncoded,
+        cloud: cloudEncoded
       });
       return `${origin}#${params.toString()}`;
     }
@@ -2100,11 +2399,6 @@
       setTimeout(() => t.classList.add('hidden'), 2600);
     }
 
-    function saveManual() {
-      saveData();
-      showToast('All data saved');
-    }
-
     function resetData() {
       if (confirm('Clear all accounts, shippers, and records to start fresh?')) {
         localStorage.removeItem(STORAGE_KEY);
@@ -2118,6 +2412,9 @@
       handleRouting();
       initDatepickers();
       renderAll();
+      if (appData.cloudUrl) {
+        pullFromCloud(false);
+      }
     });
   </script>
 </body>
