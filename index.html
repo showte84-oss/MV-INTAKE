@@ -53,7 +53,7 @@
           <span class="hidden sm:inline">Links</span>
         </button>
 
-        <!-- USER BADGE (LOCKED FOR INVITED USERS) -->
+        <!-- USER BADGE -->
         <button onclick="handleUserBadgeClick()" id="userBadge" class="h-9 flex items-center space-x-1.5 px-2.5 rounded-xl bg-slate-800 border border-slate-700 text-xs max-w-[155px] sm:max-w-[220px]">
           <span class="w-2 h-2 rounded-full bg-emerald-400 shrink-0"></span>
           <span id="userBadgeName" class="font-bold text-slate-200 truncate text-[11px] sm:text-xs">User</span>
@@ -99,7 +99,6 @@
             <i class="fa-solid fa-link w-5 text-amber-600 text-sm"></i>
             <span>Invite & Share Links</span>
           </button>
-          <!-- Only visible to unlocked Super Admin -->
           <button id="menuBtnSwitchProfile" onclick="openProfileModal(); closeMenu()" class="w-full flex items-center space-x-3 px-3 py-3 rounded-xl hover:bg-slate-100 active:bg-slate-200 text-slate-700">
             <i class="fa-solid fa-user-check w-5 text-slate-500 text-sm"></i>
             <span>Switch Active Profile (Test)</span>
@@ -116,8 +115,8 @@
       </div>
 
       <div class="pt-3 border-t border-slate-100 text-[11px] text-slate-400 flex items-center justify-between">
-        <span>MV INTAKE v3.0</span>
-        <button id="menuBtnReset" onclick="resetData(); closeMenu()" class="text-rose-500 font-semibold hover:underline">Reset All</button>
+        <span>MV INTAKE v4.0 (Clean)</span>
+        <button id="menuBtnReset" onclick="resetData(); closeMenu()" class="text-rose-500 font-semibold hover:underline">Clear All Data</button>
       </div>
     </div>
   </div>
@@ -160,15 +159,16 @@
               <i class="fa-solid fa-lock text-[8px]"></i> Locked Account
             </span>
           </div>
-          <div id="bannerBoatName" class="text-sm sm:text-base font-extrabold text-slate-800 truncate">Select Vessel</div>
+          <div id="bannerBoatName" class="text-sm sm:text-base font-extrabold text-slate-800 truncate">No Vessel Account</div>
         </div>
       </div>
 
       <div class="flex items-center space-x-2 w-full sm:w-auto">
         <select id="selectActiveBoat" onchange="changeActiveBoat(this.value)" class="flex-1 sm:w-56 h-10 bg-slate-50 border border-slate-300 text-slate-800 text-xs rounded-xl px-3 font-bold focus:ring-2 focus:ring-cyan-500">
         </select>
-        <button id="btnGearBoat" onclick="openAccountModal()" class="w-10 h-10 rounded-xl bg-slate-100 active:bg-slate-200 text-slate-700 flex items-center justify-center shrink-0" title="Manage Vessel Accounts">
-          <i class="fa-solid fa-gear text-sm"></i>
+        <button id="btnGearBoat" onclick="openAccountModal()" class="h-10 px-3 rounded-xl bg-cyan-600 active:bg-cyan-700 text-white flex items-center justify-center space-x-1.5 shrink-0 text-xs font-bold shadow-xs" title="Add or Manage Vessel Accounts">
+          <i class="fa-solid fa-plus text-xs"></i>
+          <span>Vessel</span>
         </button>
       </div>
     </div>
@@ -521,7 +521,6 @@
       </div>
 
       <div class="p-4 overflow-y-auto space-y-4 custom-scroll">
-        <!-- Add / Edit User Form -->
         <div class="bg-slate-50 border border-slate-200 p-3.5 rounded-2xl space-y-3">
           <div class="flex items-center justify-between">
             <h4 id="lblUserFormTitle" class="text-xs font-extrabold text-slate-700 uppercase">Add New Admin or Member</h4>
@@ -532,7 +531,7 @@
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
             <div class="sm:col-span-2">
               <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Full Name / Checker Name</label>
-              <input type="text" id="inputUserName" placeholder="e.g. Ko Aung (Checker 1)" class="w-full h-11 bg-white border border-slate-300 rounded-xl px-3 font-bold text-slate-800">
+              <input type="text" id="inputUserName" placeholder="Enter name..." class="w-full h-11 bg-white border border-slate-300 rounded-xl px-3 font-bold text-slate-800">
             </div>
             <div>
               <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Assign Role</label>
@@ -583,7 +582,7 @@
           <input type="hidden" id="editBoatId" value="">
           <div>
             <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Vessel / Boat Name</label>
-            <input type="text" id="inputBoatName" placeholder="e.g. MV-GOLDEN STAR 01" class="w-full h-11 bg-white border border-slate-300 rounded-xl px-3 font-bold">
+            <input type="text" id="inputBoatName" placeholder="Enter Vessel / Boat No..." class="w-full h-11 bg-white border border-slate-300 rounded-xl px-3 font-bold">
           </div>
           <div class="grid grid-cols-2 gap-2.5">
             <div>
@@ -645,7 +644,7 @@
   </div>
 
   <!-- ========================================== -->
-  <!-- MODAL 4: PROFILE SWITCHER (SUPER ADMIN ONLY)-->
+  <!-- MODAL 4: PROFILE SWITCHER (SUPER ADMIN)    -->
   <!-- ========================================== -->
   <div id="modalProfile" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-end sm:items-center justify-center p-0 sm:p-4">
     <div class="bg-white rounded-t-3xl sm:rounded-2xl max-w-md w-full max-h-[85vh] flex flex-col shadow-2xl overflow-hidden">
@@ -685,7 +684,6 @@
       </div>
 
       <div class="p-4 overflow-y-auto space-y-4 custom-scroll text-xs">
-        <!-- STEP 1: SELECT TARGET VESSEL FOR THE LINKS -->
         <div class="bg-slate-100 border border-slate-300 rounded-2xl p-3 space-y-1.5">
           <label class="block text-[10px] font-extrabold text-slate-600 uppercase">
             1. Select Target Vessel Account for Invite Links:
@@ -698,23 +696,21 @@
           </p>
         </div>
 
-        <!-- UNIQUE ADMIN LINKS (1 PER ADMIN) -->
+        <!-- UNIQUE ADMIN LINKS -->
         <div class="bg-indigo-50 border border-indigo-200 rounded-2xl p-3.5 space-y-2">
           <div class="font-extrabold text-indigo-950 flex items-center justify-between">
             <span><i class="fa-solid fa-user-tie mr-1.5 text-indigo-600"></i>Designated Admin Links</span>
             <span class="text-[10px] px-2 py-0.5 rounded bg-indigo-200 text-indigo-900 font-bold">Role Locked</span>
           </div>
-          <p class="text-[11px] text-indigo-800">Admin တစ်ဦးချင်းစီအတွက် သီးသန့် Link များ (တစ်ယောက်နှင့်တစ်ယောက် မတူညီပါ) -</p>
           <div id="listUniqueAdminLinks" class="space-y-2"></div>
         </div>
 
-        <!-- UNIQUE MEMBER LINKS (1 PER CHECKER) -->
+        <!-- UNIQUE MEMBER LINKS -->
         <div class="bg-cyan-50 border border-cyan-200 rounded-2xl p-3.5 space-y-2">
           <div class="font-extrabold text-cyan-950 flex items-center justify-between">
             <span><i class="fa-solid fa-helmet-safety mr-1.5 text-cyan-600"></i>Member (Hatch Checker) Links</span>
             <span class="text-[10px] px-2 py-0.5 rounded bg-cyan-200 text-cyan-900 font-bold">Data Entry Only</span>
           </div>
-          <p class="text-[11px] text-cyan-800">Member တစ်ဦးချင်းစီအတွက် သီးသန့် Link များ (Data Entry မှလွဲ၍ အခြားအပိုင်းများ လုံးဝ မမြင်ရပါ) -</p>
           <div id="listUniqueMemberLinks" class="space-y-2 max-h-64 overflow-y-auto custom-scroll"></div>
         </div>
       </div>
@@ -729,31 +725,23 @@
 
   <!-- JAVASCRIPT APPLICATION LOGIC -->
   <script>
-    const STORAGE_KEY = 'MV_INTAKE_DATA_V3';
+    // NEW STORAGE KEY FOR COMPLETELY CLEAN SLATE
+    const STORAGE_KEY = 'MV_INTAKE_CLEAN_V4';
 
     function generateAccessKey(seed) {
       return 'KEY-' + Math.abs(seed.split('').reduce((a, b) => ((a << 5) - a) + b.charCodeAt(0), 0)).toString(16).toUpperCase().padStart(6, '0');
     }
 
+    // COMPLETELY EMPTY INITIAL STATE (NO BOATS, NO SHIPPERS, NO EXTRA USERS, NO RECORDS)
     let appData = {
-      activeBoatId: 'B-001',
+      activeBoatId: null,
       lockedBoatId: null,
-      sessionLocked: false, // True when entered via an Invite Link
+      sessionLocked: false,
       currentUser: { id: 'U-001', name: 'Super Admin (Owner)', role: 'SUPER_ADMIN', accessKey: 'KEY-SUPER01' },
-      boats: [
-        { id: 'B-001', name: 'MV-GOLDEN STAR 01', unit: 'Bags', weight: '50 Kg' },
-        { id: 'B-002', name: 'MV-AYEYARWADY 02', unit: 'Bags', weight: '25 Kg' },
-        { id: 'B-003', name: 'MV-DELTA QUEEN 03', unit: 'KG', weight: '50 Kg' }
-      ],
-      shippers: ['Alpha Logistics Co.', 'Myanmar Agrico Ltd.', 'Delta Global Trade', 'Everest Shipping'],
+      boats: [],
+      shippers: [],
       users: [
-        { id: 'U-001', name: 'Super Admin (Owner)', role: 'SUPER_ADMIN', accessKey: 'KEY-SUPER01' },
-        { id: 'U-002', name: 'U Thant Zin (Duty Admin)', role: 'ADMIN', accessKey: 'KEY-ADM002' },
-        { id: 'U-003', name: 'Ko Aung (Checker 1)', role: 'MEMBER', accessKey: 'KEY-MEM003' },
-        { id: 'U-004', name: 'Ko Kyaw (Checker 2)', role: 'MEMBER', accessKey: 'KEY-MEM004' },
-        { id: 'U-005', name: 'Ko Min (Checker 3)', role: 'MEMBER', accessKey: 'KEY-MEM005' },
-        { id: 'U-006', name: 'Ko Zaw (Checker 4)', role: 'MEMBER', accessKey: 'KEY-MEM006' },
-        { id: 'U-007', name: 'Ko Htun (Checker 5)', role: 'MEMBER', accessKey: 'KEY-MEM007' }
+        { id: 'U-001', name: 'Super Admin (Owner)', role: 'SUPER_ADMIN', accessKey: 'KEY-SUPER01' }
       ],
       records: []
     };
@@ -784,9 +772,6 @@
       updateLiveSync();
     }
 
-    // =========================================================
-    // STRICT UNIQUE INVITE LINK ROUTING & SESSION LOCKING
-    // =========================================================
     function handleRouting() {
       const url = new URL(window.location.href);
       const searchParams = url.searchParams;
@@ -806,7 +791,6 @@
       const shippersRaw = getParam('shippers');
       const unlockMaster = getParam('master');
 
-      // Secret Super Admin recovery if needed (?master=unlock)
       if (unlockMaster === 'unlock') {
         appData.sessionLocked = false;
         appData.lockedBoatId = null;
@@ -816,12 +800,10 @@
         return;
       }
 
-      // If entering via a Unique Personal Invite Link
       if (uid && key) {
-        // Sync shippers if passed in link
         if (shippersRaw) {
           try {
-            const sList = JSON.parse(atob(shippersRaw));
+            const sList = JSON.parse(decodeURIComponent(escape(atob(shippersRaw))));
             if (Array.isArray(sList) && sList.length > 0) {
               sList.forEach(s => {
                 if (!appData.shippers.includes(s)) appData.shippers.push(s);
@@ -830,7 +812,6 @@
           } catch (e) {}
         }
 
-        // Sync target vessel account on this device if not present
         if (boatId && boatName) {
           const existingBoat = appData.boats.find(b => b.id === boatId);
           if (!existingBoat) {
@@ -846,7 +827,6 @@
           appData.activeBoatId = boatId;
         }
 
-        // Find or register this exact invited user on this device
         let targetUser = appData.users.find(u => u.id === uid && u.accessKey === key);
         if (!targetUser && uName && (uRole === 'MEMBER' || uRole === 'ADMIN')) {
           targetUser = {
@@ -862,7 +842,7 @@
 
         if (targetUser) {
           appData.currentUser = targetUser;
-          appData.sessionLocked = true; // Strictly lock this device to this user & role!
+          appData.sessionLocked = true;
           if (targetUser.role === 'MEMBER' && boatId) {
             appData.lockedBoatId = boatId;
           } else {
@@ -871,11 +851,10 @@
           saveData();
           return;
         } else {
-          alert('Invalid or expired Invite Link! Please request a new personal link from Super Admin.');
+          alert('Invalid or expired Invite Link! Please request a new link from Super Admin.');
         }
       }
 
-      // Enforce lock if session was already locked previously on this phone
       if (appData.sessionLocked && appData.currentUser) {
         if (appData.currentUser.role === 'MEMBER' && appData.lockedBoatId) {
           appData.activeBoatId = appData.lockedBoatId;
@@ -892,7 +871,6 @@
         const currentSessionLocked = appData.sessionLocked;
         const currentLockedBoat = appData.lockedBoatId;
         loadData();
-        // Preserve this tab's locked user identity
         if (currentSessionLocked) {
           appData.currentUser = currentLockedUser;
           appData.sessionLocked = true;
@@ -943,7 +921,6 @@
     }
 
     function switchTab(tabId) {
-      // Members are strictly forbidden from switching away from tabEntry
       if (appData.currentUser && appData.currentUser.role === 'MEMBER' && tabId !== 'tabEntry') {
         tabId = 'tabEntry';
       }
@@ -1037,14 +1014,21 @@
       e.preventDefault();
       const activeBoat = getActiveBoat();
       if (!activeBoat) {
-        showToast('Please select a vessel account first');
+        showToast('Please create & select a Vessel Account first!');
+        openAccountModal();
+        return;
+      }
+
+      const shipper = document.getElementById('selectShipper').value;
+      if (!shipper) {
+        showToast('Please add & select a Shipper / Company first!');
+        openShipperModal();
         return;
       }
 
       const recId = document.getElementById('entryRecordId').value;
       const date = document.getElementById('inputDate').value;
       const shift = document.getElementById('inputShift').value;
-      const shipper = document.getElementById('selectShipper').value;
       const hatch = parseInt(document.getElementById('inputHatch').value, 10);
       const unit = document.getElementById('selectUnit').value;
       const weightOpt = document.getElementById('selectWeightOpt').value;
@@ -1152,6 +1136,7 @@
     }
 
     function getActiveBoat() {
+      if (appData.boats.length === 0) return null;
       if (appData.currentUser && appData.currentUser.role === 'MEMBER' && appData.lockedBoatId) {
         return appData.boats.find(b => b.id === appData.lockedBoatId) || appData.boats[0];
       }
@@ -1174,11 +1159,7 @@
       renderAll();
     }
 
-    // ====================================================
-    // STRICT ROLE & PROFILE LOCK PERMISSIONS
-    // ====================================================
     function canSwitchProfile() {
-      // Only unlocked SUPER_ADMIN can switch profiles
       return !appData.sessionLocked && appData.currentUser && appData.currentUser.role === 'SUPER_ADMIN';
     }
 
@@ -1197,7 +1178,6 @@
 
       document.getElementById('menuRoleLabel').textContent = `${role} ${appData.sessionLocked ? '(LOCKED)' : ''}`;
 
-      // Update Top-Right User Badge Icon (Lock icon if locked, chevron if Super Admin)
       const badgeIcon = document.getElementById('userBadgeIcon');
       if (canSwitchProfile()) {
         badgeIcon.className = 'fa-solid fa-chevron-down text-[9px] text-slate-400 shrink-0';
@@ -1205,10 +1185,8 @@
         badgeIcon.className = 'fa-solid fa-lock text-[10px] text-amber-400 shrink-0';
       }
 
-      // Hide Profile Switcher in Menu for all invited/locked users
       document.getElementById('menuBtnSwitchProfile').style.display = canSwitchProfile() ? '' : 'none';
 
-      // Lock vessel selector for Members
       const selBoat = document.getElementById('selectActiveBoat');
       const lockBadge = document.getElementById('lockBadge');
       if (selBoat) {
@@ -1222,18 +1200,15 @@
         }
       }
 
-      // Navigation Bar Tabs: Hide tabs 2, 3, 4 for Member
       document.getElementById('btnTabPicker').style.display = isMember ? 'none' : '';
       document.getElementById('btnTabTemplate').style.display = isMember ? 'none' : '';
       document.getElementById('btnTabRecords').style.display = isMember ? 'none' : '';
       if (isMember) switchTab('tabEntry');
 
-      // Super Admin Only Controls
       document.getElementById('btnHeaderUsers').style.display = isSuperAdmin ? '' : 'none';
       document.getElementById('menuBtnUsers').style.display = isSuperAdmin ? '' : 'none';
       document.getElementById('menuBtnReset').style.display = isSuperAdmin ? '' : 'none';
 
-      // Admin & Super Admin Controls (Hidden from Member)
       document.getElementById('btnGearBoat').style.display = isMember ? 'none' : '';
       document.getElementById('btnManageShipper').style.display = isMember ? 'none' : '';
       document.getElementById('btnHeaderShare').style.display = isMember ? 'none' : '';
@@ -1243,9 +1218,7 @@
       document.getElementById('menuBtnExcel').style.display = isMember ? 'none' : '';
     }
 
-    // ====================================================
-    // TEAM / USERS MANAGER (SUPER ADMIN ONLY)
-    // ====================================================
+    // TEAM / USERS MANAGER
     function openUserManagerModal() {
       if (appData.currentUser.role !== 'SUPER_ADMIN' || appData.sessionLocked) {
         showToast('Only Super Admin can manage users');
@@ -1332,7 +1305,7 @@
           accessKey: newKey
         };
         appData.users.push(newUser);
-        showToast(`Added ${name} with unique key`);
+        showToast(`Added ${name}`);
       }
 
       saveData();
@@ -1387,9 +1360,7 @@
       }
     }
 
-    // ====================================================
     // RENDERING UI
-    // ====================================================
     function renderAll() {
       applyRolePermissions();
       renderActiveBoatUI();
@@ -1409,8 +1380,16 @@
       const sel = document.getElementById('selectActiveBoat');
       sel.innerHTML = '';
 
+      if (appData.boats.length === 0) {
+        const opt = document.createElement('option');
+        opt.value = '';
+        opt.textContent = '-- No Vessel Account --';
+        sel.appendChild(opt);
+        document.getElementById('bannerBoatName').textContent = 'No Vessel Account (Tap + Vessel)';
+        return;
+      }
+
       if (appData.currentUser && appData.currentUser.role === 'MEMBER' && active) {
-        // Members only see their locked vessel in the dropdown
         const opt = document.createElement('option');
         opt.value = active.id;
         opt.textContent = active.name;
@@ -1425,20 +1404,28 @@
           sel.appendChild(opt);
         });
       }
-      document.getElementById('bannerBoatName').textContent = active ? active.name : 'No Active Vessel';
+      document.getElementById('bannerBoatName').textContent = active ? active.name : 'No Vessel Account';
     }
 
     function renderShippersDropdown() {
       const sel = document.getElementById('selectShipper');
       const cur = sel.value;
       sel.innerHTML = '';
-      appData.shippers.forEach(s => {
+
+      if (appData.shippers.length === 0) {
         const opt = document.createElement('option');
-        opt.value = s;
-        opt.textContent = s;
+        opt.value = '';
+        opt.textContent = '-- No Shipper Added --';
         sel.appendChild(opt);
-      });
-      if (cur && appData.shippers.includes(cur)) sel.value = cur;
+      } else {
+        appData.shippers.forEach(s => {
+          const opt = document.createElement('option');
+          opt.value = s;
+          opt.textContent = s;
+          sel.appendChild(opt);
+        });
+        if (cur && appData.shippers.includes(cur)) sel.value = cur;
+      }
 
       const fSel = document.getElementById('filterPickerShipper');
       const fCur = fSel.value;
@@ -1454,7 +1441,16 @@
 
     function renderStats() {
       const active = getActiveBoat();
-      if (!active) return;
+      if (!active) {
+        document.getElementById('statDayBags').textContent = '0';
+        document.getElementById('statDayTons').textContent = '0.00 MT';
+        document.getElementById('statNightBags').textContent = '0';
+        document.getElementById('statNightTons').textContent = '0.00 MT';
+        document.getElementById('statGrandBags').textContent = '0';
+        document.getElementById('statGrandKg').textContent = '0 KG';
+        document.getElementById('statGrandTons').textContent = '0.00 MT';
+        return;
+      }
 
       const activeLogs = appData.records.filter(r => r.boatId === active.id);
 
@@ -1491,7 +1487,8 @@
       tbody.innerHTML = '';
 
       if (!active) {
-        tbody.innerHTML = '<tr><td colspan="6" class="text-center py-6 text-slate-400">Select an active vessel.</td></tr>';
+        document.getElementById('badgeEntryCount').textContent = '0 records';
+        tbody.innerHTML = '<tr><td colspan="6" class="text-center py-6 text-slate-400">No active vessel account.</td></tr>';
         return;
       }
 
@@ -1592,8 +1589,12 @@
       const tbody = document.getElementById('tblTemplateBody');
       const tfoot = document.getElementById('tblTemplateFoot');
       tbody.innerHTML = '';
+      tfoot.innerHTML = '';
 
-      if (!active) return;
+      if (!active) {
+        tbody.innerHTML = '<tr><td colspan="11" class="text-center py-6 text-slate-400">No vessel account selected.</td></tr>';
+        return;
+      }
 
       const logs = appData.records.filter(r => r.boatId === active.id);
       const groups = {};
@@ -1611,7 +1612,6 @@
       const keys = Object.keys(groups);
       if (keys.length === 0) {
         tbody.innerHTML = '<tr><td colspan="11" class="text-center py-6 text-slate-400">No template data recorded yet.</td></tr>';
-        tfoot.innerHTML = '';
         return;
       }
 
@@ -1748,7 +1748,7 @@
       const wsBoat = XLSX.utils.aoa_to_sheet(rowsBoat);
       XLSX.utils.book_append_sheet(wb, wsBoat, 'BOAT_ACCOUNTS');
 
-      const fileName = `MV_INTAKE_${(active ? active.name : 'ALL').replace(/[^a-zA-Z0-9]/g, '_')}.xlsx`;
+      const fileName = `MV_INTAKE_${(active ? active.name : 'REPORT').replace(/[^a-zA-Z0-9]/g, '_')}.xlsx`;
       XLSX.writeFile(wb, fileName);
       showToast('Excel downloaded');
     }
@@ -1766,6 +1766,10 @@
     function renderVesselList() {
       const container = document.getElementById('listVessels');
       container.innerHTML = '';
+      if (appData.boats.length === 0) {
+        container.innerHTML = '<div class="text-center py-4 text-slate-400 text-xs">No vessel accounts created yet.</div>';
+        return;
+      }
       appData.boats.forEach(b => {
         const div = document.createElement('div');
         div.className = 'flex items-center justify-between p-3 rounded-2xl bg-slate-50 border border-slate-200 text-xs';
@@ -1807,6 +1811,12 @@
         const newBoat = { id: 'B-' + Date.now().toString().slice(-4), name, unit, weight };
         appData.boats.push(newBoat);
         appData.activeBoatId = newBoat.id;
+        document.getElementById('selectUnit').value = unit;
+        updateUnitLogic();
+        if (unit === 'Bags') {
+          document.getElementById('selectWeightOpt').value = weight;
+          updateWeightLogic();
+        }
         showToast('New vessel account created');
       }
 
@@ -1838,15 +1848,11 @@
     }
 
     function deleteBoatAccount(id) {
-      if (appData.boats.length <= 1) {
-        showToast('At least one vessel is required');
-        return;
-      }
       if (confirm('Delete this vessel account and its records?')) {
         appData.boats = appData.boats.filter(b => b.id !== id);
         appData.records = appData.records.filter(r => r.boatId !== id);
         if (appData.activeBoatId === id) {
-          appData.activeBoatId = appData.boats[0].id;
+          appData.activeBoatId = appData.boats.length > 0 ? appData.boats[0].id : null;
         }
         saveData();
         renderVesselList();
@@ -1868,6 +1874,10 @@
     function renderShipperList() {
       const container = document.getElementById('listShippers');
       container.innerHTML = '';
+      if (appData.shippers.length === 0) {
+        container.innerHTML = '<div class="text-center py-4 text-slate-400 text-xs">No shippers added yet.</div>';
+        return;
+      }
       appData.shippers.forEach((s, idx) => {
         const div = document.createElement('div');
         div.className = 'flex items-center justify-between p-3 rounded-2xl bg-slate-50 border border-slate-200 text-xs';
@@ -1934,7 +1944,7 @@
       }
     }
 
-    // PROFILE SWITCHER MODAL (STRICTLY BLOCKED FOR INVITED USERS)
+    // PROFILE SWITCHER MODAL
     function openProfileModal() {
       if (!canSwitchProfile()) {
         showToast('Profile switching is disabled for this link');
@@ -1972,20 +1982,26 @@
       });
     }
 
-    // ====================================================
     // UNIQUE PERSONAL INVITE LINKS GENERATOR
-    // ====================================================
     function openShareModal() {
       const selBoat = document.getElementById('shareModalBoatSelect');
       selBoat.innerHTML = '';
       const active = getActiveBoat();
-      appData.boats.forEach(b => {
+
+      if (appData.boats.length === 0) {
         const opt = document.createElement('option');
-        opt.value = b.id;
-        opt.textContent = `${b.name} (${b.unit} - ${b.weight})`;
-        if (active && b.id === active.id) opt.selected = true;
+        opt.value = '';
+        opt.textContent = '-- Please Create a Vessel Account First --';
         selBoat.appendChild(opt);
-      });
+      } else {
+        appData.boats.forEach(b => {
+          const opt = document.createElement('option');
+          opt.value = b.id;
+          opt.textContent = `${b.name} (${b.unit} - ${b.weight})`;
+          if (active && b.id === active.id) opt.selected = true;
+          selBoat.appendChild(opt);
+        });
+      }
 
       renderUniqueInviteLinks();
       document.getElementById('modalShare').classList.remove('hidden');
@@ -2011,14 +2027,21 @@
     function renderUniqueInviteLinks() {
       const selectedBoatId = document.getElementById('shareModalBoatSelect').value;
       const targetBoat = appData.boats.find(b => b.id === selectedBoatId) || getActiveBoat();
-      if (!targetBoat) return;
 
-      // 1. Unique Admin Links
       const adminContainer = document.getElementById('listUniqueAdminLinks');
+      const memberContainer = document.getElementById('listUniqueMemberLinks');
       adminContainer.innerHTML = '';
+      memberContainer.innerHTML = '';
+
+      if (!targetBoat) {
+        adminContainer.innerHTML = '<div class="text-rose-600 font-semibold text-[11px] py-2">Please add a Vessel Account first to generate links.</div>';
+        memberContainer.innerHTML = '<div class="text-rose-600 font-semibold text-[11px] py-2">Please add a Vessel Account first to generate links.</div>';
+        return;
+      }
+
       const admins = appData.users.filter(u => u.role === 'ADMIN');
       if (admins.length === 0) {
-        adminContainer.innerHTML = '<div class="text-slate-400 text-[11px] py-2">No Duty Admins added yet.</div>';
+        adminContainer.innerHTML = '<div class="text-slate-400 text-[11px] py-2">No Duty Admins added yet. Add them in Team Manager.</div>';
       } else {
         admins.forEach(adm => {
           const link = buildPersonalInviteLink(adm, targetBoat);
@@ -2038,12 +2061,9 @@
         });
       }
 
-      // 2. Unique Member Links
-      const memberContainer = document.getElementById('listUniqueMemberLinks');
-      memberContainer.innerHTML = '';
       const members = appData.users.filter(u => u.role === 'MEMBER');
       if (members.length === 0) {
-        memberContainer.innerHTML = '<div class="text-slate-400 text-[11px] py-2">No Members added yet.</div>';
+        memberContainer.innerHTML = '<div class="text-slate-400 text-[11px] py-2">No Members added yet. Add them in Team Manager.</div>';
       } else {
         members.forEach(mem => {
           const link = buildPersonalInviteLink(mem, targetBoat);
@@ -2086,7 +2106,7 @@
     }
 
     function resetData() {
-      if (confirm('Reset all system data to factory defaults?')) {
+      if (confirm('Clear all accounts, shippers, and records to start fresh?')) {
         localStorage.removeItem(STORAGE_KEY);
         window.location.hash = '';
         location.reload();
