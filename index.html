@@ -203,7 +203,7 @@
             <!-- DATE -->
             <div>
               <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Date (DD/MM/YYYY)</label>
-              <input type="text" id="inputDate" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-cyan-500" required>
+              <input type="text" id="inputDate" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-cyan-500 cursor-pointer" required>
             </div>
 
             <!-- SHIFT -->
@@ -567,33 +567,33 @@
         <button onclick="closeShareModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
       </div>
       <div class="p-4 overflow-y-auto space-y-4 custom-scroll text-xs">
+        <!-- GLOBAL ADMIN LINK -->
         <div class="bg-indigo-50 border border-indigo-200 rounded-xl p-3.5 space-y-2">
           <div class="font-bold text-indigo-900 flex items-center justify-between">
-            <span>Admin Access Link</span>
-            <span class="text-[10px] px-2 py-0.5 rounded bg-indigo-200 text-indigo-800">Supervisors</span>
+            <span>Admin Access Link (Full Management)</span>
+            <span class="text-[10px] px-2 py-0.5 rounded bg-indigo-200 text-indigo-800 font-semibold">Supervisors</span>
           </div>
-          <p class="text-indigo-700 text-[11px]">Send this link to Duty Admins for full access without password:</p>
+          <p class="text-indigo-700 text-[11px]">Duty Admins get full management access to all vessels and Excel downloads:</p>
           <div class="flex items-center space-x-2">
             <input type="text" id="linkAdmin" readonly class="flex-1 bg-white border border-indigo-200 rounded-lg px-2.5 py-1.5 font-mono text-[11px] text-slate-700">
             <button onclick="copyToClipboard('linkAdmin')" class="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-bold">Copy</button>
           </div>
         </div>
 
-        <div class="bg-cyan-50 border border-cyan-200 rounded-xl p-3.5 space-y-2">
+        <!-- VESSEL SPECIFIC MEMBER LINKS -->
+        <div class="bg-cyan-50 border border-cyan-200 rounded-xl p-3.5 space-y-2.5">
           <div class="font-bold text-cyan-900 flex items-center justify-between">
-            <span>Member Access Link</span>
-            <span class="text-[10px] px-2 py-0.5 rounded bg-cyan-200 text-cyan-800">Hatch Checkers</span>
+            <span>Vessel-Specific Member Links (သီးသန့် Link များ)</span>
+            <span class="text-[10px] px-2 py-0.5 rounded bg-cyan-200 text-cyan-800 font-semibold">Locked Vessel</span>
           </div>
-          <p class="text-cyan-700 text-[11px]">Send this link to the 20 checkers to log cargo intake:</p>
-          <div class="flex items-center space-x-2">
-            <input type="text" id="linkMember" readonly class="flex-1 bg-white border border-cyan-200 rounded-lg px-2.5 py-1.5 font-mono text-[11px] text-slate-700">
-            <button onclick="copyToClipboard('linkMember')" class="px-3 py-1.5 bg-cyan-600 hover:bg-cyan-700 text-white rounded-lg font-bold">Copy</button>
-          </div>
+          <p class="text-cyan-700 text-[11px]">Member များကို သက်ဆိုင်ရာ သင်္ဘော Account တစ်ခုတည်းသို့သာ Lock ခတ်၍ စာရင်းသွင်းစေမည့် Link များ:</p>
+          <div id="listVesselSpecificLinks" class="space-y-2"></div>
         </div>
 
+        <!-- PERSONALIZED CHECKER LINKS -->
         <div class="bg-slate-50 border border-slate-200 rounded-xl p-3.5 space-y-2">
-          <div class="font-bold text-slate-800">Personalized Member Links (Direct Login)</div>
-          <div id="listMemberPersonalLinks" class="space-y-1.5 max-h-48 overflow-y-auto custom-scroll"></div>
+          <div class="font-bold text-slate-800">Personalized Member Links (Direct Name Login)</div>
+          <div id="listMemberPersonalLinks" class="space-y-1.5 max-h-40 overflow-y-auto custom-scroll"></div>
         </div>
       </div>
     </div>
@@ -612,6 +612,7 @@
 
     let appData = {
       activeBoatId: 'B-001',
+      lockedBoatId: null,
       currentUser: { id: 'U-001', name: 'Super Admin (Owner)', role: 'SUPER_ADMIN' },
       boats: [
         { id: 'B-001', name: 'MV-GOLDEN STAR 01', unit: 'Bags', weight: '50 Kg' },
@@ -658,6 +659,15 @@
 
       const mode = searchParams.get('mode') || hashParams.get('mode');
       const userId = searchParams.get('user') || hashParams.get('user');
+      const boatId = searchParams.get('boat') || hashParams.get('boat');
+
+      // If specific boat specified in URL
+      if (boatId && appData.boats.some(b => b.id === boatId)) {
+        appData.activeBoatId = boatId;
+        if (mode === 'member') {
+          appData.lockedBoatId = boatId; // Lock this member to this boat
+        }
+      }
 
       if (userId) {
         const found = appData.users.find(u => u.id === userId);
@@ -671,6 +681,7 @@
       if (mode === 'admin') {
         const adminUser = appData.users.find(u => u.role === 'ADMIN' || u.role === 'SUPER_ADMIN');
         if (adminUser) appData.currentUser = adminUser;
+        appData.lockedBoatId = null; // Admins are never locked
       } else if (mode === 'member') {
         const memberUser = appData.users.find(u => u.role === 'MEMBER');
         if (memberUser) appData.currentUser = memberUser;
@@ -694,7 +705,7 @@
       if (syncChannel) syncChannel.postMessage('sync');
     }
 
-    // DATEPICKER INITIALIZATION (DD/MM/YYYY)
+    // DATEPICKER INITIALIZATION (Strict DD/MM/YYYY)
     let pickerDate, pickerFrom, pickerTo;
     function initDatepickers() {
       const today = new Date();
@@ -703,21 +714,27 @@
 
       pickerDate = flatpickr("#inputDate", {
         dateFormat: "d/m/Y",
+        altInput: true,
+        altFormat: "d/m/Y",
         defaultDate: formattedToday,
-        allowInput: true
+        allowInput: false
       });
 
       pickerFrom = flatpickr("#filterPickerFrom", {
         dateFormat: "d/m/Y",
+        altInput: true,
+        altFormat: "d/m/Y",
         defaultDate: formattedToday,
-        allowInput: true,
+        allowInput: false,
         onChange: runShipperFilter
       });
 
       pickerTo = flatpickr("#filterPickerTo", {
         dateFormat: "d/m/Y",
+        altInput: true,
+        altFormat: "d/m/Y",
         defaultDate: formattedToday,
-        allowInput: true,
+        allowInput: false,
         onChange: runShipperFilter
       });
     }
@@ -938,6 +955,7 @@
     }
 
     function changeActiveBoat(id) {
+      if (appData.currentUser && appData.currentUser.role === 'MEMBER') return; // Prevent change in Member mode
       appData.activeBoatId = id;
       const b = getActiveBoat();
       if (b) {
@@ -956,6 +974,20 @@
     function applyRolePermissions() {
       const isMember = appData.currentUser && appData.currentUser.role === 'MEMBER';
       
+      // Lock vessel selection for Members so they cannot switch to other boats
+      const selBoat = document.getElementById('selectActiveBoat');
+      if (selBoat) {
+        if (isMember) {
+          selBoat.disabled = true;
+          selBoat.classList.add('bg-slate-200', 'cursor-not-allowed', 'opacity-80');
+          selBoat.title = "Vessel is locked to this account for Member entry";
+        } else {
+          selBoat.disabled = false;
+          selBoat.classList.remove('bg-slate-200', 'cursor-not-allowed', 'opacity-80');
+          selBoat.title = "";
+        }
+      }
+
       // Hide or show Navigation Tabs for Member
       const btnTabPicker = document.getElementById('btnTabPicker');
       const btnTabTemplate = document.getElementById('btnTabTemplate');
@@ -1566,17 +1598,41 @@
     function openShareModal() {
       const origin = window.location.origin + window.location.pathname;
       document.getElementById('linkAdmin').value = `${origin}#mode=admin`;
-      document.getElementById('linkMember').value = `${origin}#mode=member`;
 
+      // Render Vessel-Specific Member Links
+      const vContainer = document.getElementById('listVesselSpecificLinks');
+      vContainer.innerHTML = '';
+      appData.boats.forEach(b => {
+        const link = `${origin}#mode=member&boat=${b.id}`;
+        const div = document.createElement('div');
+        div.className = 'p-2.5 rounded-lg bg-white border border-cyan-200 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-2';
+        div.innerHTML = `
+          <div>
+            <div class="font-bold text-slate-800 text-xs flex items-center space-x-1.5">
+              <i class="fa-solid fa-ship text-cyan-600"></i>
+              <span>${b.name}</span>
+            </div>
+            <div class="text-[10px] text-slate-400 font-mono mt-0.5 truncate max-w-xs">${link}</div>
+          </div>
+          <button onclick="navigator.clipboard.writeText('${link}'); showToast('Copied Member Link for ${b.name}')" class="px-3 py-1.5 bg-cyan-600 hover:bg-cyan-700 text-white rounded-lg font-bold text-xs whitespace-nowrap flex items-center justify-center space-x-1">
+            <i class="fa-solid fa-copy"></i>
+            <span>Copy Member Link</span>
+          </button>
+        `;
+        vContainer.appendChild(div);
+      });
+
+      // Render Personalized Member Links
       const container = document.getElementById('listMemberPersonalLinks');
       container.innerHTML = '';
+      const active = getActiveBoat();
       appData.users.filter(u => u.role === 'MEMBER').forEach(m => {
-        const link = `${origin}#mode=member&user=${m.id}`;
+        const link = `${origin}#mode=member&boat=${active ? active.id : ''}&user=${m.id}`;
         const div = document.createElement('div');
         div.className = 'flex items-center justify-between p-2 rounded-lg bg-white border border-slate-200';
         div.innerHTML = `
           <span class="font-bold text-slate-700">${m.name}</span>
-          <button onclick="navigator.clipboard.writeText('${link}'); showToast('Copied link for ${m.name}')" class="px-2 py-1 bg-cyan-600 text-white rounded font-bold text-[10px]">Copy Link</button>
+          <button onclick="navigator.clipboard.writeText('${link}'); showToast('Copied link for ${m.name}')" class="px-2 py-1 bg-cyan-600 hover:bg-cyan-700 text-white rounded font-bold text-[10px]">Copy Link</button>
         `;
         container.appendChild(div);
       });
