@@ -24,7 +24,7 @@
 </head>
 <body class="bg-slate-100 text-slate-800 min-h-screen flex flex-col pb-16 select-none">
 
-  <!-- SUPER ADMIN PREVIEW BANNER (NEVER GET LOCKED OUT WHEN TESTING) -->
+  <!-- SUPER ADMIN PREVIEW BANNER -->
   <div id="previewModeBanner" class="hidden bg-amber-500 text-slate-950 px-3 py-2 text-xs font-extrabold flex items-center justify-between shadow-sm z-50">
     <div class="flex items-center space-x-2 truncate">
       <i class="fa-solid fa-eye"></i>
@@ -35,48 +35,46 @@
     </button>
   </div>
 
-  <!-- TOP APP BAR -->
+  <!-- TOP APP BAR (CLEAN & ALIGNED) -->
   <header class="bg-slate-900 text-white sticky top-0 z-40 shadow-md">
-    <div class="max-w-7xl mx-auto px-3 sm:px-4 h-14 sm:h-16 flex items-center justify-between gap-2">
-      <!-- Left: Menu + Brand -->
+    <div class="max-w-7xl mx-auto px-2 sm:px-4 h-14 sm:h-16 flex items-center justify-between gap-1.5 sm:gap-2">
+      <!-- Left: Menu + Title -->
       <div class="flex items-center space-x-2 min-w-0">
-        <button id="btnSystemMenu" onclick="toggleMenu()" class="w-10 h-10 rounded-xl bg-slate-800 active:bg-slate-700 text-slate-200 flex items-center justify-center shrink-0">
-          <i class="fa-solid fa-bars text-base"></i>
+        <button id="btnSystemMenu" onclick="toggleMenu()" class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-slate-800 active:bg-slate-700 text-slate-200 flex items-center justify-center shrink-0">
+          <i class="fa-solid fa-bars text-sm sm:text-base"></i>
         </button>
         <div class="truncate">
-          <div class="flex items-center space-x-1.5">
-            <h1 class="text-sm sm:text-lg font-extrabold tracking-tight text-white truncate">MV INTAKE</h1>
-            <button onclick="handleCloudClick()" id="badgeCloudStatus" class="text-[9px] font-bold uppercase px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 shrink-0 flex items-center space-x-1">
-              <span id="dotCloud" class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-              <span id="txtCloud">SYNC</span>
-            </button>
-          </div>
-          <p class="text-[10px] text-slate-400 truncate hidden sm:block">Hatch Cargo Management</p>
+          <h1 class="text-xs sm:text-base font-extrabold tracking-tight text-white truncate">MV INTAKE</h1>
+          <p class="text-[9px] sm:text-[10px] text-slate-400 truncate hidden xs:block">Cargo Management</p>
         </div>
       </div>
 
-      <!-- Right: Quick Actions & User Badge -->
-      <div class="flex items-center space-x-1.5 shrink-0">
-        <button id="btnHeaderCloud" onclick="openCloudModal()" class="h-9 px-2.5 rounded-xl bg-cyan-700 active:bg-cyan-800 text-xs font-bold flex items-center space-x-1 shadow-sm" title="Cloud Live Database">
-          <i class="fa-solid fa-cloud"></i>
-          <span class="hidden lg:inline">Cloud</span>
+      <!-- Right: Action Icons & Profile (Properly Spaced) -->
+      <div class="flex items-center space-x-1 sm:space-x-1.5 shrink-0">
+        <!-- Cloud Sync Button -->
+        <button id="btnHeaderCloud" onclick="handleCloudClick()" class="h-9 px-2 sm:px-2.5 rounded-xl bg-cyan-800 active:bg-cyan-900 text-cyan-200 border border-cyan-700/60 flex items-center space-x-1.5 shadow-2xs" title="Cloud Live Sync">
+          <i class="fa-solid fa-cloud text-xs text-cyan-300"></i>
+          <span id="dotCloud" class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span id="txtCloud" class="text-[10px] font-bold hidden md:inline">SYNC</span>
         </button>
 
-        <button id="btnHeaderUsers" onclick="openUserManagerModal()" class="h-9 px-2.5 rounded-xl bg-emerald-600 active:bg-emerald-700 text-xs font-bold flex items-center space-x-1 shadow-sm" title="Manage Admins & Members">
-          <i class="fa-solid fa-users-gear"></i>
-          <span class="hidden md:inline">Team</span>
+        <!-- Team Button -->
+        <button id="btnHeaderUsers" onclick="openUserManagerModal()" class="w-9 h-9 sm:w-auto sm:px-2.5 rounded-xl bg-emerald-600 active:bg-emerald-700 text-white flex items-center justify-center space-x-1 shadow-2xs" title="Team Manager">
+          <i class="fa-solid fa-users-gear text-xs"></i>
+          <span class="text-xs font-bold hidden md:inline">Team</span>
         </button>
 
-        <button id="btnHeaderShare" onclick="openShareModal()" class="h-9 px-2.5 rounded-xl bg-indigo-600 active:bg-indigo-700 text-xs font-bold flex items-center space-x-1 shadow-sm" title="Invite Links">
-          <i class="fa-solid fa-share-nodes"></i>
-          <span class="hidden sm:inline">Links</span>
+        <!-- Share Links Button -->
+        <button id="btnHeaderShare" onclick="openShareModal()" class="w-9 h-9 sm:w-auto sm:px-2.5 rounded-xl bg-indigo-600 active:bg-indigo-700 text-white flex items-center justify-center space-x-1 shadow-2xs" title="Invite Links">
+          <i class="fa-solid fa-share-nodes text-xs"></i>
+          <span class="text-xs font-bold hidden md:inline">Links</span>
         </button>
 
-        <!-- USER BADGE -->
-        <button onclick="handleUserBadgeClick()" id="userBadge" class="h-9 flex items-center space-x-1.5 px-2.5 rounded-xl bg-slate-800 border border-slate-700 text-xs max-w-[145px] sm:max-w-[210px]">
+        <!-- User Profile Badge -->
+        <button onclick="handleUserBadgeClick()" id="userBadge" class="h-9 flex items-center space-x-1.5 px-2.5 rounded-xl bg-slate-800 border border-slate-700 text-xs max-w-[130px] sm:max-w-[190px]">
           <span class="w-2 h-2 rounded-full bg-emerald-400 shrink-0"></span>
           <span id="userBadgeName" class="font-bold text-slate-200 truncate text-[11px] sm:text-xs">User</span>
-          <i id="userBadgeIcon" class="fa-solid fa-chevron-down text-[10px] text-slate-400 shrink-0"></i>
+          <i id="userBadgeIcon" class="fa-solid fa-chevron-down text-[9px] text-slate-400 shrink-0"></i>
         </button>
       </div>
     </div>
@@ -138,7 +136,7 @@
       </div>
 
       <div class="pt-3 border-t border-slate-100 text-[11px] text-slate-400 flex items-center justify-between">
-        <span>MV INTAKE v5.2 Live</span>
+        <span>MV INTAKE v5.5</span>
         <button id="menuBtnReset" onclick="resetData(); closeMenu()" class="text-rose-500 font-semibold hover:underline">Clear All Data</button>
       </div>
     </div>
@@ -146,28 +144,33 @@
 
   <!-- NAVIGATION TABS -->
   <nav id="mainNavBar" class="bg-white border-b border-slate-200 sticky top-14 sm:top-16 z-30 shadow-xs">
-    <div class="max-w-7xl mx-auto px-3 sm:px-4 flex space-x-1.5 overflow-x-auto py-2 custom-scroll">
-      <button onclick="switchTab('tabEntry')" id="btnTabEntry" class="tab-btn px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap bg-cyan-600 text-white shadow-xs flex items-center space-x-1.5">
+    <div class="max-w-7xl mx-auto px-2 sm:px-4 flex space-x-1.5 overflow-x-auto py-2 custom-scroll">
+      <button onclick="switchTab('tabEntry')" id="btnTabEntry" class="tab-btn px-3 py-2 rounded-xl text-xs font-bold whitespace-nowrap bg-cyan-600 text-white shadow-xs flex items-center space-x-1.5">
         <i class="fa-solid fa-pen-to-square"></i>
         <span>1. DATA ENTRY</span>
       </button>
-      <button onclick="switchTab('tabPicker')" id="btnTabPicker" class="tab-btn px-3.5 py-2 rounded-xl text-xs font-semibold whitespace-nowrap bg-slate-100 text-slate-600 flex items-center space-x-1.5">
+      <button onclick="switchTab('tabPicker')" id="btnTabPicker" class="tab-btn px-3 py-2 rounded-xl text-xs font-semibold whitespace-nowrap bg-slate-100 text-slate-600 flex items-center space-x-1.5">
         <i class="fa-solid fa-calendar-day"></i>
         <span>2. SHIPPER PICKER</span>
       </button>
-      <button onclick="switchTab('tabTemplate')" id="btnTabTemplate" class="tab-btn px-3.5 py-2 rounded-xl text-xs font-semibold whitespace-nowrap bg-slate-100 text-slate-600 flex items-center space-x-1.5">
+      <button onclick="switchTab('tabTemplate')" id="btnTabTemplate" class="tab-btn px-3 py-2 rounded-xl text-xs font-semibold whitespace-nowrap bg-slate-100 text-slate-600 flex items-center space-x-1.5">
         <i class="fa-solid fa-table"></i>
         <span>3. TEMPLATE</span>
       </button>
-      <button onclick="switchTab('tabRecords')" id="btnTabRecords" class="tab-btn px-3.5 py-2 rounded-xl text-xs font-semibold whitespace-nowrap bg-slate-100 text-slate-600 flex items-center space-x-1.5">
+      <button onclick="switchTab('tabRecords')" id="btnTabRecords" class="tab-btn px-3 py-2 rounded-xl text-xs font-semibold whitespace-nowrap bg-slate-100 text-slate-600 flex items-center space-x-1.5">
         <i class="fa-solid fa-list-check"></i>
         <span>4. ALL RECORDS</span>
+      </button>
+      <!-- NEW TAB: SHIFT ATTENDANCE -->
+      <button onclick="switchTab('tabAttendance')" id="btnTabAttendance" class="tab-btn px-3 py-2 rounded-xl text-xs font-semibold whitespace-nowrap bg-slate-100 text-slate-600 flex items-center space-x-1.5">
+        <i class="fa-solid fa-clipboard-user text-indigo-600"></i>
+        <span>5. SHIFT ATTENDANCE</span>
       </button>
     </div>
   </nav>
 
   <!-- MAIN CONTENT AREA -->
-  <main class="max-w-7xl mx-auto px-3 sm:px-4 mt-3 w-full flex-1 space-y-3">
+  <main class="max-w-7xl mx-auto px-2 sm:px-4 mt-3 w-full flex-1 space-y-3">
 
     <!-- ACTIVE VESSEL BANNER -->
     <div class="bg-white rounded-2xl border border-slate-200 p-3 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
@@ -196,7 +199,7 @@
       </div>
     </div>
 
-    <!-- TAB 1: DATA ENTRY -->
+    <!-- TAB 1: DATA ENTRY / OVERVIEW -->
     <section id="tabEntry" class="space-y-3">
       <!-- STAT METRIC CARDS -->
       <div class="grid grid-cols-2 lg:grid-cols-4 gap-2.5">
@@ -249,12 +252,12 @@
         </div>
       </div>
 
-      <!-- HATCH INTAKE FORM -->
-      <div class="bg-white rounded-2xl border border-slate-200 p-3.5 sm:p-5 shadow-xs">
+      <!-- HATCH INTAKE ENTRY FORM (MEMBER MODE ONLY - HIDDEN IN SUPER ADMIN & ADMIN) -->
+      <div id="memberEntryFormWrapper" class="bg-white rounded-2xl border border-slate-200 p-3.5 sm:p-5 shadow-xs">
         <div class="flex items-center justify-between pb-2.5 border-b border-slate-100 mb-3">
           <div class="flex items-center space-x-2">
             <i class="fa-solid fa-clipboard-check text-cyan-600 text-base"></i>
-            <h2 class="font-extrabold text-slate-800 text-sm sm:text-base">Hatch Cargo Intake Entry</h2>
+            <h2 class="font-extrabold text-slate-800 text-sm sm:text-base">Hatch Cargo Intake Entry (Member Only)</h2>
           </div>
           <span id="editingIndicator" class="hidden px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800 border border-amber-300">
             Editing Record
@@ -265,7 +268,7 @@
           <input type="hidden" id="entryRecordId" value="">
 
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <!-- DATE (DD/MM/YYYY) -->
+            <!-- DATE -->
             <div>
               <label class="block text-[11px] font-bold text-slate-600 uppercase mb-1">Date (DD/MM/YYYY)</label>
               <div class="relative">
@@ -290,7 +293,7 @@
             </div>
           </div>
 
-          <!-- SHIPPER / COMPANY (ADMIN-DEFINED SELECTABLE BUTTONS + DROPDOWN) -->
+          <!-- SHIPPER SELECTION BUTTONS & DROPDOWN -->
           <div class="bg-slate-50/80 p-3 rounded-2xl border border-slate-200/90 space-y-2">
             <div class="flex items-center justify-between">
               <label class="block text-[11px] font-bold text-slate-600 uppercase flex items-center space-x-1.5">
@@ -303,16 +306,13 @@
               </button>
             </div>
 
-            <!-- Interactive Shipper Buttons Container -->
-            <div id="shipperButtonsContainer" class="flex flex-wrap gap-1.5 pt-0.5">
-            </div>
+            <div id="shipperButtonsContainer" class="flex flex-wrap gap-1.5 pt-0.5"></div>
 
-            <!-- Synced Select Dropdown -->
             <select id="selectShipper" onchange="onShipperDropdownChange(this.value)" class="w-full h-11 bg-white border border-slate-300 rounded-xl px-3 font-bold text-slate-800 focus:ring-2 focus:ring-cyan-500" required>
             </select>
           </div>
 
-          <!-- HATCH NUMBER BUTTONS -->
+          <!-- HATCH NUMBER (H1 - H5) -->
           <div>
             <label class="block text-[11px] font-bold text-slate-600 uppercase mb-1.5">Select Hatch Number (H1 - H5)</label>
             <div class="grid grid-cols-5 gap-1.5 sm:gap-2">
@@ -325,7 +325,7 @@
             <input type="hidden" id="inputHatch" value="1">
           </div>
 
-          <!-- UNIT, WEIGHT SPEC & D TOTAL -->
+          <!-- UNIT, WEIGHT & D TOTAL -->
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 bg-slate-50 p-3 rounded-2xl border border-slate-200">
             <div>
               <label class="block text-[11px] font-bold text-slate-600 uppercase mb-1">Input Unit</label>
@@ -362,7 +362,6 @@
             <input type="text" id="inputRemarks" placeholder="Notes / Boat details..." class="w-full h-10 bg-slate-50 border border-slate-300 rounded-xl px-3 text-xs">
           </div>
 
-          <!-- SUBMIT BUTTON -->
           <div class="flex items-center space-x-2 pt-1">
             <button type="submit" id="btnSubmitForm" class="flex-1 h-12 bg-cyan-600 active:bg-cyan-700 text-white rounded-xl text-sm font-extrabold shadow-md flex items-center justify-center space-x-2">
               <i class="fa-solid fa-paper-plane"></i>
@@ -375,7 +374,7 @@
         </form>
       </div>
 
-      <!-- SUBMITTED ENTRIES LIST -->
+      <!-- RECENT SUBMITTED ENTRIES LIST -->
       <div class="bg-white rounded-2xl border border-slate-200 p-3.5 sm:p-5 shadow-xs">
         <div class="flex items-center justify-between pb-2.5 border-b border-slate-100 mb-3">
           <div class="flex items-center space-x-2">
@@ -544,6 +543,43 @@
         </table>
       </div>
     </section>
+
+    <!-- ========================================== -->
+    <!-- NEW TAB 5: SHIFT ATTENDANCE & DUTY LOG     -->
+    <!-- ========================================== -->
+    <section id="tabAttendance" class="hidden space-y-3">
+      <div class="bg-white rounded-2xl border border-slate-200 p-3.5 sm:p-5 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div>
+          <h2 class="font-extrabold text-slate-800 text-sm sm:text-base flex items-center space-x-2">
+            <i class="fa-solid fa-clipboard-user text-indigo-600 text-base"></i>
+            <span>Shift Attendance & Hatch Activity Log</span>
+          </h2>
+          <p class="text-[11px] text-slate-500">ရက်စွဲအလိုက် ဘယ်နေ့ ဘယ်သူက Day/Night ဘယ် Hatch ပေါက်မှာ စာရင်းသွင်းခဲ့သည်ကို ဖော်ပြထားခြင်း</p>
+        </div>
+        <div class="flex items-center space-x-2">
+          <input type="text" id="searchAttendance" oninput="renderAttendanceTable()" placeholder="Search date, checker, hatch..." class="h-10 bg-slate-50 border border-slate-300 rounded-xl px-3 text-xs w-full sm:w-56">
+        </div>
+      </div>
+
+      <div class="bg-white rounded-2xl border border-slate-200 p-3 shadow-xs overflow-x-auto custom-scroll">
+        <table class="w-full text-left text-xs min-w-[650px]">
+          <thead>
+            <tr class="bg-slate-100 text-slate-700 uppercase text-[10px] tracking-wider border-b border-slate-200 font-bold">
+              <th class="py-3 px-3">Date (ရက်စွဲ)</th>
+              <th class="py-3 px-3">Shift (အဆိုင်း)</th>
+              <th class="py-3 px-3">Checker Name (တာဝန်ကျသူ)</th>
+              <th class="py-3 px-3">Hatch No (ပေါက်နံပါတ်)</th>
+              <th class="py-3 px-3">Vessel (သင်္ဘော)</th>
+              <th class="py-3 px-3">Shipper (ကုန်သည်)</th>
+              <th class="py-3 px-3 text-right">Logged Intake (သွင်းခဲ့သည့် အိတ်ရေ)</th>
+              <th class="py-3 px-3 text-right">Metric Tons</th>
+            </tr>
+          </thead>
+          <tbody id="tblAttendanceBody" class="divide-y divide-slate-100">
+          </tbody>
+        </table>
+      </div>
+    </section>
   </main>
 
   <!-- ========================================== -->
@@ -566,7 +602,7 @@
             <span>ဖုန်းအားလုံး တစ်ပြိုင်နက် Live ချိတ်ဆက်ရန် -</span>
           </div>
           <p class="text-[11px] leading-relaxed text-cyan-800">
-            Member များ၏ ဖုန်းမှ သွင်းလိုက်သော Data များ သင့်ဖုန်းသို့ အင်တာနက်မှတစ်ဆင့် တိုက်ရိုက်ရောက်ရှိလာစေရန် သင်၏ <b>Firebase Realtime Database URL</b> ကို အောက်တွင် ထည့်သွင်းပေးပါ။ (Invite Link ထုတ်သည့်အခါ ၎င်းချိတ်ဆက်မှုပါ တစ်ပါတည်း ပါဝင်သွားပါမည်)။
+            Member များ၏ ဖုန်းမှ သွင်းလိုက်သော Data များ သင့်ဖုန်းသို့ အင်တာနက်မှတစ်ဆင့် တိုက်ရိုက်ရောက်ရှိလာစေရန် သင်၏ <b>Firebase Realtime Database URL</b> ကို အောက်တွင် ထည့်သွင်းပေးပါ။
           </p>
         </div>
 
@@ -699,7 +735,7 @@
   </div>
 
   <!-- ========================================== -->
-  <!-- MODAL 3: SHIPPER / COMPANY MANAGER         -->
+  <!-- MODAL 3: SHIPPER MANAGER (BUTTON AT BOTTOM)-->
   <!-- ========================================== -->
   <div id="modalShipper" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-end sm:items-center justify-center p-0 sm:p-4">
     <div class="bg-white rounded-t-3xl sm:rounded-2xl max-w-md w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
@@ -712,15 +748,25 @@
       </div>
 
       <div class="p-4 overflow-y-auto space-y-4 custom-scroll">
-        <div class="bg-slate-50 border border-slate-200 p-3 rounded-2xl space-y-2.5">
+        <!-- Input Form with Save Button at the Bottom -->
+        <div class="bg-slate-50 border border-slate-200 p-3.5 rounded-2xl space-y-2.5">
           <input type="hidden" id="editShipperIndex" value="">
-          <label id="lblShipperForm" class="block text-[10px] font-bold text-slate-500 uppercase">Add or Edit Shipper (Member များ ရွေးချယ်ရန် ကုန်သည်စာရင်း)</label>
-          <div class="flex items-center space-x-2">
-            <input type="text" id="inputNewShipper" placeholder="Enter company / shipper name..." class="flex-1 h-11 bg-white border border-slate-300 rounded-xl px-3 font-bold">
-            <button onclick="saveShipperItem()" id="btnSaveShipper" class="h-11 px-4 bg-cyan-600 active:bg-cyan-700 text-white rounded-xl text-xs font-extrabold shrink-0">Save</button>
-            <button onclick="cancelShipperEdit()" id="btnCancelShipper" class="hidden h-11 px-3 bg-slate-200 text-slate-700 rounded-xl text-xs font-bold shrink-0">Cancel</button>
+          <label id="lblShipperForm" class="block text-[11px] font-bold text-slate-600 uppercase">Add or Edit Shipper (Member များ ရွေးချယ်ရန် ကုန်သည်စာရင်း)</label>
+          <div>
+            <input type="text" id="inputNewShipper" placeholder="Enter company / shipper name..." class="w-full h-11 bg-white border border-slate-300 rounded-xl px-3 font-bold text-slate-800 focus:ring-2 focus:ring-cyan-500">
+          </div>
+          <!-- Save button located BELOW input box -->
+          <div class="flex items-center space-x-2 pt-1">
+            <button onclick="saveShipperItem()" id="btnSaveShipper" class="flex-1 h-11 bg-cyan-600 active:bg-cyan-700 text-white rounded-xl text-xs font-extrabold shadow-xs flex items-center justify-center space-x-1.5">
+              <i class="fa-solid fa-check"></i>
+              <span>Save Shipper</span>
+            </button>
+            <button onclick="cancelShipperEdit()" id="btnCancelShipper" class="hidden h-11 px-4 bg-slate-200 text-slate-700 rounded-xl text-xs font-bold">
+              Cancel
+            </button>
           </div>
         </div>
+
         <div id="listShippers" class="space-y-2"></div>
       </div>
     </div>
@@ -859,9 +905,7 @@
       }
     }
 
-    // =========================================================
-    // REAL-TIME CLOUD SYNC ENGINE
-    // =========================================================
+    // REAL-TIME CLOUD SYNC
     let isSyncingCloud = false;
 
     function normalizeCloudUrl(url) {
@@ -946,6 +990,9 @@
               if (document.getElementById('tabPicker') && !document.getElementById('tabPicker').classList.contains('hidden')) {
                 runShipperFilter();
               }
+              if (document.getElementById('tabAttendance') && !document.getElementById('tabAttendance').classList.contains('hidden')) {
+                renderAttendanceTable();
+              }
             }
           }
           updateCloudBadgeUI(true);
@@ -978,7 +1025,7 @@
       }
       if (online) {
         dot.className = 'w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse';
-        txt.textContent = 'CLOUD LIVE';
+        txt.textContent = 'LIVE';
       } else {
         dot.className = 'w-1.5 h-1.5 rounded-full bg-rose-400';
         txt.textContent = 'OFFLINE';
@@ -1023,9 +1070,7 @@
       if (appData.cloudUrl) pullFromCloud(false);
     }, 3000);
 
-    // =========================================================
-    // ROUTING & INVITE LINK HANDLER
-    // =========================================================
+    // ROUTING & INVITE LINK
     function handleRouting() {
       const url = new URL(window.location.href);
       const searchParams = url.searchParams;
@@ -1066,7 +1111,6 @@
           try {
             const sList = JSON.parse(decodeURIComponent(escape(atob(shippersRaw))));
             if (Array.isArray(sList) && sList.length > 0) {
-              // Sync Admin's shippers list to this device
               appData.shippers = sList;
             }
           } catch (e) {}
@@ -1198,30 +1242,35 @@
         tabId = 'tabEntry';
       }
 
-      ['tabEntry', 'tabPicker', 'tabTemplate', 'tabRecords'].forEach(id => {
-        document.getElementById(id).classList.add('hidden');
+      ['tabEntry', 'tabPicker', 'tabTemplate', 'tabRecords', 'tabAttendance'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.classList.add('hidden');
       });
-      document.getElementById(tabId).classList.remove('hidden');
+      const activeEl = document.getElementById(tabId);
+      if (activeEl) activeEl.classList.remove('hidden');
 
       const tabs = [
         { id: 'tabEntry', btn: 'btnTabEntry' },
         { id: 'tabPicker', btn: 'btnTabPicker' },
         { id: 'tabTemplate', btn: 'btnTabTemplate' },
-        { id: 'tabRecords', btn: 'btnTabRecords' }
+        { id: 'tabRecords', btn: 'btnTabRecords' },
+        { id: 'tabAttendance', btn: 'btnTabAttendance' }
       ];
 
       tabs.forEach(t => {
         const b = document.getElementById(t.btn);
+        if (!b) return;
         if (t.id === tabId) {
-          b.className = 'tab-btn px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap bg-cyan-600 text-white shadow-xs flex items-center space-x-1.5';
+          b.className = 'tab-btn px-3 py-2 rounded-xl text-xs font-bold whitespace-nowrap bg-cyan-600 text-white shadow-xs flex items-center space-x-1.5';
         } else {
-          b.className = 'tab-btn px-3.5 py-2 rounded-xl text-xs font-semibold whitespace-nowrap bg-slate-100 text-slate-600 flex items-center space-x-1.5';
+          b.className = 'tab-btn px-3 py-2 rounded-xl text-xs font-semibold whitespace-nowrap bg-slate-100 text-slate-600 flex items-center space-x-1.5';
         }
       });
 
       if (tabId === 'tabPicker') runShipperFilter();
       if (tabId === 'tabTemplate') renderTemplateTable();
       if (tabId === 'tabRecords') renderAllRecordsTable();
+      if (tabId === 'tabAttendance') renderAttendanceTable();
     }
 
     function toggleMenu() {
@@ -1256,9 +1305,7 @@
       });
     }
 
-    // =========================================================
-    // ADMIN-DEFINED SHIPPER SELECTION BUTTONS & DROPDOWN LOGIC
-    // =========================================================
+    // SHIPPER BUTTONS & DROPDOWN LOGIC
     function selectShipperByButton(shipperName) {
       const sel = document.getElementById('selectShipper');
       if (sel) {
@@ -1301,19 +1348,17 @@
 
         btnContainer.innerHTML = isMember
           ? '<div class="text-[11px] text-amber-700 bg-amber-50 border border-amber-200 rounded-xl px-3 py-2 w-full font-semibold"><i class="fa-solid fa-circle-exclamation mr-1"></i>Admin ဘက်မှ Shipper အမည်များ မသတ်မှတ်ရသေးပါ။</div>'
-          : '<button type="button" onclick="openShipperModal()" class="w-full py-2.5 px-3 rounded-xl border border-dashed border-cyan-400 bg-cyan-50/50 text-cyan-700 text-xs font-bold flex items-center justify-center space-x-1.5"><i class="fa-solid fa-plus"></i><span>Tap here to set Shipper / Company names for Members</span></button>';
+          : '<button type="button" onclick="openShipperModal()" class="w-full py-2.5 px-3 rounded-xl border border-dashed border-cyan-400 bg-cyan-50/50 text-cyan-700 text-xs font-bold flex items-center justify-center space-x-1.5"><i class="fa-solid fa-plus"></i><span>Tap here to set Shipper / Company names</span></button>';
       } else {
         const activeShipper = (cur && appData.shippers.includes(cur)) ? cur : appData.shippers[0];
 
         appData.shippers.forEach(s => {
-          // 1. Add to select dropdown
           const opt = document.createElement('option');
           opt.value = s;
           opt.textContent = s;
           if (s === activeShipper) opt.selected = true;
           sel.appendChild(opt);
 
-          // 2. Render interactive Shipper Button
           const btn = document.createElement('button');
           btn.type = 'button';
           btn.setAttribute('data-shipper', s);
@@ -1539,6 +1584,9 @@
       }
     }
 
+    // =========================================================
+    // ROLE VISIBILITY & ENTRY FORM TOGGLE (MEMBER ONLY FORM)
+    // =========================================================
     function applyRolePermissions() {
       const role = appData.currentUser ? appData.currentUser.role : 'MEMBER';
       const isMember = (role === 'MEMBER');
@@ -1546,6 +1594,7 @@
 
       document.getElementById('menuRoleLabel').textContent = `${role} ${appData.sessionLocked ? '(INVITE LOCKED)' : ''}`;
 
+      // Show/Hide Super Admin Preview Banner
       const previewBanner = document.getElementById('previewModeBanner');
       if (!appData.sessionLocked && role !== 'SUPER_ADMIN') {
         previewBanner.classList.remove('hidden');
@@ -1554,6 +1603,7 @@
         previewBanner.classList.add('hidden');
       }
 
+      // Profile Icon Status
       const badgeIcon = document.getElementById('userBadgeIcon');
       if (canSwitchProfile()) {
         badgeIcon.className = 'fa-solid fa-chevron-down text-[9px] text-slate-400 shrink-0';
@@ -1563,6 +1613,7 @@
 
       document.getElementById('menuBtnSwitchProfile').style.display = canSwitchProfile() ? '' : 'none';
 
+      // Lock boat selector for Member
       const selBoat = document.getElementById('selectActiveBoat');
       const lockBadge = document.getElementById('lockBadge');
       if (selBoat) {
@@ -1576,11 +1627,20 @@
         }
       }
 
+      // CRITICAL TASK: Hide Hatch Intake Entry form for Super Admin and Admin! Show ONLY for Member!
+      const memberEntryForm = document.getElementById('memberEntryFormWrapper');
+      if (memberEntryForm) {
+        memberEntryForm.style.display = isMember ? 'block' : 'none';
+      }
+
+      // Hide restricted tabs for Member
       document.getElementById('btnTabPicker').style.display = isMember ? 'none' : '';
       document.getElementById('btnTabTemplate').style.display = isMember ? 'none' : '';
       document.getElementById('btnTabRecords').style.display = isMember ? 'none' : '';
+      document.getElementById('btnTabAttendance').style.display = isMember ? 'none' : '';
       if (isMember) switchTab('tabEntry');
 
+      // Admin & Super Admin Controls
       document.getElementById('btnHeaderCloud').style.display = isSuperAdmin ? '' : 'none';
       document.getElementById('menuBtnCloud').style.display = isSuperAdmin ? '' : 'none';
       document.getElementById('btnHeaderUsers').style.display = isSuperAdmin ? '' : 'none';
@@ -2041,6 +2101,54 @@
       });
     }
 
+    // =========================================================
+    // NEW: SHIFT ATTENDANCE & ACTIVITY LOG TABLE
+    // =========================================================
+    function renderAttendanceTable() {
+      const q = (document.getElementById('searchAttendance') ? document.getElementById('searchAttendance').value : '').toLowerCase();
+      const tbody = document.getElementById('tblAttendanceBody');
+      if (!tbody) return;
+      tbody.innerHTML = '';
+
+      const filtered = appData.records.filter(r => {
+        if (!q) return true;
+        return r.date.toLowerCase().includes(q) ||
+               (r.checkerName && r.checkerName.toLowerCase().includes(q)) ||
+               r.shift.toLowerCase().includes(q) ||
+               ('hatch ' + r.hatch).includes(q) ||
+               ('h-' + r.hatch).includes(q) ||
+               r.boatName.toLowerCase().includes(q);
+      });
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="8" class="text-center py-8 text-slate-400 font-medium">No shift attendance or activity recorded yet.</td></tr>';
+        return;
+      }
+
+      filtered.forEach(r => {
+        const tr = document.createElement('tr');
+        tr.className = 'hover:bg-slate-50 transition-colors';
+        tr.innerHTML = `
+          <td class="py-2.5 px-3 font-extrabold text-slate-800">${r.date}</td>
+          <td class="py-2.5 px-3">
+            <span class="px-2 py-0.5 rounded text-[10px] font-bold ${r.shift === 'Day' ? 'bg-amber-100 text-amber-800' : 'bg-indigo-100 text-indigo-800'}">
+              ${r.shift} Shift
+            </span>
+          </td>
+          <td class="py-2.5 px-3 font-extrabold text-slate-800 flex items-center space-x-1.5">
+            <i class="fa-solid fa-user-circle text-slate-400"></i>
+            <span>${r.checkerName || 'Checker'}</span>
+          </td>
+          <td class="py-2.5 px-3 font-extrabold text-cyan-700">HATCH ${r.hatch}</td>
+          <td class="py-2.5 px-3 font-bold text-slate-700">${r.boatName}</td>
+          <td class="py-2.5 px-3 text-slate-600">${r.shipper}</td>
+          <td class="py-2.5 px-3 text-right font-extrabold text-slate-900">${r.dTotal.toLocaleString()} ${r.unit}</td>
+          <td class="py-2.5 px-3 text-right font-bold text-emerald-600">${r.totalTons.toFixed(2)} MT</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
     function downloadExcel() {
       const active = getActiveBoat();
       const wb = XLSX.utils.book_new();
@@ -2082,6 +2190,18 @@
       });
       const wsLog = XLSX.utils.aoa_to_sheet(rowsLog);
       XLSX.utils.book_append_sheet(wb, wsLog, 'HATCH_ENTRY_LOG');
+
+      // SHEET 3: SHIFT_ATTENDANCE
+      const rowsAttendance = [
+        ['DATE', 'SHIFT', 'CHECKER NAME', 'HATCH NO', 'VESSEL', 'SHIPPER', 'TOTAL INTAKE', 'UNIT', 'METRIC TONS']
+      ];
+      appData.records.forEach(r => {
+        rowsAttendance.push([
+          r.date, r.shift, r.checkerName, r.hatch, r.boatName, r.shipper, r.dTotal, r.unit, r.totalTons
+        ]);
+      });
+      const wsAtt = XLSX.utils.aoa_to_sheet(rowsAttendance);
+      XLSX.utils.book_append_sheet(wb, wsAtt, 'SHIFT_ATTENDANCE');
 
       const rowsBoat = [
         ['ACCOUNT ID', 'BOAT NO', 'DEFAULT UNIT', 'DEFAULT WEIGHT', 'TOTAL KGS', 'TOTAL TONS']
@@ -2208,7 +2328,7 @@
       }
     }
 
-    // SHIPPER MODAL (ADMIN / SUPER ADMIN)
+    // SHIPPER MODAL (BUTTON FIXED TO BOTTOM)
     function openShipperModal() {
       if (appData.currentUser && appData.currentUser.role === 'MEMBER') {
         showToast('Only Admin can configure Shippers');
@@ -2273,7 +2393,7 @@
       document.getElementById('editShipperIndex').value = idx;
       document.getElementById('inputNewShipper').value = appData.shippers[idx];
       document.getElementById('lblShipperForm').textContent = 'Editing Company Name';
-      document.getElementById('btnSaveShipper').textContent = 'Update';
+      document.getElementById('btnSaveShipper').innerHTML = '<i class="fa-solid fa-check mr-1"></i> Update Shipper';
       document.getElementById('btnCancelShipper').classList.remove('hidden');
     }
 
@@ -2281,7 +2401,7 @@
       document.getElementById('editShipperIndex').value = '';
       document.getElementById('inputNewShipper').value = '';
       document.getElementById('lblShipperForm').textContent = 'Add or Edit Shipper (Member များ ရွေးချယ်ရန် ကုန်သည်စာရင်း)';
-      document.getElementById('btnSaveShipper').textContent = 'Save';
+      document.getElementById('btnSaveShipper').innerHTML = '<i class="fa-solid fa-check mr-1"></i> Save Shipper';
       document.getElementById('btnCancelShipper').classList.add('hidden');
     }
 
@@ -2333,7 +2453,7 @@
       });
     }
 
-    // UNIQUE PERSONAL INVITE LINKS GENERATOR
+    // UNIQUE PERSONAL INVITE LINKS
     function openShareModal() {
       const selBoat = document.getElementById('shareModalBoatSelect');
       selBoat.innerHTML = '';
@@ -2451,11 +2571,6 @@
       document.getElementById('toastMsg').textContent = msg;
       t.classList.remove('hidden');
       setTimeout(() => t.classList.add('hidden'), 2600);
-    }
-
-    function saveManual() {
-      saveData();
-      showToast('All data saved');
     }
 
     function resetData() {
