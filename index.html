@@ -38,7 +38,6 @@
   <!-- TOP APP BAR -->
   <header class="bg-slate-900 text-white sticky top-0 z-40 shadow-md">
     <div class="max-w-7xl mx-auto px-2 sm:px-4 h-14 sm:h-16 flex items-center justify-between gap-1.5 sm:gap-2">
-      <!-- Left: Menu + Title -->
       <div class="flex items-center space-x-2 min-w-0">
         <button id="btnSystemMenu" onclick="toggleMenu()" class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-slate-800 active:bg-slate-700 text-slate-200 flex items-center justify-center shrink-0">
           <i class="fa-solid fa-bars text-sm sm:text-base"></i>
@@ -49,7 +48,6 @@
         </div>
       </div>
 
-      <!-- Right: Action Icons & Profile -->
       <div class="flex items-center space-x-1 sm:space-x-1.5 shrink-0">
         <button id="btnHeaderCloud" onclick="handleCloudClick()" class="h-9 px-2 sm:px-2.5 rounded-xl bg-cyan-800 active:bg-cyan-900 text-cyan-200 border border-cyan-700/60 flex items-center space-x-1.5 shadow-2xs" title="Cloud Live Sync">
           <i class="fa-solid fa-cloud text-xs text-cyan-300"></i>
@@ -76,7 +74,7 @@
     </div>
   </header>
 
-  <!-- SLIDE-OUT SYSTEM MENU WITH BACKUP & RESTORE -->
+  <!-- SLIDE-OUT SYSTEM MENU -->
   <div id="systemMenuDropdown" class="hidden fixed inset-0 z-50 bg-black/50 backdrop-blur-xs" onclick="closeMenu()">
     <div class="w-72 max-w-[85vw] bg-white h-full shadow-2xl p-4 flex flex-col justify-between" onclick="event.stopPropagation()">
       <div class="space-y-4 overflow-y-auto custom-scroll">
@@ -125,7 +123,6 @@
             <span>Refresh Live Data Now</span>
           </button>
 
-          <!-- BACKUP & RESTORE BUTTONS -->
           <div class="pt-2 border-t border-slate-100 space-y-1">
             <button onclick="backupSystemData(); closeMenu()" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl bg-slate-50 hover:bg-slate-100 text-slate-700">
               <i class="fa-solid fa-download w-5 text-indigo-600 text-sm"></i>
@@ -146,7 +143,7 @@
       </div>
 
       <div class="pt-3 border-t border-slate-100 text-[11px] text-slate-400 flex items-center justify-between">
-        <span>MV INTAKE v6.0</span>
+        <span>MV INTAKE v6.5</span>
         <button id="menuBtnReset" onclick="resetData(); closeMenu()" class="text-rose-500 font-semibold hover:underline">Clear All Data</button>
       </div>
     </div>
@@ -181,7 +178,7 @@
   <!-- MAIN CONTENT AREA -->
   <main class="max-w-7xl mx-auto px-2 sm:px-4 mt-3 w-full flex-1 space-y-3">
 
-    <!-- ACTIVE VESSEL BANNER -->
+    <!-- ACTIVE VESSEL BANNER (WITH DIRECT + VESSEL AND + SHIPPER BUTTONS) -->
     <div class="bg-white rounded-2xl border border-slate-200 p-3 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
       <div class="flex items-center space-x-2.5 min-w-0">
         <div class="w-9 h-9 rounded-xl bg-cyan-50 border border-cyan-200 text-cyan-600 flex items-center justify-center font-bold text-base shrink-0">
@@ -198,12 +195,20 @@
         </div>
       </div>
 
-      <div class="flex items-center space-x-2 w-full sm:w-auto">
-        <select id="selectActiveBoat" onchange="changeActiveBoat(this.value)" class="flex-1 sm:w-56 h-10 bg-slate-50 border border-slate-300 text-slate-800 text-xs rounded-xl px-3 font-bold focus:ring-2 focus:ring-cyan-500">
+      <!-- Action Area for Admin & Super Admin: Direct Buttons for Vessel & Shipper -->
+      <div class="flex items-center space-x-1.5 w-full sm:w-auto">
+        <select id="selectActiveBoat" onchange="changeActiveBoat(this.value)" class="flex-1 sm:w-48 h-10 bg-slate-50 border border-slate-300 text-slate-800 text-xs rounded-xl px-2.5 font-bold focus:ring-2 focus:ring-cyan-500">
         </select>
-        <button id="btnGearBoat" onclick="openAccountModal()" class="h-10 px-3 rounded-xl bg-cyan-600 active:bg-cyan-700 text-white flex items-center justify-center space-x-1.5 shrink-0 text-xs font-bold shadow-xs" title="Add or Manage Vessel Accounts">
+        
+        <button id="btnGearBoat" onclick="openAccountModal()" class="h-10 px-2.5 rounded-xl bg-cyan-600 active:bg-cyan-700 text-white flex items-center justify-center space-x-1 shrink-0 text-xs font-bold shadow-xs" title="Manage Vessels">
           <i class="fa-solid fa-plus text-xs"></i>
           <span>Vessel</span>
+        </button>
+
+        <!-- DIRECT SHIPPER BUTTON (ALWAYS VISIBLE TO ADMINS) -->
+        <button id="btnDirectShipper" onclick="openShipperModal()" class="h-10 px-2.5 rounded-xl bg-indigo-600 active:bg-indigo-700 text-white flex items-center justify-center space-x-1 shrink-0 text-xs font-bold shadow-xs" title="Manage Shippers / Companies">
+          <i class="fa-solid fa-building text-xs"></i>
+          <span>Shipper</span>
         </button>
       </div>
     </div>
@@ -261,7 +266,7 @@
         </div>
       </div>
 
-      <!-- HATCH INTAKE ENTRY FORM (MEMBER MODE ONLY) -->
+      <!-- HATCH INTAKE ENTRY FORM (MEMBER ONLY) -->
       <div id="memberEntryFormWrapper" class="bg-white rounded-2xl border border-slate-200 p-3.5 sm:p-5 shadow-xs">
         <div class="flex items-center justify-between pb-2.5 border-b border-slate-100 mb-3">
           <div class="flex items-center space-x-2">
@@ -300,18 +305,18 @@
             </div>
           </div>
 
+          <!-- SHIPPER SELECTION -->
           <div class="bg-slate-50/80 p-3 rounded-2xl border border-slate-200/90 space-y-2">
-            <div class="flex items-center justify-between">
-              <label class="block text-[11px] font-bold text-slate-600 uppercase flex items-center space-x-1.5">
-                <i class="fa-solid fa-building text-cyan-600"></i>
-                <span>Select Shipper / Company</span>
-              </label>
-            </div>
+            <label class="block text-[11px] font-bold text-slate-600 uppercase flex items-center space-x-1.5">
+              <i class="fa-solid fa-building text-cyan-600"></i>
+              <span>Select Shipper / Company</span>
+            </label>
             <div id="shipperButtonsContainer" class="flex flex-wrap gap-1.5 pt-0.5"></div>
             <select id="selectShipper" onchange="onShipperDropdownChange(this.value)" class="w-full h-11 bg-white border border-slate-300 rounded-xl px-3 font-bold text-slate-800 focus:ring-2 focus:ring-cyan-500" required>
             </select>
           </div>
 
+          <!-- HATCH NO -->
           <div>
             <label class="block text-[11px] font-bold text-slate-600 uppercase mb-1.5">Select Hatch Number (H1 - H5)</label>
             <div class="grid grid-cols-5 gap-1.5 sm:gap-2">
@@ -324,6 +329,7 @@
             <input type="hidden" id="inputHatch" value="1">
           </div>
 
+          <!-- UNIT, WEIGHT & TOTAL -->
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 bg-slate-50 p-3 rounded-2xl border border-slate-200">
             <div>
               <label class="block text-[11px] font-bold text-slate-600 uppercase mb-1">Input Unit</label>
@@ -397,7 +403,7 @@
                 <th class="py-2.5 px-2.5">Shipper</th>
                 <th class="py-2.5 px-2.5 text-right">D Total</th>
                 <th class="py-2.5 px-2.5 text-right">TONS</th>
-                <th class="py-2.5 px-2.5 text-center">Action (Edit / Del)</th>
+                <th class="py-2.5 px-2.5 text-center">Action</th>
               </tr>
             </thead>
             <tbody id="tblMyEntriesBody" class="divide-y divide-slate-100">
@@ -550,7 +556,7 @@
             <i class="fa-solid fa-clipboard-user text-indigo-600 text-base"></i>
             <span>Shift Attendance & Audit Log</span>
           </h2>
-          <p class="text-[11px] text-slate-500">ရက်စွဲ၊ အဆိုင်း၊ Hatch အလိုက် စာရင်းသွင်းသူနှင့် နောက်ဆုံး ပြင်ဆင်ခဲ့သူ မှတ်တမ်း</p>
+          <p class="text-[11px] text-slate-500">ရက်စွဲ၊ အဆိုင်း၊ Hatch အလိုက် စာရင်းသွင်းသူနှင့် ပြင်ဆင်သူ မှတ်တမ်း</p>
         </div>
         <div class="flex items-center space-x-2">
           <input type="text" id="searchAttendance" oninput="renderAttendanceTable()" placeholder="Search date, checker, hatch..." class="h-10 bg-slate-50 border border-slate-300 rounded-xl px-3 text-xs w-full sm:w-56">
@@ -568,7 +574,7 @@
               <th class="py-3 px-3">Vessel & Shipper</th>
               <th class="py-3 px-3 text-right">Intake (Bags/Kg)</th>
               <th class="py-3 px-3 text-right">Metric Tons</th>
-              <th class="py-3 px-3">Audit / Modified By (ပြင်ဆင်သူ)</th>
+              <th class="py-3 px-3">Audit / Modified By</th>
             </tr>
           </thead>
           <tbody id="tblAttendanceBody" class="divide-y divide-slate-100">
@@ -578,9 +584,7 @@
     </section>
   </main>
 
-  <!-- ========================================== -->
-  <!-- MODAL: ADMIN DIRECT HATCH EDIT MODAL       -->
-  <!-- ========================================== -->
+  <!-- MODAL: ADMIN DIRECT HATCH EDIT MODAL -->
   <div id="modalAdminEdit" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-end sm:items-center justify-center p-0 sm:p-4">
     <div class="bg-white rounded-t-3xl sm:rounded-2xl max-w-md w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
       <div class="p-4 bg-slate-900 text-white flex items-center justify-between">
@@ -662,7 +666,7 @@
     </div>
   </div>
 
-  <!-- MODAL: CLOUD LIVE SYNC SETUP -->
+  <!-- MODAL: CLOUD SYNC -->
   <div id="modalCloud" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-end sm:items-center justify-center p-0 sm:p-4">
     <div class="bg-white rounded-t-3xl sm:rounded-2xl max-w-lg w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
       <div class="p-4 bg-slate-900 text-white flex items-center justify-between">
@@ -807,13 +811,13 @@
     </div>
   </div>
 
-  <!-- MODAL: SHIPPER MANAGER -->
+  <!-- MODAL: SHIPPER MANAGER (PROPERLY ACCESSIBLE) -->
   <div id="modalShipper" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-end sm:items-center justify-center p-0 sm:p-4">
     <div class="bg-white rounded-t-3xl sm:rounded-2xl max-w-md w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
       <div class="p-4 bg-slate-900 text-white flex items-center justify-between">
         <div class="flex items-center space-x-2">
           <i class="fa-solid fa-building text-cyan-400"></i>
-          <span class="font-bold text-sm">Shipper / Company Manager (Admin)</span>
+          <span class="font-bold text-sm">Shipper / Company Manager</span>
         </div>
         <button onclick="closeShipperModal()" class="w-8 h-8 rounded-lg bg-slate-800 text-slate-300 flex items-center justify-center"><i class="fa-solid fa-xmark"></i></button>
       </div>
@@ -878,6 +882,18 @@
       </div>
 
       <div class="p-4 overflow-y-auto space-y-4 custom-scroll text-xs">
+        <!-- SUPER ADMIN PERMANENT LINK -->
+        <div class="bg-amber-50 border border-amber-200 rounded-2xl p-3 space-y-1.5">
+          <div class="font-extrabold text-amber-950 flex items-center justify-between">
+            <span><i class="fa-solid fa-crown mr-1.5 text-amber-600"></i>Super Admin Direct Master Link</span>
+            <span class="text-[10px] px-2 py-0.5 rounded bg-amber-200 text-amber-900 font-bold">Full Access</span>
+          </div>
+          <div class="flex items-center space-x-1.5">
+            <input type="text" id="linkSuperAdmin" readonly class="flex-1 h-9 bg-white border border-amber-300 rounded-xl px-2.5 font-mono text-[10px] text-slate-700 truncate">
+            <button onclick="copyDirectLink(document.getElementById('linkSuperAdmin').value, 'Super Admin')" class="h-9 px-3 bg-amber-600 active:bg-amber-700 text-white rounded-xl font-bold shrink-0">Copy</button>
+          </div>
+        </div>
+
         <div class="bg-slate-100 border border-slate-300 rounded-2xl p-3 space-y-1.5">
           <label class="block text-[10px] font-extrabold text-slate-600 uppercase">
             1. Select Target Vessel Account for Invite Links:
@@ -964,13 +980,11 @@
       }
     }
 
-    // =========================================================
-    // BACKUP & RESTORE FUNCTION (EXPORT & IMPORT JSON)
-    // =========================================================
+    // BACKUP & RESTORE
     function backupSystemData() {
       const exportObject = {
         app: 'MV_INTAKE_AUTOMATED',
-        version: '6.0',
+        version: '6.5',
         exportedAt: new Date().toISOString(),
         data: {
           boats: appData.boats,
@@ -1471,12 +1485,12 @@
         opt.value = '';
         opt.textContent = isMember
           ? '-- Admin မှ Shipper မသတ်မှတ်ရသေးပါ --'
-          : '-- Tap "+ Set Shippers" to add companies --';
+          : '-- Tap "+ Shipper" above to add --';
         sel.appendChild(opt);
 
         btnContainer.innerHTML = isMember
           ? '<div class="text-[11px] text-amber-700 bg-amber-50 border border-amber-200 rounded-xl px-3 py-2 w-full font-semibold"><i class="fa-solid fa-circle-exclamation mr-1"></i>Admin ဘက်မှ Shipper အမည်များ မသတ်မှတ်ရသေးပါ။</div>'
-          : '<button type="button" onclick="openShipperModal()" class="w-full py-2.5 px-3 rounded-xl border border-dashed border-cyan-400 bg-cyan-50/50 text-cyan-700 text-xs font-bold flex items-center justify-center space-x-1.5"><i class="fa-solid fa-plus"></i><span>Tap here to set Shipper / Company names</span></button>';
+          : '<button type="button" onclick="openShipperModal()" class="w-full py-2.5 px-3 rounded-xl border border-dashed border-cyan-400 bg-cyan-50/50 text-cyan-700 text-xs font-bold flex items-center justify-center space-x-1.5"><i class="fa-solid fa-plus"></i><span>Tap here to add Shipper / Company names</span></button>';
       } else {
         const activeShipper = (cur && appData.shippers.includes(cur)) ? cur : appData.shippers[0];
 
@@ -1541,7 +1555,6 @@
       }
     }
 
-    // FORM SUBMIT (MEMBER)
     function handleFormSubmit(e) {
       e.preventDefault();
       const activeBoat = getActiveBoat();
@@ -1621,9 +1634,6 @@
       renderAll();
     }
 
-    // =========================================================
-    // EDIT & DELETE ACTIONS (FOR ADMIN, SUPER ADMIN & MEMBERS)
-    // =========================================================
     function editRecord(id) {
       const rec = appData.records.find(r => r.id === id);
       if (!rec) return;
@@ -1631,7 +1641,6 @@
       const isMember = appData.currentUser && appData.currentUser.role === 'MEMBER';
 
       if (isMember) {
-        // Member editing in regular form
         document.getElementById('entryRecordId').value = rec.id;
         pickerDate.setDate(rec.date);
         selectShift(rec.shift);
@@ -1658,7 +1667,6 @@
         switchTab('tabEntry');
         window.scrollTo({ top: 0, behavior: 'smooth' });
       } else {
-        // Super Admin & Admin Direct Edit Modal
         openAdminDirectEdit(rec);
       }
     }
@@ -1708,7 +1716,6 @@
       const totalKgs = unit === 'KG' ? dTotal : (dTotal * effectiveKg);
       const totalTons = totalKgs / 1000;
 
-      // Update record with Audit Trail
       appData.records[idx] = {
         ...appData.records[idx],
         date,
@@ -1744,7 +1751,7 @@
       const rec = appData.records.find(r => r.id === id);
       if (!rec) return;
 
-      const confirmMsg = `Delete Hatch ${rec.hatch} record (${rec.dTotal} ${rec.unit} by ${rec.checkerName})?\n\nDeleted by: ${appData.currentUser.name} (${appData.currentUser.role})`;
+      const confirmMsg = `Delete Hatch ${rec.hatch} record (${rec.dTotal} ${rec.unit} by ${rec.checkerName})?\n\nAction by: ${appData.currentUser.name} (${appData.currentUser.role})`;
       if (confirm(confirmMsg)) {
         appData.records = appData.records.filter(r => r.id !== id);
         saveData();
@@ -1840,6 +1847,12 @@
       const memberEntryForm = document.getElementById('memberEntryFormWrapper');
       if (memberEntryForm) {
         memberEntryForm.style.display = isMember ? 'block' : 'none';
+      }
+
+      // Direct Shipper Button: Visible ONLY for Admins & Super Admins on main page
+      const btnDirectShipper = document.getElementById('btnDirectShipper');
+      if (btnDirectShipper) {
+        btnDirectShipper.style.display = isMember ? 'none' : '';
       }
 
       // Hide tabs 2, 3, 4, 5 for Member
@@ -2175,7 +2188,7 @@
       document.getElementById('pDayBags').textContent = dayBags.toLocaleString();
       document.getElementById('pNightBags').textContent = nightBags.toLocaleString();
       document.getElementById('pTotBags').textContent = totBags.toLocaleString();
-      document.getElementById('pTotTons').textContent = totTons.toFixed(2) + ' MT';
+      document.getElementById('pTotTons').textContent = totBags.toFixed(2) + ' MT';
 
       const tbody = document.getElementById('tblPickerBody');
       tbody.innerHTML = '';
@@ -2309,7 +2322,7 @@
       });
     }
 
-    // SHIFT ATTENDANCE WITH AUDIT TRAIL LOGGING
+    // ATTENDANCE LOG TABLE
     function renderAttendanceTable() {
       const q = (document.getElementById('searchAttendance') ? document.getElementById('searchAttendance').value : '').toLowerCase();
       const tbody = document.getElementById('tblAttendanceBody');
@@ -2664,8 +2677,11 @@
       });
     }
 
-    // UNIQUE PERSONAL INVITE LINKS GENERATOR
+    // UNIQUE PERSONAL INVITE LINKS
     function openShareModal() {
+      const origin = window.location.origin + window.location.pathname;
+      document.getElementById('linkSuperAdmin').value = `${origin}#master=unlock`;
+
       const selBoat = document.getElementById('shareModalBoatSelect');
       selBoat.innerHTML = '';
       const active = getActiveBoat();
@@ -2770,7 +2786,7 @@
 
     function copyDirectLink(link, userName) {
       navigator.clipboard.writeText(link);
-      showToast(`Unique link copied for ${userName}`);
+      showToast(`Link copied for ${userName}`);
     }
 
     function closeShareModal() {
