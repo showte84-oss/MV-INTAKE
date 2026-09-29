@@ -35,7 +35,7 @@
     </button>
   </div>
 
-  <!-- TOP APP BAR (CLEAN & ALIGNED) -->
+  <!-- TOP APP BAR -->
   <header class="bg-slate-900 text-white sticky top-0 z-40 shadow-md">
     <div class="max-w-7xl mx-auto px-2 sm:px-4 h-14 sm:h-16 flex items-center justify-between gap-1.5 sm:gap-2">
       <!-- Left: Menu + Title -->
@@ -49,28 +49,24 @@
         </div>
       </div>
 
-      <!-- Right: Action Icons & Profile (Properly Spaced) -->
+      <!-- Right: Action Icons & Profile -->
       <div class="flex items-center space-x-1 sm:space-x-1.5 shrink-0">
-        <!-- Cloud Sync Button -->
         <button id="btnHeaderCloud" onclick="handleCloudClick()" class="h-9 px-2 sm:px-2.5 rounded-xl bg-cyan-800 active:bg-cyan-900 text-cyan-200 border border-cyan-700/60 flex items-center space-x-1.5 shadow-2xs" title="Cloud Live Sync">
           <i class="fa-solid fa-cloud text-xs text-cyan-300"></i>
           <span id="dotCloud" class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
           <span id="txtCloud" class="text-[10px] font-bold hidden md:inline">SYNC</span>
         </button>
 
-        <!-- Team Button -->
         <button id="btnHeaderUsers" onclick="openUserManagerModal()" class="w-9 h-9 sm:w-auto sm:px-2.5 rounded-xl bg-emerald-600 active:bg-emerald-700 text-white flex items-center justify-center space-x-1 shadow-2xs" title="Team Manager">
           <i class="fa-solid fa-users-gear text-xs"></i>
           <span class="text-xs font-bold hidden md:inline">Team</span>
         </button>
 
-        <!-- Share Links Button -->
         <button id="btnHeaderShare" onclick="openShareModal()" class="w-9 h-9 sm:w-auto sm:px-2.5 rounded-xl bg-indigo-600 active:bg-indigo-700 text-white flex items-center justify-center space-x-1 shadow-2xs" title="Invite Links">
           <i class="fa-solid fa-share-nodes text-xs"></i>
           <span class="text-xs font-bold hidden md:inline">Links</span>
         </button>
 
-        <!-- User Profile Badge -->
         <button onclick="handleUserBadgeClick()" id="userBadge" class="h-9 flex items-center space-x-1.5 px-2.5 rounded-xl bg-slate-800 border border-slate-700 text-xs max-w-[130px] sm:max-w-[190px]">
           <span class="w-2 h-2 rounded-full bg-emerald-400 shrink-0"></span>
           <span id="userBadgeName" class="font-bold text-slate-200 truncate text-[11px] sm:text-xs">User</span>
@@ -80,7 +76,7 @@
     </div>
   </header>
 
-  <!-- SLIDE-OUT SYSTEM MENU -->
+  <!-- SLIDE-OUT SYSTEM MENU WITH BACKUP & RESTORE -->
   <div id="systemMenuDropdown" class="hidden fixed inset-0 z-50 bg-black/50 backdrop-blur-xs" onclick="closeMenu()">
     <div class="w-72 max-w-[85vw] bg-white h-full shadow-2xl p-4 flex flex-col justify-between" onclick="event.stopPropagation()">
       <div class="space-y-4 overflow-y-auto custom-scroll">
@@ -128,7 +124,21 @@
             <i class="fa-solid fa-arrows-rotate w-5 text-blue-600 text-sm"></i>
             <span>Refresh Live Data Now</span>
           </button>
-          <button id="menuBtnExcel" onclick="downloadExcel(); closeMenu()" class="w-full flex items-center space-x-3 px-3 py-3 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-bold">
+
+          <!-- BACKUP & RESTORE BUTTONS -->
+          <div class="pt-2 border-t border-slate-100 space-y-1">
+            <button onclick="backupSystemData(); closeMenu()" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl bg-slate-50 hover:bg-slate-100 text-slate-700">
+              <i class="fa-solid fa-download w-5 text-indigo-600 text-sm"></i>
+              <span>Backup Data (Export JSON)</span>
+            </button>
+            <label class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl bg-slate-50 hover:bg-slate-100 text-slate-700 cursor-pointer">
+              <i class="fa-solid fa-upload w-5 text-emerald-600 text-sm"></i>
+              <span>Restore Data (Import JSON)</span>
+              <input type="file" id="fileRestore" accept=".json" onchange="restoreSystemData(event)" class="hidden">
+            </label>
+          </div>
+
+          <button id="menuBtnExcel" onclick="downloadExcel(); closeMenu()" class="w-full flex items-center space-x-3 px-3 py-3 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-bold mt-2">
             <i class="fa-solid fa-file-excel w-5 text-emerald-600 text-sm"></i>
             <span>Download Excel (.xlsx)</span>
           </button>
@@ -136,7 +146,7 @@
       </div>
 
       <div class="pt-3 border-t border-slate-100 text-[11px] text-slate-400 flex items-center justify-between">
-        <span>MV INTAKE v5.5</span>
+        <span>MV INTAKE v6.0</span>
         <button id="menuBtnReset" onclick="resetData(); closeMenu()" class="text-rose-500 font-semibold hover:underline">Clear All Data</button>
       </div>
     </div>
@@ -161,7 +171,6 @@
         <i class="fa-solid fa-list-check"></i>
         <span>4. ALL RECORDS</span>
       </button>
-      <!-- NEW TAB: SHIFT ATTENDANCE -->
       <button onclick="switchTab('tabAttendance')" id="btnTabAttendance" class="tab-btn px-3 py-2 rounded-xl text-xs font-semibold whitespace-nowrap bg-slate-100 text-slate-600 flex items-center space-x-1.5">
         <i class="fa-solid fa-clipboard-user text-indigo-600"></i>
         <span>5. SHIFT ATTENDANCE</span>
@@ -252,7 +261,7 @@
         </div>
       </div>
 
-      <!-- HATCH INTAKE ENTRY FORM (MEMBER MODE ONLY - HIDDEN IN SUPER ADMIN & ADMIN) -->
+      <!-- HATCH INTAKE ENTRY FORM (MEMBER MODE ONLY) -->
       <div id="memberEntryFormWrapper" class="bg-white rounded-2xl border border-slate-200 p-3.5 sm:p-5 shadow-xs">
         <div class="flex items-center justify-between pb-2.5 border-b border-slate-100 mb-3">
           <div class="flex items-center space-x-2">
@@ -268,7 +277,6 @@
           <input type="hidden" id="entryRecordId" value="">
 
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <!-- DATE -->
             <div>
               <label class="block text-[11px] font-bold text-slate-600 uppercase mb-1">Date (DD/MM/YYYY)</label>
               <div class="relative">
@@ -276,7 +284,6 @@
               </div>
             </div>
 
-            <!-- SHIFT -->
             <div>
               <label class="block text-[11px] font-bold text-slate-600 uppercase mb-1">Work Shift</label>
               <div class="grid grid-cols-2 gap-2">
@@ -293,26 +300,18 @@
             </div>
           </div>
 
-          <!-- SHIPPER SELECTION BUTTONS & DROPDOWN -->
           <div class="bg-slate-50/80 p-3 rounded-2xl border border-slate-200/90 space-y-2">
             <div class="flex items-center justify-between">
               <label class="block text-[11px] font-bold text-slate-600 uppercase flex items-center space-x-1.5">
                 <i class="fa-solid fa-building text-cyan-600"></i>
-                <span>Select Shipper / Company (Admin သတ်မှတ်ထားသော ကုန်သည်)</span>
+                <span>Select Shipper / Company</span>
               </label>
-              <button id="btnManageShipper" type="button" onclick="openShipperModal()" class="px-2.5 py-1 rounded-lg bg-cyan-600 active:bg-cyan-700 text-white text-[11px] font-bold shadow-2xs flex items-center space-x-1">
-                <i class="fa-solid fa-gear text-[10px]"></i>
-                <span>+ Set Shippers</span>
-              </button>
             </div>
-
             <div id="shipperButtonsContainer" class="flex flex-wrap gap-1.5 pt-0.5"></div>
-
             <select id="selectShipper" onchange="onShipperDropdownChange(this.value)" class="w-full h-11 bg-white border border-slate-300 rounded-xl px-3 font-bold text-slate-800 focus:ring-2 focus:ring-cyan-500" required>
             </select>
           </div>
 
-          <!-- HATCH NUMBER (H1 - H5) -->
           <div>
             <label class="block text-[11px] font-bold text-slate-600 uppercase mb-1.5">Select Hatch Number (H1 - H5)</label>
             <div class="grid grid-cols-5 gap-1.5 sm:gap-2">
@@ -325,7 +324,6 @@
             <input type="hidden" id="inputHatch" value="1">
           </div>
 
-          <!-- UNIT, WEIGHT & D TOTAL -->
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 bg-slate-50 p-3 rounded-2xl border border-slate-200">
             <div>
               <label class="block text-[11px] font-bold text-slate-600 uppercase mb-1">Input Unit</label>
@@ -374,7 +372,7 @@
         </form>
       </div>
 
-      <!-- RECENT SUBMITTED ENTRIES LIST -->
+      <!-- SUBMITTED ENTRIES LIST -->
       <div class="bg-white rounded-2xl border border-slate-200 p-3.5 sm:p-5 shadow-xs">
         <div class="flex items-center justify-between pb-2.5 border-b border-slate-100 mb-3">
           <div class="flex items-center space-x-2">
@@ -391,7 +389,7 @@
         </div>
 
         <div class="overflow-x-auto custom-scroll">
-          <table class="w-full text-left text-xs">
+          <table class="w-full text-left text-xs min-w-[550px]">
             <thead>
               <tr class="bg-slate-100 text-slate-600 uppercase text-[10px] tracking-wider border-b border-slate-200">
                 <th class="py-2.5 px-2.5">Date/Shift</th>
@@ -399,7 +397,7 @@
                 <th class="py-2.5 px-2.5">Shipper</th>
                 <th class="py-2.5 px-2.5 text-right">D Total</th>
                 <th class="py-2.5 px-2.5 text-right">TONS</th>
-                <th class="py-2.5 px-2.5 text-center">Edit / Del</th>
+                <th class="py-2.5 px-2.5 text-center">Action (Edit / Del)</th>
               </tr>
             </thead>
             <tbody id="tblMyEntriesBody" class="divide-y divide-slate-100">
@@ -525,7 +523,7 @@
         <input type="text" id="searchAllRecords" oninput="renderAllRecordsTable()" placeholder="Search boat, shipper, checker..." class="h-10 bg-slate-50 border border-slate-300 rounded-xl px-3 text-xs w-full sm:w-64">
       </div>
       <div class="bg-white rounded-2xl border border-slate-200 p-3 shadow-xs overflow-x-auto custom-scroll">
-        <table class="w-full text-left text-xs min-w-[600px]">
+        <table class="w-full text-left text-xs min-w-[650px]">
           <thead>
             <tr class="bg-slate-100 text-slate-600 uppercase text-[10px] tracking-wider border-b border-slate-200">
               <th class="py-2.5 px-2.5">Date</th>
@@ -544,17 +542,15 @@
       </div>
     </section>
 
-    <!-- ========================================== -->
-    <!-- NEW TAB 5: SHIFT ATTENDANCE & DUTY LOG     -->
-    <!-- ========================================== -->
+    <!-- TAB 5: SHIFT ATTENDANCE & AUDIT LOG -->
     <section id="tabAttendance" class="hidden space-y-3">
       <div class="bg-white rounded-2xl border border-slate-200 p-3.5 sm:p-5 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
           <h2 class="font-extrabold text-slate-800 text-sm sm:text-base flex items-center space-x-2">
             <i class="fa-solid fa-clipboard-user text-indigo-600 text-base"></i>
-            <span>Shift Attendance & Hatch Activity Log</span>
+            <span>Shift Attendance & Audit Log</span>
           </h2>
-          <p class="text-[11px] text-slate-500">ရက်စွဲအလိုက် ဘယ်နေ့ ဘယ်သူက Day/Night ဘယ် Hatch ပေါက်မှာ စာရင်းသွင်းခဲ့သည်ကို ဖော်ပြထားခြင်း</p>
+          <p class="text-[11px] text-slate-500">ရက်စွဲ၊ အဆိုင်း၊ Hatch အလိုက် စာရင်းသွင်းသူနှင့် နောက်ဆုံး ပြင်ဆင်ခဲ့သူ မှတ်တမ်း</p>
         </div>
         <div class="flex items-center space-x-2">
           <input type="text" id="searchAttendance" oninput="renderAttendanceTable()" placeholder="Search date, checker, hatch..." class="h-10 bg-slate-50 border border-slate-300 rounded-xl px-3 text-xs w-full sm:w-56">
@@ -562,17 +558,17 @@
       </div>
 
       <div class="bg-white rounded-2xl border border-slate-200 p-3 shadow-xs overflow-x-auto custom-scroll">
-        <table class="w-full text-left text-xs min-w-[650px]">
+        <table class="w-full text-left text-xs min-w-[700px]">
           <thead>
             <tr class="bg-slate-100 text-slate-700 uppercase text-[10px] tracking-wider border-b border-slate-200 font-bold">
               <th class="py-3 px-3">Date (ရက်စွဲ)</th>
               <th class="py-3 px-3">Shift (အဆိုင်း)</th>
-              <th class="py-3 px-3">Checker Name (တာဝန်ကျသူ)</th>
-              <th class="py-3 px-3">Hatch No (ပေါက်နံပါတ်)</th>
-              <th class="py-3 px-3">Vessel (သင်္ဘော)</th>
-              <th class="py-3 px-3">Shipper (ကုန်သည်)</th>
-              <th class="py-3 px-3 text-right">Logged Intake (သွင်းခဲ့သည့် အိတ်ရေ)</th>
+              <th class="py-3 px-3">Created By (သွင်းသူ)</th>
+              <th class="py-3 px-3">Hatch No</th>
+              <th class="py-3 px-3">Vessel & Shipper</th>
+              <th class="py-3 px-3 text-right">Intake (Bags/Kg)</th>
               <th class="py-3 px-3 text-right">Metric Tons</th>
+              <th class="py-3 px-3">Audit / Modified By (ပြင်ဆင်သူ)</th>
             </tr>
           </thead>
           <tbody id="tblAttendanceBody" class="divide-y divide-slate-100">
@@ -583,8 +579,90 @@
   </main>
 
   <!-- ========================================== -->
-  <!-- MODAL 0: CLOUD LIVE SYNC SETUP             -->
+  <!-- MODAL: ADMIN DIRECT HATCH EDIT MODAL       -->
   <!-- ========================================== -->
+  <div id="modalAdminEdit" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-end sm:items-center justify-center p-0 sm:p-4">
+    <div class="bg-white rounded-t-3xl sm:rounded-2xl max-w-md w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
+      <div class="p-4 bg-slate-900 text-white flex items-center justify-between">
+        <div class="flex items-center space-x-2">
+          <i class="fa-solid fa-pen-to-square text-cyan-400"></i>
+          <span class="font-bold text-sm">Edit Hatch Intake Record (Admin)</span>
+        </div>
+        <button onclick="closeAdminEditModal()" class="w-8 h-8 rounded-lg bg-slate-800 text-slate-300 flex items-center justify-center"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <form id="adminEditForm" onsubmit="saveAdminDirectEdit(event)" class="p-4 space-y-3.5 overflow-y-auto custom-scroll text-xs">
+        <input type="hidden" id="adminEditRecId" value="">
+
+        <div class="grid grid-cols-2 gap-2.5">
+          <div>
+            <label class="block text-[11px] font-bold text-slate-600 uppercase mb-1">Date</label>
+            <input type="text" id="adminEditDate" class="w-full h-11 bg-slate-50 border border-slate-300 rounded-xl px-3 font-bold text-slate-800 cursor-pointer" required>
+          </div>
+          <div>
+            <label class="block text-[11px] font-bold text-slate-600 uppercase mb-1">Shift</label>
+            <select id="adminEditShift" class="w-full h-11 bg-slate-50 border border-slate-300 rounded-xl px-3 font-bold text-slate-800">
+              <option value="Day">Day Shift</option>
+              <option value="Night">Night Shift</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2.5">
+          <div>
+            <label class="block text-[11px] font-bold text-slate-600 uppercase mb-1">Hatch No</label>
+            <select id="adminEditHatch" class="w-full h-11 bg-slate-50 border border-slate-300 rounded-xl px-3 font-bold text-slate-800">
+              <option value="1">H-1</option>
+              <option value="2">H-2</option>
+              <option value="3">H-3</option>
+              <option value="4">H-4</option>
+              <option value="5">H-5</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-[11px] font-bold text-slate-600 uppercase mb-1">Shipper</label>
+            <select id="adminEditShipper" class="w-full h-11 bg-slate-50 border border-slate-300 rounded-xl px-3 font-bold text-slate-800" required>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2.5">
+          <div>
+            <label class="block text-[11px] font-bold text-slate-600 uppercase mb-1">D Total Amount</label>
+            <input type="number" step="any" id="adminEditDTotal" class="w-full h-11 bg-white border-2 border-cyan-500 rounded-xl px-3 font-extrabold text-slate-900" required>
+          </div>
+          <div>
+            <label class="block text-[11px] font-bold text-slate-600 uppercase mb-1">Unit</label>
+            <select id="adminEditUnit" class="w-full h-11 bg-slate-50 border border-slate-300 rounded-xl px-3 font-bold text-slate-800">
+              <option value="Bags">Bags (50 Kg)</option>
+              <option value="KG">KG</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-[11px] font-bold text-slate-600 uppercase mb-1">Remarks</label>
+          <input type="text" id="adminEditRemarks" placeholder="Notes..." class="w-full h-10 bg-slate-50 border border-slate-300 rounded-xl px-3 text-xs">
+        </div>
+
+        <div class="p-2.5 rounded-xl bg-amber-50 border border-amber-200 text-[11px] text-amber-800 font-semibold flex items-center space-x-1.5">
+          <i class="fa-solid fa-user-pen text-amber-600"></i>
+          <span>Will be logged as: <b><span id="adminEditModifierName">Admin</span></b></span>
+        </div>
+
+        <div class="flex items-center space-x-2 pt-1">
+          <button type="submit" class="flex-1 h-11 bg-cyan-600 active:bg-cyan-700 text-white rounded-xl font-extrabold shadow-xs">
+            Save Changes & Log Audit
+          </button>
+          <button type="button" onclick="closeAdminEditModal()" class="h-11 px-4 bg-slate-200 text-slate-700 rounded-xl font-bold">
+            Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: CLOUD LIVE SYNC SETUP -->
   <div id="modalCloud" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-end sm:items-center justify-center p-0 sm:p-4">
     <div class="bg-white rounded-t-3xl sm:rounded-2xl max-w-lg w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
       <div class="p-4 bg-slate-900 text-white flex items-center justify-between">
@@ -609,7 +687,6 @@
         <div class="space-y-2">
           <label class="block text-[11px] font-extrabold text-slate-600 uppercase">Firebase Realtime Database URL</label>
           <input type="url" id="inputCloudUrl" placeholder="https://your-project-default-rtdb.firebaseio.com" class="w-full h-11 bg-slate-50 border border-slate-300 rounded-xl px-3 font-mono text-xs text-slate-800">
-          <p class="text-[10px] text-slate-400">ဥပမာ - https://cargo-preparation-default-rtdb.firebaseio.com</p>
         </div>
 
         <div class="flex items-center space-x-2 pt-1">
@@ -624,9 +701,7 @@
     </div>
   </div>
 
-  <!-- ========================================== -->
-  <!-- MODAL 1: TEAM / USERS MANAGER (SUPER ADMIN) -->
-  <!-- ========================================== -->
+  <!-- MODAL: TEAM / USERS MANAGER -->
   <div id="modalUserManager" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-end sm:items-center justify-center p-0 sm:p-4">
     <div class="bg-white rounded-t-3xl sm:rounded-2xl max-w-lg w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
       <div class="p-4 bg-slate-900 text-white flex items-center justify-between">
@@ -682,9 +757,7 @@
     </div>
   </div>
 
-  <!-- ========================================== -->
-  <!-- MODAL 2: VESSEL ACCOUNTS MANAGER           -->
-  <!-- ========================================== -->
+  <!-- MODAL: VESSEL ACCOUNTS MANAGER -->
   <div id="modalAccount" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-end sm:items-center justify-center p-0 sm:p-4">
     <div class="bg-white rounded-t-3xl sm:rounded-2xl max-w-lg w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
       <div class="p-4 bg-slate-900 text-white flex items-center justify-between">
@@ -734,9 +807,7 @@
     </div>
   </div>
 
-  <!-- ========================================== -->
-  <!-- MODAL 3: SHIPPER MANAGER (BUTTON AT BOTTOM)-->
-  <!-- ========================================== -->
+  <!-- MODAL: SHIPPER MANAGER -->
   <div id="modalShipper" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-end sm:items-center justify-center p-0 sm:p-4">
     <div class="bg-white rounded-t-3xl sm:rounded-2xl max-w-md w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
       <div class="p-4 bg-slate-900 text-white flex items-center justify-between">
@@ -748,14 +819,12 @@
       </div>
 
       <div class="p-4 overflow-y-auto space-y-4 custom-scroll">
-        <!-- Input Form with Save Button at the Bottom -->
         <div class="bg-slate-50 border border-slate-200 p-3.5 rounded-2xl space-y-2.5">
           <input type="hidden" id="editShipperIndex" value="">
-          <label id="lblShipperForm" class="block text-[11px] font-bold text-slate-600 uppercase">Add or Edit Shipper (Member များ ရွေးချယ်ရန် ကုန်သည်စာရင်း)</label>
+          <label id="lblShipperForm" class="block text-[11px] font-bold text-slate-600 uppercase">Add or Edit Shipper</label>
           <div>
             <input type="text" id="inputNewShipper" placeholder="Enter company / shipper name..." class="w-full h-11 bg-white border border-slate-300 rounded-xl px-3 font-bold text-slate-800 focus:ring-2 focus:ring-cyan-500">
           </div>
-          <!-- Save button located BELOW input box -->
           <div class="flex items-center space-x-2 pt-1">
             <button onclick="saveShipperItem()" id="btnSaveShipper" class="flex-1 h-11 bg-cyan-600 active:bg-cyan-700 text-white rounded-xl text-xs font-extrabold shadow-xs flex items-center justify-center space-x-1.5">
               <i class="fa-solid fa-check"></i>
@@ -772,9 +841,7 @@
     </div>
   </div>
 
-  <!-- ========================================== -->
-  <!-- MODAL 4: PROFILE SWITCHER (SUPER ADMIN)    -->
-  <!-- ========================================== -->
+  <!-- MODAL: PROFILE SWITCHER -->
   <div id="modalProfile" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-end sm:items-center justify-center p-0 sm:p-4">
     <div class="bg-white rounded-t-3xl sm:rounded-2xl max-w-md w-full max-h-[85vh] flex flex-col shadow-2xl overflow-hidden">
       <div class="p-4 bg-slate-900 text-white flex items-center justify-between">
@@ -796,9 +863,7 @@
     </div>
   </div>
 
-  <!-- ========================================== -->
-  <!-- MODAL 5: UNIQUE INVITE LINKS PER USER      -->
-  <!-- ========================================== -->
+  <!-- MODAL: UNIQUE INVITE LINKS PER USER -->
   <div id="modalShare" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-end sm:items-center justify-center p-0 sm:p-4">
     <div class="bg-white rounded-t-3xl sm:rounded-2xl max-w-lg w-full max-h-[92vh] flex flex-col shadow-2xl overflow-hidden">
       <div class="p-4 bg-indigo-950 text-white flex items-center justify-between">
@@ -819,13 +884,8 @@
           </label>
           <select id="shareModalBoatSelect" onchange="renderUniqueInviteLinks()" class="w-full h-11 bg-white border border-slate-300 rounded-xl px-3 font-extrabold text-slate-900">
           </select>
-          <p class="text-[10px] text-slate-500">
-            <i class="fa-solid fa-lock text-amber-600 mr-1"></i>
-            အောက်ပါ Link များတွင် သင်သတ်မှတ်ထားသော သင်္ဘောအကောင့်နှင့် Shipper စာရင်းများ တစ်ပါတည်း ပါဝင်သွားမည်ဖြစ်ပြီး အခြား Role သို့ ပြောင်းကြည့်၍ မရပါ။
-          </p>
         </div>
 
-        <!-- UNIQUE ADMIN LINKS -->
         <div class="bg-indigo-50 border border-indigo-200 rounded-2xl p-3.5 space-y-2">
           <div class="font-extrabold text-indigo-950 flex items-center justify-between">
             <span><i class="fa-solid fa-user-tie mr-1.5 text-indigo-600"></i>Designated Admin Links</span>
@@ -834,7 +894,6 @@
           <div id="listUniqueAdminLinks" class="space-y-2"></div>
         </div>
 
-        <!-- UNIQUE MEMBER LINKS -->
         <div class="bg-cyan-50 border border-cyan-200 rounded-2xl p-3.5 space-y-2">
           <div class="font-extrabold text-cyan-950 flex items-center justify-between">
             <span><i class="fa-solid fa-helmet-safety mr-1.5 text-cyan-600"></i>Member (Hatch Checker) Links</span>
@@ -903,6 +962,67 @@
       if (!skipCloudPush && appData.cloudUrl) {
         pushToCloud();
       }
+    }
+
+    // =========================================================
+    // BACKUP & RESTORE FUNCTION (EXPORT & IMPORT JSON)
+    // =========================================================
+    function backupSystemData() {
+      const exportObject = {
+        app: 'MV_INTAKE_AUTOMATED',
+        version: '6.0',
+        exportedAt: new Date().toISOString(),
+        data: {
+          boats: appData.boats,
+          shippers: appData.shippers,
+          users: appData.users,
+          records: appData.records,
+          cloudUrl: appData.cloudUrl,
+          activeBoatId: appData.activeBoatId
+        }
+      };
+      const jsonStr = JSON.stringify(exportObject, null, 2);
+      const blob = new Blob([jsonStr], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `MV_INTAKE_BACKUP_${new Date().toISOString().slice(0, 10)}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      showToast('System Backup Downloaded');
+    }
+
+    function restoreSystemData(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const imported = JSON.parse(e.target.result);
+          if (imported && imported.data) {
+            const d = imported.data;
+            if (Array.isArray(d.boats)) appData.boats = d.boats;
+            if (Array.isArray(d.shippers)) appData.shippers = d.shippers;
+            if (Array.isArray(d.users)) appData.users = d.users;
+            if (Array.isArray(d.records)) appData.records = d.records;
+            if (d.cloudUrl) appData.cloudUrl = d.cloudUrl;
+            if (d.activeBoatId) appData.activeBoatId = d.activeBoatId;
+
+            saveData();
+            renderAll();
+            showToast('System Data Restored Successfully');
+          } else {
+            showToast('Invalid backup file format');
+          }
+        } catch (err) {
+          showToast('Failed to parse backup file');
+        }
+        event.target.value = '';
+      };
+      reader.readAsText(file);
     }
 
     // REAL-TIME CLOUD SYNC
@@ -1201,13 +1321,22 @@
       if (syncChannel) syncChannel.postMessage('sync');
     }
 
-    let pickerDate, pickerFrom, pickerTo;
+    let pickerDate, pickerFrom, pickerTo, pickerAdminEdit;
     function initDatepickers() {
       const today = new Date();
       const pad = n => n < 10 ? '0' + n : n;
       const formattedToday = `${pad(today.getDate())}/${pad(today.getMonth() + 1)}/${today.getFullYear()}`;
 
       pickerDate = flatpickr("#inputDate", {
+        dateFormat: "d/m/Y",
+        altInput: true,
+        altFormat: "d/m/Y",
+        defaultDate: formattedToday,
+        allowInput: false,
+        disableMobile: true
+      });
+
+      pickerAdminEdit = flatpickr("#adminEditDate", {
         dateFormat: "d/m/Y",
         altInput: true,
         altFormat: "d/m/Y",
@@ -1305,7 +1434,6 @@
       });
     }
 
-    // SHIPPER BUTTONS & DROPDOWN LOGIC
     function selectShipperByButton(shipperName) {
       const sel = document.getElementById('selectShipper');
       if (sel) {
@@ -1413,19 +1541,18 @@
       }
     }
 
+    // FORM SUBMIT (MEMBER)
     function handleFormSubmit(e) {
       e.preventDefault();
       const activeBoat = getActiveBoat();
       if (!activeBoat) {
         showToast('Please create & select a Vessel Account first!');
-        if (appData.currentUser.role !== 'MEMBER') openAccountModal();
         return;
       }
 
       const shipper = document.getElementById('selectShipper').value;
       if (!shipper) {
         showToast('Please select a Shipper / Company first!');
-        if (appData.currentUser.role !== 'MEMBER') openShipperModal();
         return;
       }
 
@@ -1456,7 +1583,10 @@
         if (idx !== -1) {
           appData.records[idx] = {
             ...appData.records[idx],
-            date, shift, shipper, hatch, unit, weightOpt, otherKg, dTotal, totalKgs, totalTons, remarks
+            date, shift, shipper, hatch, unit, weightOpt, otherKg, dTotal, totalKgs, totalTons, remarks,
+            lastModifiedBy: appData.currentUser.name,
+            lastModifiedRole: appData.currentUser.role,
+            lastModifiedTime: new Date().toLocaleTimeString()
           };
           showToast('Record updated & synced');
         }
@@ -1478,6 +1608,8 @@
           remarks,
           checkerId: appData.currentUser.id,
           checkerName: appData.currentUser.name,
+          createdRole: appData.currentUser.role,
+          lastModifiedBy: null,
           timestamp: new Date().toISOString()
         };
         appData.records.unshift(newRecord);
@@ -1489,35 +1621,114 @@
       renderAll();
     }
 
+    // =========================================================
+    // EDIT & DELETE ACTIONS (FOR ADMIN, SUPER ADMIN & MEMBERS)
+    // =========================================================
     function editRecord(id) {
       const rec = appData.records.find(r => r.id === id);
       if (!rec) return;
 
-      document.getElementById('entryRecordId').value = rec.id;
-      pickerDate.setDate(rec.date);
-      selectShift(rec.shift);
-      selectShipperByButton(rec.shipper);
-      selectHatch(rec.hatch);
-      document.getElementById('selectUnit').value = rec.unit;
-      updateUnitLogic();
+      const isMember = appData.currentUser && appData.currentUser.role === 'MEMBER';
 
-      if (rec.unit === 'Bags') {
-        document.getElementById('selectWeightOpt').value = rec.weightOpt || '50 Kg';
-        updateWeightLogic();
-        if (rec.weightOpt === 'Other') {
-          document.getElementById('inputOtherKg').value = rec.otherKg || '';
+      if (isMember) {
+        // Member editing in regular form
+        document.getElementById('entryRecordId').value = rec.id;
+        pickerDate.setDate(rec.date);
+        selectShift(rec.shift);
+        selectShipperByButton(rec.shipper);
+        selectHatch(rec.hatch);
+        document.getElementById('selectUnit').value = rec.unit;
+        updateUnitLogic();
+
+        if (rec.unit === 'Bags') {
+          document.getElementById('selectWeightOpt').value = rec.weightOpt || '50 Kg';
+          updateWeightLogic();
+          if (rec.weightOpt === 'Other') {
+            document.getElementById('inputOtherKg').value = rec.otherKg || '';
+          }
         }
+
+        document.getElementById('inputDTotal').value = rec.dTotal;
+        document.getElementById('inputRemarks').value = rec.remarks || '';
+
+        document.getElementById('editingIndicator').classList.remove('hidden');
+        document.getElementById('btnCancelEdit').classList.remove('hidden');
+        document.getElementById('lblSubmitForm').textContent = 'Update Hatch Entry';
+
+        switchTab('tabEntry');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        // Super Admin & Admin Direct Edit Modal
+        openAdminDirectEdit(rec);
       }
+    }
 
-      document.getElementById('inputDTotal').value = rec.dTotal;
-      document.getElementById('inputRemarks').value = rec.remarks || '';
+    function openAdminDirectEdit(rec) {
+      document.getElementById('adminEditRecId').value = rec.id;
+      pickerAdminEdit.setDate(rec.date);
+      document.getElementById('adminEditShift').value = rec.shift;
+      document.getElementById('adminEditHatch').value = rec.hatch;
+      document.getElementById('adminEditDTotal').value = rec.dTotal;
+      document.getElementById('adminEditUnit').value = rec.unit || 'Bags';
+      document.getElementById('adminEditRemarks').value = rec.remarks || '';
+      document.getElementById('adminEditModifierName').textContent = `${appData.currentUser.name} (${appData.currentUser.role})`;
 
-      document.getElementById('editingIndicator').classList.remove('hidden');
-      document.getElementById('btnCancelEdit').classList.remove('hidden');
-      document.getElementById('lblSubmitForm').textContent = 'Update Hatch Entry';
+      const selShipper = document.getElementById('adminEditShipper');
+      selShipper.innerHTML = '';
+      appData.shippers.forEach(s => {
+        const opt = document.createElement('option');
+        opt.value = s;
+        opt.textContent = s;
+        if (s === rec.shipper) opt.selected = true;
+        selShipper.appendChild(opt);
+      });
 
-      switchTab('tabEntry');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      document.getElementById('modalAdminEdit').classList.remove('hidden');
+    }
+
+    function closeAdminEditModal() {
+      document.getElementById('modalAdminEdit').classList.add('hidden');
+    }
+
+    function saveAdminDirectEdit(e) {
+      e.preventDefault();
+      const recId = document.getElementById('adminEditRecId').value;
+      const idx = appData.records.findIndex(r => r.id === recId);
+      if (idx === -1) return;
+
+      const date = document.getElementById('adminEditDate').value;
+      const shift = document.getElementById('adminEditShift').value;
+      const hatch = parseInt(document.getElementById('adminEditHatch').value, 10);
+      const shipper = document.getElementById('adminEditShipper').value;
+      const dTotal = parseFloat(document.getElementById('adminEditDTotal').value) || 0;
+      const unit = document.getElementById('adminEditUnit').value;
+      const remarks = document.getElementById('adminEditRemarks').value;
+
+      const effectiveKg = unit === 'KG' ? 1 : 50;
+      const totalKgs = unit === 'KG' ? dTotal : (dTotal * effectiveKg);
+      const totalTons = totalKgs / 1000;
+
+      // Update record with Audit Trail
+      appData.records[idx] = {
+        ...appData.records[idx],
+        date,
+        shift,
+        hatch,
+        shipper,
+        dTotal,
+        unit,
+        totalKgs,
+        totalTons,
+        remarks,
+        lastModifiedBy: appData.currentUser.name,
+        lastModifiedRole: appData.currentUser.role,
+        lastModifiedTime: `${date} ${new Date().toLocaleTimeString()}`
+      };
+
+      saveData();
+      closeAdminEditModal();
+      renderAll();
+      showToast(`Record updated by ${appData.currentUser.name}`);
     }
 
     function cancelEditing() {
@@ -1530,11 +1741,15 @@
     }
 
     function deleteRecord(id) {
-      if (confirm('Delete this intake record?')) {
+      const rec = appData.records.find(r => r.id === id);
+      if (!rec) return;
+
+      const confirmMsg = `Delete Hatch ${rec.hatch} record (${rec.dTotal} ${rec.unit} by ${rec.checkerName})?\n\nDeleted by: ${appData.currentUser.name} (${appData.currentUser.role})`;
+      if (confirm(confirmMsg)) {
         appData.records = appData.records.filter(r => r.id !== id);
         saveData();
         renderAll();
-        showToast('Record deleted');
+        showToast(`Record deleted by ${appData.currentUser.name}`);
       }
     }
 
@@ -1584,9 +1799,6 @@
       }
     }
 
-    // =========================================================
-    // ROLE VISIBILITY & ENTRY FORM TOGGLE (MEMBER ONLY FORM)
-    // =========================================================
     function applyRolePermissions() {
       const role = appData.currentUser ? appData.currentUser.role : 'MEMBER';
       const isMember = (role === 'MEMBER');
@@ -1594,7 +1806,6 @@
 
       document.getElementById('menuRoleLabel').textContent = `${role} ${appData.sessionLocked ? '(INVITE LOCKED)' : ''}`;
 
-      // Show/Hide Super Admin Preview Banner
       const previewBanner = document.getElementById('previewModeBanner');
       if (!appData.sessionLocked && role !== 'SUPER_ADMIN') {
         previewBanner.classList.remove('hidden');
@@ -1603,7 +1814,6 @@
         previewBanner.classList.add('hidden');
       }
 
-      // Profile Icon Status
       const badgeIcon = document.getElementById('userBadgeIcon');
       if (canSwitchProfile()) {
         badgeIcon.className = 'fa-solid fa-chevron-down text-[9px] text-slate-400 shrink-0';
@@ -1613,7 +1823,6 @@
 
       document.getElementById('menuBtnSwitchProfile').style.display = canSwitchProfile() ? '' : 'none';
 
-      // Lock boat selector for Member
       const selBoat = document.getElementById('selectActiveBoat');
       const lockBadge = document.getElementById('lockBadge');
       if (selBoat) {
@@ -1627,13 +1836,13 @@
         }
       }
 
-      // CRITICAL TASK: Hide Hatch Intake Entry form for Super Admin and Admin! Show ONLY for Member!
+      // Member mode shows the form, Super Admin & Admin mode hides it!
       const memberEntryForm = document.getElementById('memberEntryFormWrapper');
       if (memberEntryForm) {
         memberEntryForm.style.display = isMember ? 'block' : 'none';
       }
 
-      // Hide restricted tabs for Member
+      // Hide tabs 2, 3, 4, 5 for Member
       document.getElementById('btnTabPicker').style.display = isMember ? 'none' : '';
       document.getElementById('btnTabTemplate').style.display = isMember ? 'none' : '';
       document.getElementById('btnTabRecords').style.display = isMember ? 'none' : '';
@@ -1648,7 +1857,6 @@
       document.getElementById('menuBtnReset').style.display = isSuperAdmin ? '' : 'none';
 
       document.getElementById('btnGearBoat').style.display = isMember ? 'none' : '';
-      document.getElementById('btnManageShipper').style.display = isMember ? 'none' : '';
       document.getElementById('btnHeaderShare').style.display = isMember ? 'none' : '';
       document.getElementById('menuBtnVessels').style.display = isMember ? 'none' : '';
       document.getElementById('menuBtnShippers').style.display = isMember ? 'none' : '';
@@ -1914,7 +2122,7 @@
 
       myLogs.forEach(r => {
         const tr = document.createElement('tr');
-        tr.className = 'hover:bg-slate-50';
+        tr.className = 'hover:bg-slate-50 transition-colors';
         tr.innerHTML = `
           <td class="py-2.5 px-2.5">
             <div class="font-bold text-slate-800">${r.date}</div>
@@ -1925,8 +2133,8 @@
           <td class="py-2.5 px-2.5 text-right font-extrabold text-slate-900">${r.dTotal.toLocaleString()} <span class="text-[9px] font-normal text-slate-400">${r.unit}</span></td>
           <td class="py-2.5 px-2.5 text-right font-bold text-emerald-600">${r.totalTons.toFixed(2)}</td>
           <td class="py-2.5 px-2.5 text-center whitespace-nowrap">
-            <button onclick="editRecord('${r.id}')" class="w-8 h-8 rounded-lg bg-cyan-50 text-cyan-600 active:bg-cyan-100 inline-flex items-center justify-center mr-1"><i class="fa-solid fa-pen text-xs"></i></button>
-            <button onclick="deleteRecord('${r.id}')" class="w-8 h-8 rounded-lg bg-rose-50 text-rose-500 active:bg-rose-100 inline-flex items-center justify-center"><i class="fa-solid fa-trash text-xs"></i></button>
+            <button onclick="editRecord('${r.id}')" class="w-8 h-8 rounded-lg bg-cyan-50 text-cyan-600 active:bg-cyan-100 inline-flex items-center justify-center mr-1" title="Edit Hatch Record"><i class="fa-solid fa-pen text-xs"></i></button>
+            <button onclick="deleteRecord('${r.id}')" class="w-8 h-8 rounded-lg bg-rose-50 text-rose-500 active:bg-rose-100 inline-flex items-center justify-center" title="Delete Record"><i class="fa-solid fa-trash text-xs"></i></button>
           </td>
         `;
         tbody.appendChild(tr);
@@ -2093,17 +2301,15 @@
           <td class="py-2 px-2.5 text-right font-bold">${r.dTotal.toLocaleString()} ${r.unit}</td>
           <td class="py-2 px-2.5 text-right font-bold text-emerald-600">${r.totalTons.toFixed(3)}</td>
           <td class="py-2 px-2.5 text-center whitespace-nowrap">
-            <button onclick="editRecord('${r.id}')" class="w-7 h-7 rounded bg-cyan-50 text-cyan-600 mr-1"><i class="fa-solid fa-pen"></i></button>
-            <button onclick="deleteRecord('${r.id}')" class="w-7 h-7 rounded bg-rose-50 text-rose-500"><i class="fa-solid fa-trash"></i></button>
+            <button onclick="editRecord('${r.id}')" class="w-7 h-7 rounded bg-cyan-50 text-cyan-600 mr-1" title="Edit Record"><i class="fa-solid fa-pen"></i></button>
+            <button onclick="deleteRecord('${r.id}')" class="w-7 h-7 rounded bg-rose-50 text-rose-500" title="Delete Record"><i class="fa-solid fa-trash"></i></button>
           </td>
         `;
         tbody.appendChild(tr);
       });
     }
 
-    // =========================================================
-    // NEW: SHIFT ATTENDANCE & ACTIVITY LOG TABLE
-    // =========================================================
+    // SHIFT ATTENDANCE WITH AUDIT TRAIL LOGGING
     function renderAttendanceTable() {
       const q = (document.getElementById('searchAttendance') ? document.getElementById('searchAttendance').value : '').toLowerCase();
       const tbody = document.getElementById('tblAttendanceBody');
@@ -2126,6 +2332,12 @@
       }
 
       filtered.forEach(r => {
+        const auditText = r.lastModifiedBy
+          ? `<span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-amber-100 text-amber-900 border border-amber-300">
+               <i class="fa-solid fa-pen mr-1 text-[9px]"></i>Edited by: ${r.lastModifiedBy} (${r.lastModifiedRole})
+             </span>`
+          : `<span class="text-slate-400 text-[10px] font-medium">- No Changes -</span>`;
+
         const tr = document.createElement('tr');
         tr.className = 'hover:bg-slate-50 transition-colors';
         tr.innerHTML = `
@@ -2140,10 +2352,10 @@
             <span>${r.checkerName || 'Checker'}</span>
           </td>
           <td class="py-2.5 px-3 font-extrabold text-cyan-700">HATCH ${r.hatch}</td>
-          <td class="py-2.5 px-3 font-bold text-slate-700">${r.boatName}</td>
-          <td class="py-2.5 px-3 text-slate-600">${r.shipper}</td>
+          <td class="py-2.5 px-3 font-bold text-slate-700">${r.boatName} <span class="text-slate-400 font-normal">(${r.shipper})</span></td>
           <td class="py-2.5 px-3 text-right font-extrabold text-slate-900">${r.dTotal.toLocaleString()} ${r.unit}</td>
           <td class="py-2.5 px-3 text-right font-bold text-emerald-600">${r.totalTons.toFixed(2)} MT</td>
+          <td class="py-2.5 px-3">${auditText}</td>
         `;
         tbody.appendChild(tr);
       });
@@ -2191,13 +2403,12 @@
       const wsLog = XLSX.utils.aoa_to_sheet(rowsLog);
       XLSX.utils.book_append_sheet(wb, wsLog, 'HATCH_ENTRY_LOG');
 
-      // SHEET 3: SHIFT_ATTENDANCE
       const rowsAttendance = [
-        ['DATE', 'SHIFT', 'CHECKER NAME', 'HATCH NO', 'VESSEL', 'SHIPPER', 'TOTAL INTAKE', 'UNIT', 'METRIC TONS']
+        ['DATE', 'SHIFT', 'CHECKER NAME', 'HATCH NO', 'VESSEL', 'SHIPPER', 'TOTAL INTAKE', 'UNIT', 'METRIC TONS', 'MODIFIED BY']
       ];
       appData.records.forEach(r => {
         rowsAttendance.push([
-          r.date, r.shift, r.checkerName, r.hatch, r.boatName, r.shipper, r.dTotal, r.unit, r.totalTons
+          r.date, r.shift, r.checkerName, r.hatch, r.boatName, r.shipper, r.dTotal, r.unit, r.totalTons, r.lastModifiedBy || 'None'
         ]);
       });
       const wsAtt = XLSX.utils.aoa_to_sheet(rowsAttendance);
@@ -2328,7 +2539,7 @@
       }
     }
 
-    // SHIPPER MODAL (BUTTON FIXED TO BOTTOM)
+    // SHIPPER MODAL
     function openShipperModal() {
       if (appData.currentUser && appData.currentUser.role === 'MEMBER') {
         showToast('Only Admin can configure Shippers');
@@ -2400,7 +2611,7 @@
     function cancelShipperEdit() {
       document.getElementById('editShipperIndex').value = '';
       document.getElementById('inputNewShipper').value = '';
-      document.getElementById('lblShipperForm').textContent = 'Add or Edit Shipper (Member များ ရွေးချယ်ရန် ကုန်သည်စာရင်း)';
+      document.getElementById('lblShipperForm').textContent = 'Add or Edit Shipper';
       document.getElementById('btnSaveShipper').innerHTML = '<i class="fa-solid fa-check mr-1"></i> Save Shipper';
       document.getElementById('btnCancelShipper').classList.add('hidden');
     }
@@ -2453,7 +2664,7 @@
       });
     }
 
-    // UNIQUE PERSONAL INVITE LINKS
+    // UNIQUE PERSONAL INVITE LINKS GENERATOR
     function openShareModal() {
       const selBoat = document.getElementById('shareModalBoatSelect');
       selBoat.innerHTML = '';
