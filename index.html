@@ -138,7 +138,7 @@
       </div>
 
       <div class="pt-3 border-t border-slate-100 text-[11px] text-slate-400 flex items-center justify-between">
-        <span>MV INTAKE v5.0 Live</span>
+        <span>MV INTAKE v5.2 Live</span>
         <button id="menuBtnReset" onclick="resetData(); closeMenu()" class="text-rose-500 font-semibold hover:underline">Clear All Data</button>
       </div>
     </div>
@@ -264,7 +264,7 @@
         <form id="intakeForm" onsubmit="handleFormSubmit(event)" class="space-y-3.5">
           <input type="hidden" id="entryRecordId" value="">
 
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <!-- DATE (DD/MM/YYYY) -->
             <div>
               <label class="block text-[11px] font-bold text-slate-600 uppercase mb-1">Date (DD/MM/YYYY)</label>
@@ -288,16 +288,28 @@
               </div>
               <input type="hidden" id="inputShift" value="Day">
             </div>
+          </div>
 
-            <!-- SHIPPER / COMPANY -->
-            <div>
-              <div class="flex items-center justify-between mb-1">
-                <label class="block text-[11px] font-bold text-slate-600 uppercase">Shipper / Company</label>
-                <button id="btnManageShipper" type="button" onclick="openShipperModal()" class="text-[11px] text-cyan-600 font-bold hover:underline">+ Edit/Add</button>
-              </div>
-              <select id="selectShipper" class="w-full h-11 bg-slate-50 border border-slate-300 rounded-xl px-3 font-bold text-slate-800 focus:ring-2 focus:ring-cyan-500" required>
-              </select>
+          <!-- SHIPPER / COMPANY (ADMIN-DEFINED SELECTABLE BUTTONS + DROPDOWN) -->
+          <div class="bg-slate-50/80 p-3 rounded-2xl border border-slate-200/90 space-y-2">
+            <div class="flex items-center justify-between">
+              <label class="block text-[11px] font-bold text-slate-600 uppercase flex items-center space-x-1.5">
+                <i class="fa-solid fa-building text-cyan-600"></i>
+                <span>Select Shipper / Company (Admin သတ်မှတ်ထားသော ကုန်သည်)</span>
+              </label>
+              <button id="btnManageShipper" type="button" onclick="openShipperModal()" class="px-2.5 py-1 rounded-lg bg-cyan-600 active:bg-cyan-700 text-white text-[11px] font-bold shadow-2xs flex items-center space-x-1">
+                <i class="fa-solid fa-gear text-[10px]"></i>
+                <span>+ Set Shippers</span>
+              </button>
             </div>
+
+            <!-- Interactive Shipper Buttons Container -->
+            <div id="shipperButtonsContainer" class="flex flex-wrap gap-1.5 pt-0.5">
+            </div>
+
+            <!-- Synced Select Dropdown -->
+            <select id="selectShipper" onchange="onShipperDropdownChange(this.value)" class="w-full h-11 bg-white border border-slate-300 rounded-xl px-3 font-bold text-slate-800 focus:ring-2 focus:ring-cyan-500" required>
+            </select>
           </div>
 
           <!-- HATCH NUMBER BUTTONS -->
@@ -694,7 +706,7 @@
       <div class="p-4 bg-slate-900 text-white flex items-center justify-between">
         <div class="flex items-center space-x-2">
           <i class="fa-solid fa-building text-cyan-400"></i>
-          <span class="font-bold text-sm">Shipper / Company Manager</span>
+          <span class="font-bold text-sm">Shipper / Company Manager (Admin)</span>
         </div>
         <button onclick="closeShipperModal()" class="w-8 h-8 rounded-lg bg-slate-800 text-slate-300 flex items-center justify-center"><i class="fa-solid fa-xmark"></i></button>
       </div>
@@ -702,9 +714,9 @@
       <div class="p-4 overflow-y-auto space-y-4 custom-scroll">
         <div class="bg-slate-50 border border-slate-200 p-3 rounded-2xl space-y-2.5">
           <input type="hidden" id="editShipperIndex" value="">
-          <label id="lblShipperForm" class="block text-[10px] font-bold text-slate-500 uppercase">Add or Edit Company Name</label>
+          <label id="lblShipperForm" class="block text-[10px] font-bold text-slate-500 uppercase">Add or Edit Shipper (Member များ ရွေးချယ်ရန် ကုန်သည်စာရင်း)</label>
           <div class="flex items-center space-x-2">
-            <input type="text" id="inputNewShipper" placeholder="Enter company name..." class="flex-1 h-11 bg-white border border-slate-300 rounded-xl px-3 font-bold">
+            <input type="text" id="inputNewShipper" placeholder="Enter company / shipper name..." class="flex-1 h-11 bg-white border border-slate-300 rounded-xl px-3 font-bold">
             <button onclick="saveShipperItem()" id="btnSaveShipper" class="h-11 px-4 bg-cyan-600 active:bg-cyan-700 text-white rounded-xl text-xs font-extrabold shrink-0">Save</button>
             <button onclick="cancelShipperEdit()" id="btnCancelShipper" class="hidden h-11 px-3 bg-slate-200 text-slate-700 rounded-xl text-xs font-bold shrink-0">Cancel</button>
           </div>
@@ -763,7 +775,7 @@
           </select>
           <p class="text-[10px] text-slate-500">
             <i class="fa-solid fa-lock text-amber-600 mr-1"></i>
-            အောက်ပါ Link များသည် ရွေးချယ်ထားသော သင်္ဘောနှင့် သတ်မှတ်ထားသော လူပုဂ္ဂိုလ်အတွက်သာ သီးသန့်ဖြစ်ပြီး အခြား Role သို့ လုံးဝ ပြောင်းကြည့်၍ မရပါ။
+            အောက်ပါ Link များတွင် သင်သတ်မှတ်ထားသော သင်္ဘောအကောင့်နှင့် Shipper စာရင်းများ တစ်ပါတည်း ပါဝင်သွားမည်ဖြစ်ပြီး အခြား Role သို့ ပြောင်းကြည့်၍ မရပါ။
           </p>
         </div>
 
@@ -803,10 +815,10 @@
     }
 
     let appData = {
-      cloudUrl: '', // Firebase Realtime DB URL for Cross-Phone Live Sync
+      cloudUrl: '',
       activeBoatId: null,
       lockedBoatId: null,
-      sessionLocked: false, // ONLY true when user opened an Invite Link
+      sessionLocked: false,
       currentUser: { id: 'U-001', name: 'Super Admin (Owner)', role: 'SUPER_ADMIN', accessKey: 'KEY-SUPER01' },
       boats: [],
       shippers: [],
@@ -848,7 +860,7 @@
     }
 
     // =========================================================
-    // REAL-TIME CLOUD SYNC ENGINE (ACROSS ALL 20 PHONES)
+    // REAL-TIME CLOUD SYNC ENGINE
     // =========================================================
     let isSyncingCloud = false;
 
@@ -892,7 +904,6 @@
           if (remote) {
             let changed = false;
 
-            // Merge Boats
             if (Array.isArray(remote.boats)) {
               if (JSON.stringify(remote.boats) !== JSON.stringify(appData.boats)) {
                 appData.boats = remote.boats;
@@ -903,7 +914,6 @@
               }
             }
 
-            // Merge Shippers
             if (Array.isArray(remote.shippers)) {
               if (JSON.stringify(remote.shippers) !== JSON.stringify(appData.shippers)) {
                 appData.shippers = remote.shippers;
@@ -911,7 +921,6 @@
               }
             }
 
-            // Merge Users
             if (Array.isArray(remote.users) && remote.users.length > 0) {
               if (JSON.stringify(remote.users) !== JSON.stringify(appData.users)) {
                 appData.users = remote.users;
@@ -919,7 +928,6 @@
               }
             }
 
-            // Merge Intake Records
             const remoteRecords = Array.isArray(remote.records) ? remote.records : [];
             if (JSON.stringify(remoteRecords) !== JSON.stringify(appData.records)) {
               appData.records = remoteRecords;
@@ -1011,7 +1019,6 @@
       showToast('Disconnected from Cloud');
     }
 
-    // Poll Cloud every 3 seconds for real-time updates across devices
     setInterval(() => {
       if (appData.cloudUrl) pullFromCloud(false);
     }, 3000);
@@ -1039,7 +1046,6 @@
       const cloudParam = getParam('cloud');
       const unlockMaster = getParam('master');
 
-      // Always allow ?master=unlock or #master=unlock to restore Super Admin
       if (unlockMaster === 'unlock') {
         appData.sessionLocked = false;
         appData.lockedBoatId = null;
@@ -1049,7 +1055,6 @@
         return;
       }
 
-      // If no invite link parameters in URL and user was merely previewing on Super Admin's phone, keep session unlocked
       if (uid && key) {
         if (cloudParam) {
           try {
@@ -1061,9 +1066,8 @@
           try {
             const sList = JSON.parse(decodeURIComponent(escape(atob(shippersRaw))));
             if (Array.isArray(sList) && sList.length > 0) {
-              sList.forEach(s => {
-                if (!appData.shippers.includes(s)) appData.shippers.push(s);
-              });
+              // Sync Admin's shippers list to this device
+              appData.shippers = sList;
             }
           } catch (e) {}
         }
@@ -1098,7 +1102,7 @@
 
         if (targetUser) {
           appData.currentUser = targetUser;
-          appData.sessionLocked = true; // Strictly lock because they entered via Invite Link
+          appData.sessionLocked = true;
           if (targetUser.role === 'MEMBER' && boatId) {
             appData.lockedBoatId = boatId;
           } else {
@@ -1117,7 +1121,6 @@
       }
     }
 
-    // Same-browser tab live sync
     let syncChannel;
     try {
       syncChannel = new BroadcastChannel('mv_intake_live_sync');
@@ -1253,6 +1256,91 @@
       });
     }
 
+    // =========================================================
+    // ADMIN-DEFINED SHIPPER SELECTION BUTTONS & DROPDOWN LOGIC
+    // =========================================================
+    function selectShipperByButton(shipperName) {
+      const sel = document.getElementById('selectShipper');
+      if (sel) {
+        sel.value = shipperName;
+      }
+      highlightActiveShipperButton(shipperName);
+    }
+
+    function onShipperDropdownChange(val) {
+      highlightActiveShipperButton(val);
+    }
+
+    function highlightActiveShipperButton(activeName) {
+      document.querySelectorAll('.shipper-chip-btn').forEach(btn => {
+        const name = btn.getAttribute('data-shipper');
+        if (name === activeName) {
+          btn.className = 'shipper-chip-btn px-3 py-2 rounded-xl border text-xs font-extrabold bg-cyan-600 text-white border-cyan-600 shadow-xs flex items-center space-x-1.5 transition-all';
+        } else {
+          btn.className = 'shipper-chip-btn px-3 py-2 rounded-xl border text-xs font-bold bg-white text-slate-700 border-slate-300 hover:bg-slate-100 flex items-center space-x-1.5 transition-all';
+        }
+      });
+    }
+
+    function renderShippersDropdown() {
+      const sel = document.getElementById('selectShipper');
+      const btnContainer = document.getElementById('shipperButtonsContainer');
+      const cur = sel.value;
+      sel.innerHTML = '';
+      btnContainer.innerHTML = '';
+
+      const isMember = appData.currentUser && appData.currentUser.role === 'MEMBER';
+
+      if (appData.shippers.length === 0) {
+        const opt = document.createElement('option');
+        opt.value = '';
+        opt.textContent = isMember
+          ? '-- Admin မှ Shipper မသတ်မှတ်ရသေးပါ --'
+          : '-- Tap "+ Set Shippers" to add companies --';
+        sel.appendChild(opt);
+
+        btnContainer.innerHTML = isMember
+          ? '<div class="text-[11px] text-amber-700 bg-amber-50 border border-amber-200 rounded-xl px-3 py-2 w-full font-semibold"><i class="fa-solid fa-circle-exclamation mr-1"></i>Admin ဘက်မှ Shipper အမည်များ မသတ်မှတ်ရသေးပါ။</div>'
+          : '<button type="button" onclick="openShipperModal()" class="w-full py-2.5 px-3 rounded-xl border border-dashed border-cyan-400 bg-cyan-50/50 text-cyan-700 text-xs font-bold flex items-center justify-center space-x-1.5"><i class="fa-solid fa-plus"></i><span>Tap here to set Shipper / Company names for Members</span></button>';
+      } else {
+        const activeShipper = (cur && appData.shippers.includes(cur)) ? cur : appData.shippers[0];
+
+        appData.shippers.forEach(s => {
+          // 1. Add to select dropdown
+          const opt = document.createElement('option');
+          opt.value = s;
+          opt.textContent = s;
+          if (s === activeShipper) opt.selected = true;
+          sel.appendChild(opt);
+
+          // 2. Render interactive Shipper Button
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.setAttribute('data-shipper', s);
+          btn.onclick = () => selectShipperByButton(s);
+          const isSelected = (s === activeShipper);
+          btn.className = isSelected
+            ? 'shipper-chip-btn px-3 py-2 rounded-xl border text-xs font-extrabold bg-cyan-600 text-white border-cyan-600 shadow-xs flex items-center space-x-1.5 transition-all'
+            : 'shipper-chip-btn px-3 py-2 rounded-xl border text-xs font-bold bg-white text-slate-700 border-slate-300 hover:bg-slate-100 flex items-center space-x-1.5 transition-all';
+          btn.innerHTML = `<i class="fa-solid fa-check-circle text-[11px] ${isSelected ? ' opacity-100' : 'opacity-30'}"></i><span>${s}</span>`;
+          btnContainer.appendChild(btn);
+        });
+      }
+
+      const fSel = document.getElementById('filterPickerShipper');
+      if (fSel) {
+        const fCur = fSel.value;
+        fSel.innerHTML = '<option value="ALL">All Shippers</option>';
+        appData.shippers.forEach(s => {
+          const opt = document.createElement('option');
+          opt.value = s;
+          opt.textContent = s;
+          fSel.appendChild(opt);
+        });
+        if (fCur) fSel.value = fCur;
+      }
+    }
+
     function updateUnitLogic() {
       const unit = document.getElementById('selectUnit').value;
       const wrapWeight = document.getElementById('wrapperWeightOpt');
@@ -1285,14 +1373,14 @@
       const activeBoat = getActiveBoat();
       if (!activeBoat) {
         showToast('Please create & select a Vessel Account first!');
-        if (!appData.sessionLocked) openAccountModal();
+        if (appData.currentUser.role !== 'MEMBER') openAccountModal();
         return;
       }
 
       const shipper = document.getElementById('selectShipper').value;
       if (!shipper) {
-        showToast('Please add & select a Shipper / Company first!');
-        if (!appData.sessionLocked) openShipperModal();
+        showToast('Please select a Shipper / Company first!');
+        if (appData.currentUser.role !== 'MEMBER') openShipperModal();
         return;
       }
 
@@ -1363,7 +1451,7 @@
       document.getElementById('entryRecordId').value = rec.id;
       pickerDate.setDate(rec.date);
       selectShift(rec.shift);
-      document.getElementById('selectShipper').value = rec.shipper;
+      selectShipperByButton(rec.shipper);
       selectHatch(rec.hatch);
       document.getElementById('selectUnit').value = rec.unit;
       updateUnitLogic();
@@ -1429,11 +1517,7 @@
       renderAll();
     }
 
-    // =========================================================
-    // FIXED: SUPER ADMIN NEVER GETS LOCKED OUT WHEN PREVIEWING
-    // =========================================================
     function canSwitchProfile() {
-      // As long as the device did NOT enter through a locked invite link, Super Admin can freely switch roles back & forth!
       return !appData.sessionLocked;
     }
 
@@ -1462,7 +1546,6 @@
 
       document.getElementById('menuRoleLabel').textContent = `${role} ${appData.sessionLocked ? '(INVITE LOCKED)' : ''}`;
 
-      // Show yellow "Return to Super Admin" banner whenever owner is testing Member or Admin mode
       const previewBanner = document.getElementById('previewModeBanner');
       if (!appData.sessionLocked && role !== 'SUPER_ADMIN') {
         previewBanner.classList.remove('hidden');
@@ -1701,38 +1784,6 @@
         });
       }
       document.getElementById('bannerBoatName').textContent = active ? active.name : 'No Vessel Account';
-    }
-
-    function renderShippersDropdown() {
-      const sel = document.getElementById('selectShipper');
-      const cur = sel.value;
-      sel.innerHTML = '';
-
-      if (appData.shippers.length === 0) {
-        const opt = document.createElement('option');
-        opt.value = '';
-        opt.textContent = '-- No Shipper Added --';
-        sel.appendChild(opt);
-      } else {
-        appData.shippers.forEach(s => {
-          const opt = document.createElement('option');
-          opt.value = s;
-          opt.textContent = s;
-          sel.appendChild(opt);
-        });
-        if (cur && appData.shippers.includes(cur)) sel.value = cur;
-      }
-
-      const fSel = document.getElementById('filterPickerShipper');
-      const fCur = fSel.value;
-      fSel.innerHTML = '<option value="ALL">All Shippers</option>';
-      appData.shippers.forEach(s => {
-        const opt = document.createElement('option');
-        opt.value = s;
-        opt.textContent = s;
-        fSel.appendChild(opt);
-      });
-      if (fCur) fSel.value = fCur;
     }
 
     function renderStats() {
@@ -2157,8 +2208,12 @@
       }
     }
 
-    // SHIPPER MODAL
+    // SHIPPER MODAL (ADMIN / SUPER ADMIN)
     function openShipperModal() {
+      if (appData.currentUser && appData.currentUser.role === 'MEMBER') {
+        showToast('Only Admin can configure Shippers');
+        return;
+      }
       cancelShipperEdit();
       renderShipperList();
       document.getElementById('modalShipper').classList.remove('hidden');
@@ -2225,7 +2280,7 @@
     function cancelShipperEdit() {
       document.getElementById('editShipperIndex').value = '';
       document.getElementById('inputNewShipper').value = '';
-      document.getElementById('lblShipperForm').textContent = 'Add or Edit Company Name';
+      document.getElementById('lblShipperForm').textContent = 'Add or Edit Shipper (Member များ ရွေးချယ်ရန် ကုန်သည်စာရင်း)';
       document.getElementById('btnSaveShipper').textContent = 'Save';
       document.getElementById('btnCancelShipper').classList.add('hidden');
     }
@@ -2260,7 +2315,6 @@
         const btn = document.createElement('button');
         btn.onclick = () => {
           appData.currentUser = u;
-          // Note: We do NOT set sessionLocked = true here so Super Admin can always switch back!
           saveData(true);
           renderAll();
           closeProfileModal();
@@ -2397,6 +2451,11 @@
       document.getElementById('toastMsg').textContent = msg;
       t.classList.remove('hidden');
       setTimeout(() => t.classList.add('hidden'), 2600);
+    }
+
+    function saveManual() {
+      saveData();
+      showToast('All data saved');
     }
 
     function resetData() {
