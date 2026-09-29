@@ -143,7 +143,7 @@
       </div>
 
       <div class="pt-3 border-t border-slate-100 text-[11px] text-slate-400 flex items-center justify-between">
-        <span>MV INTAKE v6.5</span>
+        <span>MV INTAKE v6.5 (Clean)</span>
         <button id="menuBtnReset" onclick="resetData(); closeMenu()" class="text-rose-500 font-semibold hover:underline">Clear All Data</button>
       </div>
     </div>
@@ -178,7 +178,7 @@
   <!-- MAIN CONTENT AREA -->
   <main class="max-w-7xl mx-auto px-2 sm:px-4 mt-3 w-full flex-1 space-y-3">
 
-    <!-- ACTIVE VESSEL BANNER (WITH DIRECT + VESSEL AND + SHIPPER BUTTONS) -->
+    <!-- ACTIVE VESSEL BANNER -->
     <div class="bg-white rounded-2xl border border-slate-200 p-3 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
       <div class="flex items-center space-x-2.5 min-w-0">
         <div class="w-9 h-9 rounded-xl bg-cyan-50 border border-cyan-200 text-cyan-600 flex items-center justify-center font-bold text-base shrink-0">
@@ -195,7 +195,6 @@
         </div>
       </div>
 
-      <!-- Action Area for Admin & Super Admin: Direct Buttons for Vessel & Shipper -->
       <div class="flex items-center space-x-1.5 w-full sm:w-auto">
         <select id="selectActiveBoat" onchange="changeActiveBoat(this.value)" class="flex-1 sm:w-48 h-10 bg-slate-50 border border-slate-300 text-slate-800 text-xs rounded-xl px-2.5 font-bold focus:ring-2 focus:ring-cyan-500">
         </select>
@@ -205,7 +204,6 @@
           <span>Vessel</span>
         </button>
 
-        <!-- DIRECT SHIPPER BUTTON (ALWAYS VISIBLE TO ADMINS) -->
         <button id="btnDirectShipper" onclick="openShipperModal()" class="h-10 px-2.5 rounded-xl bg-indigo-600 active:bg-indigo-700 text-white flex items-center justify-center space-x-1 shrink-0 text-xs font-bold shadow-xs" title="Manage Shippers / Companies">
           <i class="fa-solid fa-building text-xs"></i>
           <span>Shipper</span>
@@ -305,7 +303,6 @@
             </div>
           </div>
 
-          <!-- SHIPPER SELECTION -->
           <div class="bg-slate-50/80 p-3 rounded-2xl border border-slate-200/90 space-y-2">
             <label class="block text-[11px] font-bold text-slate-600 uppercase flex items-center space-x-1.5">
               <i class="fa-solid fa-building text-cyan-600"></i>
@@ -316,7 +313,6 @@
             </select>
           </div>
 
-          <!-- HATCH NO -->
           <div>
             <label class="block text-[11px] font-bold text-slate-600 uppercase mb-1.5">Select Hatch Number (H1 - H5)</label>
             <div class="grid grid-cols-5 gap-1.5 sm:gap-2">
@@ -329,7 +325,6 @@
             <input type="hidden" id="inputHatch" value="1">
           </div>
 
-          <!-- UNIT, WEIGHT & TOTAL -->
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 bg-slate-50 p-3 rounded-2xl border border-slate-200">
             <div>
               <label class="block text-[11px] font-bold text-slate-600 uppercase mb-1">Input Unit</label>
@@ -811,7 +806,7 @@
     </div>
   </div>
 
-  <!-- MODAL: SHIPPER MANAGER (PROPERLY ACCESSIBLE) -->
+  <!-- MODAL: SHIPPER MANAGER -->
   <div id="modalShipper" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-end sm:items-center justify-center p-0 sm:p-4">
     <div class="bg-white rounded-t-3xl sm:rounded-2xl max-w-md w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
       <div class="p-4 bg-slate-900 text-white flex items-center justify-between">
@@ -882,7 +877,6 @@
       </div>
 
       <div class="p-4 overflow-y-auto space-y-4 custom-scroll text-xs">
-        <!-- SUPER ADMIN PERMANENT LINK -->
         <div class="bg-amber-50 border border-amber-200 rounded-2xl p-3 space-y-1.5">
           <div class="font-extrabold text-amber-950 flex items-center justify-between">
             <span><i class="fa-solid fa-crown mr-1.5 text-amber-600"></i>Super Admin Direct Master Link</span>
@@ -929,6 +923,33 @@
 
   <!-- JAVASCRIPT APPLICATION LOGIC -->
   <script>
+    // =========================================================
+    // ANDROID WEBVIEW / APK LIFECYCLE RECOVERY & ERROR FIX
+    // =========================================================
+    window.addEventListener('error', function(e) {
+      if (e.message && (e.message.includes('500') || e.message.includes('Script error'))) {
+        window.location.href = window.location.pathname;
+      }
+    });
+
+    function sanitizeAppUrl() {
+      if (window.location.hash || window.location.search) {
+        try {
+          window.history.replaceState(null, document.title, window.location.pathname);
+        } catch (err) {}
+      }
+    }
+
+    document.addEventListener('visibilitychange', function() {
+      if (document.visibilityState === 'visible') {
+        loadData();
+        renderAll();
+        if (appData.cloudUrl) {
+          pullFromCloud(false);
+        }
+      }
+    });
+
     const STORAGE_KEY = 'MV_INTAKE_CLEAN_V5';
 
     function generateAccessKey(seed) {
@@ -1230,7 +1251,7 @@
         appData.lockedBoatId = null;
         appData.currentUser = appData.users.find(u => u.role === 'SUPER_ADMIN') || appData.users[0];
         saveData(true);
-        window.history.replaceState({}, document.title, window.location.pathname);
+        sanitizeAppUrl();
         return;
       }
 
@@ -1288,6 +1309,7 @@
           }
           saveData(true);
           if (appData.cloudUrl) pullFromCloud(false);
+          sanitizeAppUrl();
           return;
         }
       }
@@ -1297,6 +1319,7 @@
           appData.activeBoatId = appData.lockedBoatId;
         }
       }
+      sanitizeAppUrl();
     }
 
     let syncChannel;
@@ -1843,26 +1866,22 @@
         }
       }
 
-      // Member mode shows the form, Super Admin & Admin mode hides it!
       const memberEntryForm = document.getElementById('memberEntryFormWrapper');
       if (memberEntryForm) {
         memberEntryForm.style.display = isMember ? 'block' : 'none';
       }
 
-      // Direct Shipper Button: Visible ONLY for Admins & Super Admins on main page
       const btnDirectShipper = document.getElementById('btnDirectShipper');
       if (btnDirectShipper) {
         btnDirectShipper.style.display = isMember ? 'none' : '';
       }
 
-      // Hide tabs 2, 3, 4, 5 for Member
       document.getElementById('btnTabPicker').style.display = isMember ? 'none' : '';
       document.getElementById('btnTabTemplate').style.display = isMember ? 'none' : '';
       document.getElementById('btnTabRecords').style.display = isMember ? 'none' : '';
       document.getElementById('btnTabAttendance').style.display = isMember ? 'none' : '';
       if (isMember) switchTab('tabEntry');
 
-      // Admin & Super Admin Controls
       document.getElementById('btnHeaderCloud').style.display = isSuperAdmin ? '' : 'none';
       document.getElementById('menuBtnCloud').style.display = isSuperAdmin ? '' : 'none';
       document.getElementById('btnHeaderUsers').style.display = isSuperAdmin ? '' : 'none';
