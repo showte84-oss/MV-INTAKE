@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>MV INTAKE AUTOMATED - Maritime Cargo System</title>
+  <title>MV INTAKE AUTOMATED - Multi-Org System</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
@@ -24,6 +24,27 @@
 </head>
 <body class="bg-slate-100 text-slate-800 min-h-screen flex flex-col pb-16 select-none">
 
+  <!-- MODAL: SECURE ORG CODE ACCESS GATE -->
+  <div id="modalOrgGate" class="hidden fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl text-center space-y-4">
+      <div class="w-14 h-14 rounded-2xl bg-cyan-100 text-cyan-600 flex items-center justify-center mx-auto text-2xl font-bold">
+        <i class="fa-solid fa-shield-halved"></i>
+      </div>
+      <div>
+        <h2 class="text-base font-extrabold text-slate-900">Organization Access Gate</h2>
+        <p class="text-xs text-slate-500 mt-1">Master Owner ခွင့်ပြုပေးထားသော တရားဝင် Organization Code ကို ရိုက်ထည့်ပါ -</p>
+      </div>
+      <div>
+        <input type="text" id="inputOrgGateCode" placeholder="e.g. KNA-001" class="w-full h-12 bg-slate-50 border-2 border-slate-300 focus:border-cyan-500 rounded-xl px-3 font-mono text-center font-bold text-slate-800 uppercase tracking-widest outline-none">
+        <p id="txtOrgGateError" class="hidden text-rose-500 text-[11px] font-bold mt-2"></p>
+      </div>
+      <button id="btnOrgGateSubmit" onclick="submitOrgGate()" class="w-full h-12 bg-cyan-600 hover:bg-cyan-700 text-white rounded-xl font-extrabold text-sm shadow-md active:scale-95 transition-all flex items-center justify-center space-x-1.5">
+        <span>Verify & Enter System</span>
+      </button>
+      <p class="text-[10px] text-slate-400">ခွင့်ပြုချက်မရှိသော Code များကို စနစ်မှ အလိုအလျောက် ပိတ်ပင်ထားပါသည်</p>
+    </div>
+  </div>
+
   <!-- SUPER ADMIN PREVIEW BANNER -->
   <div id="previewModeBanner" class="hidden bg-amber-500 text-slate-950 px-3 py-2 text-xs font-extrabold flex items-center justify-between shadow-sm z-50">
     <div class="flex items-center space-x-2 truncate">
@@ -43,7 +64,10 @@
           <i class="fa-solid fa-bars text-sm sm:text-base"></i>
         </button>
         <div class="truncate">
-          <h1 class="text-xs sm:text-base font-extrabold tracking-tight text-white truncate">MV INTAKE</h1>
+          <div class="flex items-center space-x-1.5">
+            <h1 class="text-xs sm:text-base font-extrabold tracking-tight text-white truncate">MV INTAKE</h1>
+            <span id="badgeOrgCode" class="text-[9px] font-mono font-bold uppercase px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30 shrink-0">KNA-001</span>
+          </div>
           <p class="text-[9px] sm:text-[10px] text-slate-400 truncate hidden xs:block">Cargo Management</p>
         </div>
       </div>
@@ -94,6 +118,17 @@
         </div>
 
         <div class="space-y-1 text-xs font-bold">
+          <div class="p-2.5 bg-slate-50 border border-slate-200 rounded-xl mb-2 text-[11px]">
+            <span class="text-slate-400 block text-[9px] uppercase font-bold">Active Organization</span>
+            <span id="menuOrgDisplay" class="font-mono font-extrabold text-slate-800 text-xs">KNA-001</span>
+          </div>
+
+          <!-- MASTER OWNER ONLY: AUTHORIZED ORG LICENSES MANAGER -->
+          <button id="menuBtnOrgLicenses" onclick="openOrgLicensesModal(); closeMenu()" class="w-full flex items-center space-x-3 px-3 py-3 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-950 font-bold border border-amber-200">
+            <i class="fa-solid fa-key w-5 text-amber-600 text-sm"></i>
+            <span>Authorize Org Codes (ခွင့်ပြုကုဒ်များ)</span>
+          </button>
+
           <button id="menuBtnCloud" onclick="openCloudModal(); closeMenu()" class="w-full flex items-center space-x-3 px-3 py-3 rounded-xl bg-cyan-50 hover:bg-cyan-100 text-cyan-900">
             <i class="fa-solid fa-cloud-arrow-up w-5 text-cyan-600 text-sm"></i>
             <span>Cloud Live Sync Setup</span>
@@ -143,8 +178,8 @@
       </div>
 
       <div class="pt-3 border-t border-slate-100 text-[11px] text-slate-400 flex items-center justify-between">
-        <span>MV INTAKE v6.5 (Clean)</span>
-        <button id="menuBtnReset" onclick="resetData(); closeMenu()" class="text-rose-500 font-semibold hover:underline">Clear All Data</button>
+        <span>MV INTAKE Multi-Org</span>
+        <button id="menuBtnReset" onclick="resetData(); closeMenu()" class="text-rose-500 font-semibold hover:underline">Change Org Code</button>
       </div>
     </div>
   </div>
@@ -177,7 +212,6 @@
 
   <!-- MAIN CONTENT AREA -->
   <main class="max-w-7xl mx-auto px-2 sm:px-4 mt-3 w-full flex-1 space-y-3">
-
     <!-- ACTIVE VESSEL BANNER -->
     <div class="bg-white rounded-2xl border border-slate-200 p-3 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
       <div class="flex items-center space-x-2.5 min-w-0">
@@ -213,7 +247,6 @@
 
     <!-- TAB 1: DATA ENTRY / OVERVIEW -->
     <section id="tabEntry" class="space-y-3">
-      <!-- STAT METRIC CARDS -->
       <div class="grid grid-cols-2 lg:grid-cols-4 gap-2.5">
         <div class="bg-amber-500 text-white rounded-2xl p-3 shadow-xs">
           <div class="flex items-center justify-between text-[10px] font-bold opacity-90">
@@ -532,7 +565,7 @@
               <th class="py-2.5 px-2.5">Boat No</th>
               <th class="py-2.5 px-2.5">Hatch</th>
               <th class="py-2.5 px-2.5">Shipper</th>
-              <th class="py-2.5 px-2.5">Checker</th>
+              <th class="py-2.5 px-2.5 text-slate-500">Checker</th>
               <th class="py-2.5 px-2.5 text-right">D Total</th>
               <th class="py-2.5 px-2.5 text-right">TONS</th>
               <th class="py-2.5 px-2.5 text-center">Action</th>
@@ -578,6 +611,42 @@
       </div>
     </section>
   </main>
+
+  <!-- ========================================== -->
+  <!-- MODAL: MASTER OWNER - ORG LICENSES MANAGER -->
+  <!-- ========================================== -->
+  <div id="modalOrgLicenses" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-end sm:items-center justify-center p-0 sm:p-4">
+    <div class="bg-white rounded-t-3xl sm:rounded-2xl max-w-md w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
+      <div class="p-4 bg-amber-950 text-white flex items-center justify-between">
+        <div class="flex items-center space-x-2">
+          <i class="fa-solid fa-key text-amber-400"></i>
+          <div>
+            <span class="font-bold text-sm">Authorized Org Codes (Master Owner)</span>
+            <div class="text-[10px] text-amber-300">တခြားအဖွဲ့များ သုံးခွင့်ပြုမည့် တရားဝင် ကုဒ်များ သတ်မှတ်ရန်</div>
+          </div>
+        </div>
+        <button onclick="closeOrgLicensesModal()" class="w-8 h-8 rounded-lg bg-amber-900 text-amber-200 flex items-center justify-center"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <div class="p-4 overflow-y-auto space-y-3.5 custom-scroll text-xs">
+        <div class="bg-amber-50 border border-amber-200 p-3 rounded-2xl space-y-2">
+          <label class="block text-[11px] font-bold text-amber-900 uppercase">Authorize New Organization Code</label>
+          <div class="flex items-center space-x-1.5">
+            <input type="text" id="inputNewAllowedOrg" placeholder="e.g. DELTA-CARGO" class="flex-1 h-11 bg-white border border-amber-300 rounded-xl px-3 font-mono font-bold uppercase text-slate-800">
+            <button onclick="addAllowedOrgCode()" class="h-11 px-4 bg-amber-600 active:bg-amber-700 text-white rounded-xl font-bold shrink-0">
+              Authorize
+            </button>
+          </div>
+          <p class="text-[10px] text-amber-800">ဤနေရာတွင် ထည့်သွင်းထားသော Code များမှလွဲ၍ တခြားမည်သူမျှ စနစ်ထဲ ဝင်ခွင့်မရှိပါ</p>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-slate-700 uppercase text-[10px] mb-2">Active Authorized Codes List</h4>
+          <div id="listAllowedOrgs" class="space-y-1.5"></div>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- MODAL: ADMIN DIRECT HATCH EDIT MODAL -->
   <div id="modalAdminEdit" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-end sm:items-center justify-center p-0 sm:p-4">
@@ -679,7 +748,7 @@
             <span>ဖုန်းအားလုံး တစ်ပြိုင်နက် Live ချိတ်ဆက်ရန် -</span>
           </div>
           <p class="text-[11px] leading-relaxed text-cyan-800">
-            Member များ၏ ဖုန်းမှ သွင်းလိုက်သော Data များ သင့်ဖုန်းသို့ အင်တာနက်မှတစ်ဆင့် တိုက်ရိုက်ရောက်ရှိလာစေရန် သင်၏ <b>Firebase Realtime Database URL</b> ကို အောက်တွင် ထည့်သွင်းပေးပါ။
+            သင်၏ <b>Firebase Realtime Database URL</b> ကို အောက်တွင် ထည့်သွင်းပေးပါ။
           </p>
         </div>
 
@@ -870,7 +939,7 @@
           <i class="fa-solid fa-key text-amber-400"></i>
           <div>
             <div class="font-bold text-sm">Unique Personal Invite Links</div>
-            <div class="text-[10px] text-indigo-300">Each person gets a unique, role-locked link</div>
+            <div class="text-[10px] text-indigo-300">Role-locked invite links for this Organization</div>
           </div>
         </div>
         <button onclick="closeShareModal()" class="w-8 h-8 rounded-lg bg-indigo-900 text-indigo-200 flex items-center justify-center"><i class="fa-solid fa-xmark"></i></button>
@@ -921,11 +990,8 @@
     <span id="toastMsg">Success</span>
   </div>
 
-  <!-- JAVASCRIPT APPLICATION LOGIC -->
+  <!-- JAVASCRIPT LOGIC -->
   <script>
-    // =========================================================
-    // ANDROID WEBVIEW / APK LIFECYCLE RECOVERY & ERROR FIX
-    // =========================================================
     window.addEventListener('error', function(e) {
       if (e.message && (e.message.includes('500') || e.message.includes('Script error'))) {
         window.location.href = window.location.pathname;
@@ -950,12 +1016,177 @@
       }
     });
 
-    const STORAGE_KEY = 'MV_INTAKE_CLEAN_V5';
+    // =========================================================
+    // AUTHORIZED ORG LICENSES SYSTEM (UPDATED MASTER: KNA-001)
+    // =========================================================
+    const ORG_STORAGE_KEY = 'MV_INTAKE_ACTIVE_ORG';
+    const ALLOWED_ORGS_KEY = 'MV_INTAKE_ALLOWED_ORGS_CACHE';
+    
+    // Master Owner Org Code: KNA-001 is now pre-authorized by default
+    let allowedOrgCodes = ['KNA-001'];
+    let currentOrgCode = localStorage.getItem(ORG_STORAGE_KEY) || '';
 
-    function generateAccessKey(seed) {
-      return 'KEY-' + Math.abs(seed.split('').reduce((a, b) => ((a << 5) - a) + b.charCodeAt(0), 0)).toString(16).toUpperCase().padStart(6, '0');
+    function getStorageKeyForOrg(code) {
+      return `MV_INTAKE_DATA_ORG_${code.toUpperCase().replace(/[^A-Z0-9_-]/g, '')}`;
     }
 
+    const cachedAllowed = localStorage.getItem(ALLOWED_ORGS_KEY);
+    if (cachedAllowed) {
+      try {
+        const arr = JSON.parse(cachedAllowed);
+        if (Array.isArray(arr) && arr.length > 0) allowedOrgCodes = arr;
+      } catch (e) {}
+    }
+    if (!allowedOrgCodes.includes('KNA-001')) {
+      allowedOrgCodes.unshift('KNA-001');
+    }
+
+    async function syncAllowedOrgsFromCloud() {
+      if (!appData.cloudUrl) return;
+      try {
+        const endpoint = `${normalizeCloudUrl(appData.cloudUrl)}/authorized_orgs.json`;
+        const res = await fetch(endpoint + '?t=' + Date.now());
+        if (res.ok) {
+          const cloudList = await res.json();
+          if (Array.isArray(cloudList) && cloudList.length > 0) {
+            allowedOrgCodes = cloudList;
+            if (!allowedOrgCodes.includes('KNA-001')) allowedOrgCodes.unshift('KNA-001');
+            localStorage.setItem(ALLOWED_ORGS_KEY, JSON.stringify(allowedOrgCodes));
+            renderAllowedOrgsList();
+          }
+        }
+      } catch (e) {}
+    }
+
+    async function pushAllowedOrgsToCloud() {
+      if (!appData.cloudUrl) return;
+      try {
+        const endpoint = `${normalizeCloudUrl(appData.cloudUrl)}/authorized_orgs.json`;
+        await fetch(endpoint, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(allowedOrgCodes)
+        });
+      } catch (e) {}
+    }
+
+    function checkOrgGate() {
+      if (!currentOrgCode) {
+        document.getElementById('modalOrgGate').classList.remove('hidden');
+      } else {
+        document.getElementById('modalOrgGate').classList.add('hidden');
+        document.getElementById('badgeOrgCode').textContent = currentOrgCode;
+        document.getElementById('menuOrgDisplay').textContent = currentOrgCode;
+      }
+    }
+
+    async function submitOrgGate() {
+      const inputEl = document.getElementById('inputOrgGateCode');
+      const errEl = document.getElementById('txtOrgGateError');
+      const btn = document.getElementById('btnOrgGateSubmit');
+      const code = inputEl.value.trim().toUpperCase();
+
+      if (!code) {
+        errEl.textContent = 'Organization Code ရိုက်ထည့်ပေးပါ!';
+        errEl.classList.remove('hidden');
+        return;
+      }
+
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner animate-spin mr-1"></i> Verifying...';
+
+      if (appData.cloudUrl) {
+        await syncAllowedOrgsFromCloud();
+      }
+
+      if (!allowedOrgCodes.includes(code)) {
+        errEl.textContent = 'ခွင့်ပြုချက်မရှိသော Code ဖြစ်ပါသည်! Master Admin ထံ တရားဝင် Code တောင်းယူပါ။';
+        errEl.classList.remove('hidden');
+        btn.disabled = false;
+        btn.innerHTML = 'Verify & Enter System';
+        return;
+      }
+
+      errEl.classList.add('hidden');
+      currentOrgCode = code;
+      localStorage.setItem(ORG_STORAGE_KEY, code);
+      document.getElementById('modalOrgGate').classList.add('hidden');
+      btn.disabled = false;
+      btn.innerHTML = 'Verify & Enter System';
+
+      loadData();
+      renderAll();
+      if (appData.cloudUrl) pullFromCloud(false);
+      showToast(`Access Granted: ${code}`);
+    }
+
+    function openOrgLicensesModal() {
+      renderAllowedOrgsList();
+      document.getElementById('modalOrgLicenses').classList.remove('hidden');
+    }
+    function closeOrgLicensesModal() {
+      document.getElementById('modalOrgLicenses').classList.add('hidden');
+    }
+
+    function renderAllowedOrgsList() {
+      const container = document.getElementById('listAllowedOrgs');
+      if (!container) return;
+      container.innerHTML = '';
+
+      allowedOrgCodes.forEach(code => {
+        const isMaster = (code === 'KNA-001');
+        const div = document.createElement('div');
+        div.className = 'flex items-center justify-between p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-xs font-bold';
+        div.innerHTML = `
+          <div class="flex items-center space-x-2">
+            <i class="fa-solid fa-building-circle-check text-emerald-600"></i>
+            <span class="font-mono text-slate-800">${code}</span>
+            ${isMaster ? '<span class="text-[9px] px-1.5 py-0.2 rounded bg-amber-100 text-amber-800 font-bold">Master</span>' : ''}
+          </div>
+          ${!isMaster ? `
+            <button onclick="removeAllowedOrgCode('${code}')" class="w-7 h-7 rounded-lg bg-rose-50 text-rose-500 hover:bg-rose-100 flex items-center justify-center">
+              <i class="fa-solid fa-trash text-[10px]"></i>
+            </button>
+          ` : ''}
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    async function addAllowedOrgCode() {
+      const input = document.getElementById('inputNewAllowedOrg');
+      const val = input.value.trim().toUpperCase().replace(/[^A-Z0-9_-]/g, '');
+      if (!val) {
+        showToast('Please enter an Org Code');
+        return;
+      }
+      if (allowedOrgCodes.includes(val)) {
+        showToast('Code already authorized');
+        return;
+      }
+
+      allowedOrgCodes.push(val);
+      localStorage.setItem(ALLOWED_ORGS_KEY, JSON.stringify(allowedOrgCodes));
+      input.value = '';
+      renderAllowedOrgsList();
+      await pushAllowedOrgsToCloud();
+      showToast(`Authorized Code: ${val}`);
+    }
+
+    async function removeAllowedOrgCode(code) {
+      if (code === 'KNA-001') return;
+      if (confirm(`Revoke access for Organization Code "${code}"?`)) {
+        allowedOrgCodes = allowedOrgCodes.filter(c => c !== code);
+        localStorage.setItem(ALLOWED_ORGS_KEY, JSON.stringify(allowedOrgCodes));
+        renderAllowedOrgsList();
+        await pushAllowedOrgsToCloud();
+        showToast(`Revoked Code: ${code}`);
+      }
+    }
+
+    // =========================================================
+    // MULTI-ORG DATA & CLOUD SYNC
+    // =========================================================
     let appData = {
       cloudUrl: '',
       activeBoatId: null,
@@ -971,6 +1202,10 @@
       lastUpdated: 0
     };
 
+    function generateAccessKey(seed) {
+      return 'KEY-' + Math.abs(seed.split('').reduce((a, b) => ((a << 5) - a) + b.charCodeAt(0), 0)).toString(16).toUpperCase().padStart(6, '0');
+    }
+
     function ensureUserKeys() {
       appData.users.forEach(u => {
         if (!u.accessKey) {
@@ -980,7 +1215,9 @@
     }
 
     function loadData() {
-      const stored = localStorage.getItem(STORAGE_KEY);
+      if (!currentOrgCode) return;
+      const key = getStorageKeyForOrg(currentOrgCode);
+      const stored = localStorage.getItem(key);
       if (stored) {
         try {
           const parsed = JSON.parse(stored);
@@ -993,19 +1230,21 @@
     }
 
     function saveData(skipCloudPush = false) {
+      if (!currentOrgCode) return;
       appData.lastUpdated = Date.now();
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
+      const key = getStorageKeyForOrg(currentOrgCode);
+      localStorage.setItem(key, JSON.stringify(appData));
       updateLiveSync();
       if (!skipCloudPush && appData.cloudUrl) {
         pushToCloud();
       }
     }
 
-    // BACKUP & RESTORE
     function backupSystemData() {
       const exportObject = {
         app: 'MV_INTAKE_AUTOMATED',
-        version: '6.5',
+        version: '7.0',
+        org: currentOrgCode,
         exportedAt: new Date().toISOString(),
         data: {
           boats: appData.boats,
@@ -1021,7 +1260,7 @@
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `MV_INTAKE_BACKUP_${new Date().toISOString().slice(0, 10)}.json`;
+      a.download = `MV_INTAKE_BACKUP_${currentOrgCode}_${new Date().toISOString().slice(0, 10)}.json`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
@@ -1060,7 +1299,6 @@
       reader.readAsText(file);
     }
 
-    // REAL-TIME CLOUD SYNC
     let isSyncingCloud = false;
 
     function normalizeCloudUrl(url) {
@@ -1071,8 +1309,9 @@
     }
 
     async function pushToCloud() {
-      if (!appData.cloudUrl) return;
-      const endpoint = `${normalizeCloudUrl(appData.cloudUrl)}/mv_intake_master.json`;
+      if (!appData.cloudUrl || !currentOrgCode) return;
+      const orgPath = currentOrgCode.toUpperCase().replace(/[^A-Z0-9_-]/g, '_');
+      const endpoint = `${normalizeCloudUrl(appData.cloudUrl)}/organizations/${orgPath}.json`;
       const payload = {
         boats: appData.boats || [],
         shippers: appData.shippers || [],
@@ -1093,9 +1332,10 @@
     }
 
     async function pullFromCloud(showNotification = false) {
-      if (!appData.cloudUrl || isSyncingCloud) return;
+      if (!appData.cloudUrl || !currentOrgCode || isSyncingCloud) return;
       isSyncingCloud = true;
-      const endpoint = `${normalizeCloudUrl(appData.cloudUrl)}/mv_intake_master.json`;
+      const orgPath = currentOrgCode.toUpperCase().replace(/[^A-Z0-9_-]/g, '_');
+      const endpoint = `${normalizeCloudUrl(appData.cloudUrl)}/organizations/${orgPath}.json`;
       try {
         const res = await fetch(endpoint + '?t=' + Date.now());
         if (res.ok) {
@@ -1134,7 +1374,8 @@
             }
 
             if (changed) {
-              localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
+              const key = getStorageKeyForOrg(currentOrgCode);
+              localStorage.setItem(key, JSON.stringify(appData));
               renderAll();
               if (document.getElementById('tabTemplate') && !document.getElementById('tabTemplate').classList.contains('hidden')) {
                 renderTemplateTable();
@@ -1209,6 +1450,7 @@
       }
       appData.cloudUrl = val;
       saveData(true);
+      await pushAllowedOrgsToCloud();
       await pushToCloud();
       await pullFromCloud(true);
       closeCloudModal();
@@ -1222,7 +1464,7 @@
     }
 
     setInterval(() => {
-      if (appData.cloudUrl) pullFromCloud(false);
+      if (appData.cloudUrl && currentOrgCode) pullFromCloud(false);
     }, 3000);
 
     // ROUTING & INVITE LINK
@@ -1234,6 +1476,7 @@
 
       const getParam = (k) => searchParams.get(k) || hashParams.get(k);
 
+      const orgInUrl = getParam('org');
       const uid = getParam('uid');
       const key = getParam('key');
       const uName = getParam('uname');
@@ -1245,6 +1488,11 @@
       const shippersRaw = getParam('shippers');
       const cloudParam = getParam('cloud');
       const unlockMaster = getParam('master');
+
+      if (orgInUrl) {
+        currentOrgCode = orgInUrl.toUpperCase();
+        localStorage.setItem(ORG_STORAGE_KEY, currentOrgCode);
+      }
 
       if (unlockMaster === 'unlock') {
         appData.sessionLocked = false;
@@ -1340,7 +1588,7 @@
     } catch (e) {}
 
     window.addEventListener('storage', (ev) => {
-      if (ev.key === STORAGE_KEY) {
+      if (currentOrgCode && ev.key === getStorageKeyForOrg(currentOrgCode)) {
         const currentLockedUser = appData.currentUser;
         const currentSessionLocked = appData.sessionLocked;
         const currentLockedBoat = appData.lockedBoatId;
@@ -1473,9 +1721,7 @@
 
     function selectShipperByButton(shipperName) {
       const sel = document.getElementById('selectShipper');
-      if (sel) {
-        sel.value = shipperName;
-      }
+      if (sel) sel.value = shipperName;
       highlightActiveShipperButton(shipperName);
     }
 
@@ -1882,6 +2128,13 @@
       document.getElementById('btnTabAttendance').style.display = isMember ? 'none' : '';
       if (isMember) switchTab('tabEntry');
 
+      // Master Owner licenses button: Visible ONLY on KNA-001 for Super Admin!
+      const isMasterKNA = (currentOrgCode === 'KNA-001' && isSuperAdmin);
+      const menuBtnOrgLicenses = document.getElementById('menuBtnOrgLicenses');
+      if (menuBtnOrgLicenses) {
+        menuBtnOrgLicenses.style.display = isMasterKNA ? '' : 'none';
+      }
+
       document.getElementById('btnHeaderCloud').style.display = isSuperAdmin ? '' : 'none';
       document.getElementById('menuBtnCloud').style.display = isSuperAdmin ? '' : 'none';
       document.getElementById('btnHeaderUsers').style.display = isSuperAdmin ? '' : 'none';
@@ -2040,6 +2293,7 @@
 
     // RENDERING UI
     function renderAll() {
+      checkOrgGate();
       applyRolePermissions();
       updateCloudBadgeUI(!!appData.cloudUrl);
       renderActiveBoatUI();
@@ -2331,8 +2585,8 @@
           <td class="py-2 px-2.5">${r.shipper}</td>
           <td class="py-2 px-2.5 text-slate-500">${r.checkerName}</td>
           <td class="py-2 px-2.5 text-right font-bold">${r.dTotal.toLocaleString()} ${r.unit}</td>
-          <td class="py-2 px-2.5 text-right font-bold text-emerald-600">${r.totalTons.toFixed(3)}</td>
-          <td class="py-2 px-2.5 text-center whitespace-nowrap">
+          <td class="py-2.5 px-2.5 text-right font-bold text-emerald-600">${r.totalTons.toFixed(3)}</td>
+          <td class="py-2.5 px-2.5 text-center whitespace-nowrap">
             <button onclick="editRecord('${r.id}')" class="w-7 h-7 rounded bg-cyan-50 text-cyan-600 mr-1" title="Edit Record"><i class="fa-solid fa-pen"></i></button>
             <button onclick="deleteRecord('${r.id}')" class="w-7 h-7 rounded bg-rose-50 text-rose-500" title="Delete Record"><i class="fa-solid fa-trash"></i></button>
           </td>
@@ -2341,7 +2595,6 @@
       });
     }
 
-    // ATTENDANCE LOG TABLE
     function renderAttendanceTable() {
       const q = (document.getElementById('searchAttendance') ? document.getElementById('searchAttendance').value : '').toLowerCase();
       const tbody = document.getElementById('tblAttendanceBody');
@@ -2410,7 +2663,7 @@
         groups[k].h[r.hatch] += r.dTotal;
         groups[k].kgs += r.totalKgs;
         groups[k].tons += r.totalTons;
-        if (r.remarks && !groups[k].remarks.includes(r.remarks)) groups[k].remarks.push(r.remarks);
+        if (r.remarks && !groups[key].remarks.includes(r.remarks)) groups[k].remarks.push(r.remarks);
       });
 
       Object.values(groups).forEach(g => {
@@ -2458,7 +2711,7 @@
       const wsBoat = XLSX.utils.aoa_to_sheet(rowsBoat);
       XLSX.utils.book_append_sheet(wb, wsBoat, 'BOAT_ACCOUNTS');
 
-      const fileName = `MV_INTAKE_${(active ? active.name : 'REPORT').replace(/[^a-zA-Z0-9]/g, '_')}.xlsx`;
+      const fileName = `MV_INTAKE_${currentOrgCode || 'REPORT'}_${(active ? active.name : '').replace(/[^a-zA-Z0-9]/g, '_')}.xlsx`;
       XLSX.writeFile(wb, fileName);
       showToast('Excel downloaded');
     }
@@ -2699,7 +2952,7 @@
     // UNIQUE PERSONAL INVITE LINKS
     function openShareModal() {
       const origin = window.location.origin + window.location.pathname;
-      document.getElementById('linkSuperAdmin').value = `${origin}#master=unlock`;
+      document.getElementById('linkSuperAdmin').value = `${origin}#master=unlock&org=${currentOrgCode}`;
 
       const selBoat = document.getElementById('shareModalBoatSelect');
       selBoat.innerHTML = '';
@@ -2729,6 +2982,7 @@
       const shippersEncoded = btoa(unescape(encodeURIComponent(JSON.stringify(appData.shippers))));
       const cloudEncoded = appData.cloudUrl ? btoa(unescape(encodeURIComponent(appData.cloudUrl))) : '';
       const params = new URLSearchParams({
+        org: currentOrgCode,
         uid: user.id,
         key: user.accessKey,
         uname: user.name,
@@ -2820,20 +3074,23 @@
     }
 
     function resetData() {
-      if (confirm('Clear all accounts, shippers, and records to start fresh?')) {
-        localStorage.removeItem(STORAGE_KEY);
+      if (confirm('Switch/Reset Organization Code on this device?')) {
+        localStorage.removeItem(ORG_STORAGE_KEY);
+        currentOrgCode = '';
         window.location.hash = '';
         location.reload();
       }
     }
 
     window.addEventListener('DOMContentLoaded', () => {
-      loadData();
       handleRouting();
+      checkOrgGate();
+      loadData();
       initDatepickers();
       renderAll();
       if (appData.cloudUrl) {
-        pullFromCloud(false);
+        syncAllowedOrgsFromCloud();
+        if (currentOrgCode) pullFromCloud(false);
       }
     });
   </script>
