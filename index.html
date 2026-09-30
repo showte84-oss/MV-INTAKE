@@ -339,7 +339,6 @@
             </select>
           </div>
 
-          <!-- HATCH SELECTION -->
           <div>
             <label class="block text-[11px] font-bold text-slate-600 uppercase mb-1.5">Select Hatch Number (H1 - H5)</label>
             <div class="grid grid-cols-5 gap-1.5 sm:gap-2">
@@ -362,7 +361,6 @@
               <span class="text-[10px] text-indigo-700 font-bold bg-indigo-100 px-2 py-0.5 rounded">24 HR Dial</span>
             </div>
 
-            <!-- Commenced & Completed Time -->
             <div class="grid grid-cols-2 gap-2.5">
               <div>
                 <label class="block text-[10px] font-extrabold text-indigo-900 uppercase mb-1">
@@ -397,7 +395,6 @@
                 </button>
               </div>
 
-              <!-- Dynamic Stoppage rows with 24-Hr Clock Picker -->
               <div id="memberStoppagesList" class="space-y-2"></div>
             </div>
           </div>
@@ -547,7 +544,7 @@
       </div>
     </section>
 
-    <!-- TAB 3: MV INTAKE TEMPLATE PREVIEW -->
+    <!-- TAB 3: MV INTAKE TEMPLATE PREVIEW (CHRONOLOGICAL ORDER + RED DAILY TOTALS) -->
     <section id="tabTemplate" class="hidden space-y-3">
       <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-xs flex flex-wrap items-center justify-between gap-3">
         <div>
@@ -555,7 +552,7 @@
             <i class="fa-solid fa-table text-cyan-600"></i>
             <span>MV INTAKE Master Template</span>
           </h2>
-          <p class="text-[11px] text-slate-500">Matches your uploaded Excel structure</p>
+          <p class="text-[11px] text-slate-500">ရက်စွဲအစမှ အစီအစဉ်လိုက်ပြသပြီး တစ်ရက်ချင်းစီအတွက် Day/Night Total အနီရောင်ဖြင့် ဖော်ပြထားပါသည်</p>
         </div>
         <button onclick="downloadExcel()" class="h-10 px-4 bg-emerald-600 active:bg-emerald-700 text-white rounded-xl text-xs font-bold shadow-xs flex items-center space-x-2">
           <i class="fa-solid fa-file-excel"></i>
@@ -657,12 +654,9 @@
     </section>
   </main>
 
-  <!-- ========================================================= -->
-  <!-- MODAL: 24-HOUR MILITARY CLOCK DIAL PICKER (၂၄ နာရီ နာရီဝိုင်း) -->
-  <!-- ========================================================= -->
+  <!-- MODAL: 24-HOUR MILITARY CLOCK DIAL PICKER -->
   <div id="modal24HrClockPicker" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-xs flex items-center justify-center p-4">
     <div class="bg-white rounded-3xl max-w-[320px] w-full p-4 shadow-2xl flex flex-col items-center space-y-3" onclick="event.stopPropagation()">
-      <!-- Header Display -->
       <div class="w-full text-center pb-2 border-b border-slate-100">
         <span id="lbl24ClockPickerTitle" class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider block mb-1">Select Time (24-Hour)</span>
         <div class="flex items-center justify-center space-x-2">
@@ -675,16 +669,14 @@
           </button>
           <span class="text-xs font-bold text-slate-400 ml-1">HRS</span>
         </div>
-        <span id="lbl24ClockModeInstruction" class="text-[10px] font-bold text-cyan-700 mt-1 block">Tap hour (00 မှ 23 ကို ရွေးပါ)</span>
+        <span id="lbl24ClockModeInstruction" class="text-[10px] font-bold text-cyan-700 mt-1 block">Tap hour (00 မှ 23 နာရီကို ရွေးပါ)</span>
       </div>
 
-      <!-- 24-Hour Double Dial Circle -->
       <div class="relative w-[230px] h-[230px] bg-slate-100 rounded-full border-4 border-slate-200 flex items-center justify-center shadow-inner" id="clock24DialCircle">
         <div class="w-3 h-3 rounded-full bg-cyan-600 z-20 shadow-xs"></div>
         <div id="clock24NumbersContainer" class="absolute inset-0"></div>
       </div>
 
-      <!-- Actions -->
       <div class="w-full flex items-center justify-between pt-1">
         <button type="button" onclick="close24HrClockModal()" class="h-10 px-4 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs font-bold">
           Cancel
@@ -740,7 +732,7 @@
     </div>
   </div>
 
-  <!-- MODAL: ADMIN DIRECT HATCH EDIT MODAL (WITH 24-HOUR TIME & MULTIPLE STOPPAGES) -->
+  <!-- MODAL: ADMIN DIRECT HATCH EDIT MODAL -->
   <div id="modalAdminEdit" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-end sm:items-center justify-center p-0 sm:p-4">
     <div class="bg-white rounded-t-3xl sm:rounded-2xl max-w-lg w-full max-h-[92vh] flex flex-col shadow-2xl overflow-hidden">
       <div class="p-4 bg-slate-900 text-white flex items-center justify-between">
@@ -921,7 +913,7 @@
             <div>
               <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Assign Role</label>
               <select id="inputUserRole" class="w-full h-11 bg-white border border-slate-300 rounded-xl px-2.5 font-bold text-slate-800">
-                <option value="MEMBER">MEMBER (Tally )</option>
+                <option value="MEMBER">MEMBER (Tally)</option>
                 <option value="ADMIN">ADMIN (Supervisor)</option>
                 <option value="SUPER_ADMIN">SUPER ADMIN</option>
               </select>
@@ -1144,7 +1136,7 @@
     // =========================================================
     let clock24TargetInputId = null;
     let clock24TargetCallback = null;
-    let clock24CurrentMode = 'HOURS'; // 'HOURS' or 'MINUTES'
+    let clock24CurrentMode = 'HOURS';
     let clock24SelectedHour = 8;
     let clock24SelectedMinute = 0;
 
@@ -1176,7 +1168,6 @@
     function parse24TimeToComponents(str) {
       if (!str) return null;
       str = str.trim();
-      // Handle standard 24hr format "14:30" or 12hr "02:30 PM"
       let match = str.match(/^(\d{1,2}):(\d{2})$/);
       if (match) {
         return { hour: parseInt(match[1], 10) % 24, minute: parseInt(match[2], 10) % 60 };
@@ -1218,15 +1209,13 @@
       }
     }
 
-    // 24-HOUR DOUBLE DIAL: Outer Ring (13-00/24), Inner Ring (01-12)
     function render24HrClockHoursDial() {
       const container = document.getElementById('clock24NumbersContainer');
       container.innerHTML = '';
-      const center = 115; // center of 230px container
+      const center = 115;
       const outerRadius = 88;
       const innerRadius = 55;
 
-      // Outer Ring: 13 to 23 and 00
       const outerHours = [0, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23];
       outerHours.forEach((h, i) => {
         const angleDeg = (i * 30) - 60;
@@ -1249,7 +1238,6 @@
         container.appendChild(btn);
       });
 
-      // Inner Ring: 1 to 12
       for (let h = 1; h <= 12; h++) {
         const i = (h === 12) ? 0 : h;
         const angleDeg = (i * 30) - 60;
@@ -1359,7 +1347,7 @@
       const m2 = parse24TimeToMinutes(toStr);
       if (m1 === null || m2 === null) return '';
       let diff = m2 - m1;
-      if (diff < 0) diff += 24 * 60; // crossed midnight
+      if (diff < 0) diff += 24 * 60;
       const hrs = Math.floor(diff / 60);
       const mins = diff % 60;
       if (hrs > 0 && mins > 0) return `${hrs} hr ${mins} mins`;
@@ -1389,6 +1377,16 @@
       if (h > 0 && m > 0) return `${h} hr ${m} mins`;
       if (h > 0) return `${h} hr${h > 1 ? 's' : ''}`;
       return `${m} mins`;
+    }
+
+    // Helper: Parse DD/MM/YYYY string to epoch milliseconds
+    function parseDMYTimestamp(str) {
+      if (!str) return 0;
+      const parts = str.split('/');
+      if (parts.length === 3) {
+        return new Date(parseInt(parts[2], 10), parseInt(parts[1], 10) - 1, parseInt(parts[0], 10)).getTime();
+      }
+      return 0;
     }
 
     // =========================================================
@@ -1744,7 +1742,7 @@
     function backupSystemData() {
       const exportObject = {
         app: 'MV_INTAKE_AUTOMATED',
-        version: '9.5',
+        version: '9.8',
         org: currentOrgCode,
         exportedAt: new Date().toISOString(),
         data: {
@@ -3014,12 +3012,15 @@
           <td class="py-2 px-2.5">${r.shipper}</td>
           <td class="py-2 px-2.5 font-bold text-cyan-700">H-${r.hatch}</td>
           <td class="py-2 px-2.5 text-right font-bold">${r.dTotal.toLocaleString()}</td>
-          <td class="py-2.5 px-2.5 text-right font-bold text-emerald-600">${r.totalTons.toFixed(3)}</td>
+          <td class="py-2 px-2.5 text-right font-bold text-emerald-600">${r.totalTons.toFixed(3)}</td>
         `;
         tbody.appendChild(tr);
       });
     }
 
+    // =========================================================
+    // TAB 3: MV INTAKE TEMPLATE PREVIEW (CHRONOLOGICAL + RED DAILY TOTALS)
+    // =========================================================
     function renderTemplateTable() {
       const active = getActiveBoat();
       const tbody = document.getElementById('tblTemplateBody');
@@ -3033,59 +3034,119 @@
       }
 
       const logs = appData.records.filter(r => r.boatId === active.id);
-      const groups = {};
-      logs.forEach(r => {
-        const key = `${r.date}|${r.shift}|${r.boatName}`;
-        if (!groups[key]) {
-          groups[key] = { date: r.date, shift: r.shift, boat: r.boatName, h: {1:0, 2:0, 3:0, 4:0, 5:0}, kgs: 0, tons: 0, remarks: [] };
-        }
-        groups[key].h[r.hatch] += r.dTotal;
-        groups[key].kgs += r.totalKgs;
-        groups[key].tons += r.totalTons;
-        if (r.remarks && !groups[key].remarks.includes(r.remarks)) groups[key].remarks.push(r.remarks);
-      });
-
-      const keys = Object.keys(groups);
-      if (keys.length === 0) {
+      if (logs.length === 0) {
         tbody.innerHTML = '<tr><td colspan="11" class="text-center py-6 text-slate-400">No template data recorded yet.</td></tr>';
         return;
       }
 
-      let totH = {1:0, 2:0, 3:0, 4:0, 5:0}, totKgs = 0, totTons = 0;
-
-      keys.forEach(k => {
-        const g = groups[k];
-        totKgs += g.kgs;
-        totTons += g.tons;
-        for (let i = 1; i <= 5; i++) totH[i] += g.h[i];
-
-        const tr = document.createElement('tr');
-        tr.className = 'border-b border-slate-200 text-[11px]';
-        tr.innerHTML = `
-          <td class="py-2 px-2 border-r border-slate-200 font-semibold">${g.date}</td>
-          <td class="py-2 px-2 border-r border-slate-200 font-bold ${g.shift === 'Day' ? 'text-amber-600' : 'text-indigo-600'}">${g.shift}</td>
-          <td class="py-2 px-2 border-r border-slate-200 text-left font-semibold">${g.boat}</td>
-          <td class="py-2 px-2 border-r border-slate-200 text-right">${g.h[1] ? g.h[1].toLocaleString() : '-'}</td>
-          <td class="py-2 px-2 border-r border-slate-200 text-right">${g.h[2] ? g.h[2].toLocaleString() : '-'}</td>
-          <td class="py-2 px-2 border-r border-slate-200 text-right">${g.h[3] ? g.h[3].toLocaleString() : '-'}</td>
-          <td class="py-2 px-2 border-r border-slate-200 text-right">${g.h[4] ? g.h[4].toLocaleString() : '-'}</td>
-          <td class="py-2 px-2 border-r border-slate-200 text-right">${g.h[5] ? g.h[5].toLocaleString() : '-'}</td>
-          <td class="py-2 px-2 border-r border-slate-200 text-right font-bold">${g.kgs.toLocaleString()}</td>
-          <td class="py-2 px-2 border-r border-slate-200 text-right font-bold text-emerald-600">${g.tons.toFixed(3)}</td>
-          <td class="py-2 px-2 text-left text-slate-500">${g.remarks.join(', ')}</td>
-        `;
-        tbody.appendChild(tr);
+      // Group records by Date and Shift
+      const dateMap = {};
+      logs.forEach(r => {
+        if (!dateMap[r.date]) {
+          dateMap[r.date] = {
+            date: r.date,
+            timestamp: parseDMYTimestamp(r.date),
+            shifts: {},
+            boatName: r.boatName || active.name
+          };
+        }
+        if (!dateMap[r.date].shifts[r.shift]) {
+          dateMap[r.date].shifts[r.shift] = {
+            shift: r.shift,
+            boat: r.boatName || active.name,
+            h: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 },
+            kgs: 0,
+            tons: 0,
+            remarks: []
+          };
+        }
+        dateMap[r.date].shifts[r.shift].h[r.hatch] += r.dTotal;
+        dateMap[r.date].shifts[r.shift].kgs += r.totalKgs;
+        dateMap[r.date].shifts[r.shift].tons += r.totalTons;
+        if (r.remarks && !dateMap[r.date].shifts[r.shift].remarks.includes(r.remarks)) {
+          dateMap[r.date].shifts[r.shift].remarks.push(r.remarks);
+        }
       });
 
+      // Sort dates CHRONOLOGICALLY (Starting date at the top -> then subsequent dates)
+      const sortedDates = Object.values(dateMap).sort((a, b) => a.timestamp - b.timestamp);
+
+      let grandH = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 }, grandKgs = 0, grandTons = 0;
+
+      sortedDates.forEach(dateObj => {
+        const dateStr = dateObj.date;
+        const shifts = dateObj.shifts;
+
+        // Daily accumulator for Day + Night Total
+        const dailyH = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
+        let dailyKgs = 0;
+        let dailyTons = 0;
+
+        // Render Day Shift first, then Night Shift
+        ['Day', 'Night'].forEach(shiftName => {
+          if (shifts[shiftName]) {
+            const sData = shifts[shiftName];
+            dailyKgs += sData.kgs;
+            dailyTons += sData.tons;
+            for (let i = 1; i <= 5; i++) {
+              dailyH[i] += sData.h[i];
+            }
+
+            const tr = document.createElement('tr');
+            tr.className = 'border-b border-slate-200 text-[11px]';
+            tr.innerHTML = `
+              <td class="py-2 px-2 border-r border-slate-200 font-semibold text-slate-800">${dateStr}</td>
+              <td class="py-2 px-2 border-r border-slate-200 font-bold ${shiftName === 'Day' ? 'text-amber-600' : 'text-indigo-600'}">${shiftName}</td>
+              <td class="py-2 px-2 border-r border-slate-200 text-left font-semibold">${sData.boat}</td>
+              <td class="py-2 px-2 border-r border-slate-200 text-right">${sData.h[1] ? sData.h[1].toLocaleString() : '-'}</td>
+              <td class="py-2 px-2 border-r border-slate-200 text-right">${sData.h[2] ? sData.h[2].toLocaleString() : '-'}</td>
+              <td class="py-2 px-2 border-r border-slate-200 text-right">${sData.h[3] ? sData.h[3].toLocaleString() : '-'}</td>
+              <td class="py-2 px-2 border-r border-slate-200 text-right">${sData.h[4] ? sData.h[4].toLocaleString() : '-'}</td>
+              <td class="py-2 px-2 border-r border-slate-200 text-right">${sData.h[5] ? sData.h[5].toLocaleString() : '-'}</td>
+              <td class="py-2 px-2 border-r border-slate-200 text-right font-bold text-slate-900">${sData.kgs.toLocaleString()}</td>
+              <td class="py-2 px-2 border-r border-slate-200 text-right font-bold text-emerald-600">${sData.tons.toFixed(3)}</td>
+              <td class="py-2 px-2 text-left text-slate-500">${sData.remarks.join(', ')}</td>
+            `;
+            tbody.appendChild(tr);
+          }
+        });
+
+        // Add to Grand Totals
+        grandKgs += dailyKgs;
+        grandTons += dailyTons;
+        for (let i = 1; i <= 5; i++) {
+          grandH[i] += dailyH[i];
+        }
+
+        // SEPARATE DAILY TOTAL ROW IN BOLD RED (စာသား အနီရောင်ဖြင့် Day+Night စုစုပေါင်း Row)
+        const trDailyTotal = document.createElement('tr');
+        trDailyTotal.className = 'bg-rose-50/70 border-y-2 border-rose-300 font-black text-rose-600 text-[11px]';
+        trDailyTotal.innerHTML = `
+          <td class="py-2 px-2 border-r border-rose-200 font-black">${dateStr}</td>
+          <td class="py-2 px-2 border-r border-rose-200 font-black tracking-wide">TOTAL</td>
+          <td class="py-2 px-2 border-r border-rose-200 text-left font-black">${dateObj.boatName}</td>
+          <td class="py-2 px-2 border-r border-rose-200 text-right font-black">${dailyH[1] ? dailyH[1].toLocaleString() : '-'}</td>
+          <td class="py-2 px-2 border-r border-rose-200 text-right font-black">${dailyH[2] ? dailyH[2].toLocaleString() : '-'}</td>
+          <td class="py-2 px-2 border-r border-rose-200 text-right font-black">${dailyH[3] ? dailyH[3].toLocaleString() : '-'}</td>
+          <td class="py-2 px-2 border-r border-rose-200 text-right font-black">${dailyH[4] ? dailyH[4].toLocaleString() : '-'}</td>
+          <td class="py-2 px-2 border-r border-rose-200 text-right font-black">${dailyH[5] ? dailyH[5].toLocaleString() : '-'}</td>
+          <td class="py-2 px-2 border-r border-rose-200 text-right font-black">${dailyKgs.toLocaleString()}</td>
+          <td class="py-2 px-2 border-r border-rose-200 text-right font-black">${dailyTons.toFixed(3)}</td>
+          <td class="py-2 px-2 text-left italic text-[10px]">Daily Total (D+N)</td>
+        `;
+        tbody.appendChild(trDailyTotal);
+      });
+
+      // Bottom Grand Total Foot
       tfoot.innerHTML = `
-        <td colspan="3" class="py-2.5 px-3 text-left border-r border-slate-300">TOTAL</td>
-        <td class="py-2.5 px-2 text-right border-r border-slate-300">${totH[1].toLocaleString()}</td>
-        <td class="py-2.5 px-2 text-right border-r border-slate-300">${totH[2].toLocaleString()}</td>
-        <td class="py-2.5 px-2 text-right border-r border-slate-300">${totH[3].toLocaleString()}</td>
-        <td class="py-2.5 px-2 text-right border-r border-slate-300">${totH[4].toLocaleString()}</td>
-        <td class="py-2.5 px-2 text-right border-r border-slate-300">${totH[5].toLocaleString()}</td>
-        <td class="py-2.5 px-2 text-right border-r border-slate-300">${totKgs.toLocaleString()}</td>
-        <td class="py-2.5 px-2 text-right border-r border-slate-300 text-emerald-700">${totTons.toFixed(3)}</td>
+        <td colspan="3" class="py-2.5 px-3 text-left border-r border-slate-300 font-black">GRAND TOTAL</td>
+        <td class="py-2.5 px-2 text-right border-r border-slate-300 font-black">${grandH[1].toLocaleString()}</td>
+        <td class="py-2.5 px-2 text-right border-r border-slate-300 font-black">${grandH[2].toLocaleString()}</td>
+        <td class="py-2.5 px-2 text-right border-r border-slate-300 font-black">${grandH[3].toLocaleString()}</td>
+        <td class="py-2.5 px-2 text-right border-r border-slate-300 font-black">${grandH[4].toLocaleString()}</td>
+        <td class="py-2.5 px-2 text-right border-r border-slate-300 font-black">${grandH[5].toLocaleString()}</td>
+        <td class="py-2.5 px-2 text-right border-r border-slate-300 font-black">${grandKgs.toLocaleString()}</td>
+        <td class="py-2.5 px-2 text-right border-r border-slate-300 font-black text-emerald-700">${grandTons.toFixed(3)}</td>
         <td></td>
       `;
     }
@@ -3118,8 +3179,8 @@
           <td class="py-2 px-2.5 font-semibold">${r.boatName}</td>
           <td class="py-2 px-2.5 font-bold text-cyan-700">H-${r.hatch}</td>
           <td class="py-2 px-2.5">${r.shipper}</td>
-          <td class="py-2 px-2.5 text-slate-500">${r.checkerName}</td>
-          <td class="py-2 px-2.5 text-right font-bold">${r.dTotal.toLocaleString()} ${r.unit}</td>
+          <td class="py-2.5 px-2.5 text-slate-500">${r.checkerName}</td>
+          <td class="py-2.5 px-2.5 text-right font-bold">${r.dTotal.toLocaleString()} ${r.unit}</td>
           <td class="py-2.5 px-2.5 text-right font-bold text-emerald-600">${r.totalTons.toFixed(3)}</td>
           <td class="py-2.5 px-2.5 text-center whitespace-nowrap">
             <button onclick="editRecord('${r.id}')" class="w-7 h-7 rounded bg-cyan-50 text-cyan-600 mr-1" title="Edit Record"><i class="fa-solid fa-pen"></i></button>
@@ -3232,6 +3293,7 @@
       });
     }
 
+    // EXCEL EXPORT (INCLUDES CHRONOLOGICAL ORDER & DAILY TOTAL ROWS)
     function downloadExcel() {
       const active = getActiveBoat();
       const wb = XLSX.utils.book_new();
@@ -3242,21 +3304,65 @@
       ];
 
       const activeLogs = active ? appData.records.filter(r => r.boatId === active.id) : appData.records;
-      const groups = {};
+
+      // Group records by Date and Shift for Excel export
+      const dateMap = {};
       activeLogs.forEach(r => {
-        const k = `${r.date}|${r.shift}|${r.boatName}`;
-        if (!groups[k]) groups[k] = { date: r.date, shift: r.shift, boat: r.boatName, h: {1:0, 2:0, 3:0, 4:0, 5:0}, kgs:0, tons:0, remarks:[] };
-        groups[k].h[r.hatch] += r.dTotal;
-        groups[k].kgs += r.totalKgs;
-        groups[k].tons += r.totalTons;
-        if (r.remarks && !groups[key].remarks.includes(r.remarks)) groups[k].remarks.push(r.remarks);
+        if (!dateMap[r.date]) {
+          dateMap[r.date] = {
+            date: r.date,
+            timestamp: parseDMYTimestamp(r.date),
+            shifts: {},
+            boatName: r.boatName || (active ? active.name : '')
+          };
+        }
+        if (!dateMap[r.date].shifts[r.shift]) {
+          dateMap[r.date].shifts[r.shift] = {
+            shift: r.shift,
+            boat: r.boatName || (active ? active.name : ''),
+            h: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 },
+            kgs: 0,
+            tons: 0,
+            remarks: []
+          };
+        }
+        dateMap[r.date].shifts[r.shift].h[r.hatch] += r.dTotal;
+        dateMap[r.date].shifts[r.shift].kgs += r.totalKgs;
+        dateMap[r.date].shifts[r.shift].tons += r.totalTons;
+        if (r.remarks && !dateMap[r.date].shifts[r.shift].remarks.includes(r.remarks)) {
+          dateMap[r.date].shifts[r.shift].remarks.push(r.remarks);
+        }
       });
 
-      Object.values(groups).forEach(g => {
+      const sortedDates = Object.values(dateMap).sort((a, b) => a.timestamp - b.timestamp);
+
+      sortedDates.forEach(dateObj => {
+        const dateStr = dateObj.date;
+        const shifts = dateObj.shifts;
+        const dailyH = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
+        let dailyKgs = 0;
+        let dailyTons = 0;
+
+        ['Day', 'Night'].forEach(shiftName => {
+          if (shifts[shiftName]) {
+            const s = shifts[shiftName];
+            dailyKgs += s.kgs;
+            dailyTons += s.tons;
+            for (let i = 1; i <= 5; i++) dailyH[i] += s.h[i];
+
+            rowsTemplate.push([
+              dateStr, s.shift, s.boat,
+              s.h[1] || '', s.h[2] || '', s.h[3] || '', s.h[4] || '', s.h[5] || '',
+              s.kgs, s.tons, s.remarks.join(', ')
+            ]);
+          }
+        });
+
+        // Insert Daily Total row into Excel
         rowsTemplate.push([
-          g.date, g.shift, g.boat,
-          g.h[1] || '', g.h[2] || '', g.h[3] || '', g.h[4] || '', g.h[5] || '',
-          g.kgs, g.tons, g.remarks.join(', ')
+          dateStr, 'TOTAL', dateObj.boatName,
+          dailyH[1] || '', dailyH[2] || '', dailyH[3] || '', dailyH[4] || '', dailyH[5] || '',
+          dailyKgs, dailyTons, 'Daily Total (Day + Night)'
         ]);
       });
 
