@@ -24,7 +24,7 @@
 </head>
 <body class="bg-slate-100 text-slate-800 min-h-screen flex flex-col pb-16 select-none">
 
-  <!-- MODAL: SECURE ORG CODE ACCESS GATE (CLEAN & NO HINT) -->
+  <!-- MODAL: SECURE ORG CODE ACCESS GATE -->
   <div id="modalOrgGate" class="hidden fixed inset-0 z-50 bg-slate-950/95 backdrop-blur-md flex items-center justify-center p-4">
     <div class="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl text-center space-y-4">
       <div class="w-14 h-14 rounded-2xl bg-cyan-100 text-cyan-600 flex items-center justify-center mx-auto text-2xl font-bold">
@@ -35,7 +35,6 @@
         <p class="text-xs text-slate-500 mt-1">Master Owner ခွင့်ပြုပေးထားသော တရားဝင် Organization Code ကို ရိုက်ထည့်ပါ -</p>
       </div>
       <div>
-        <!-- PLACEHOLDER COMPLETELY HIDDEN / GENERIC -->
         <input type="password" id="inputOrgGateCode" placeholder="••••••••••••" class="w-full h-12 bg-slate-50 border-2 border-slate-300 focus:border-cyan-500 rounded-xl px-3 font-mono text-center font-bold text-slate-800 uppercase tracking-widest outline-none">
         <div class="flex items-center justify-end mt-1 px-1">
           <button type="button" onclick="toggleGatePasswordVisibility()" class="text-[11px] text-slate-400 hover:text-slate-600 font-semibold flex items-center space-x-1">
@@ -63,40 +62,39 @@
     </button>
   </div>
 
-  <!-- TOP APP BAR -->
+  <!-- TOP APP BAR (CLEAN, PROPORTIONAL & BALANCED) -->
   <header class="bg-slate-900 text-white sticky top-0 z-40 shadow-md">
-    <div class="max-w-7xl mx-auto px-2 sm:px-4 h-14 sm:h-16 flex items-center justify-between gap-1.5 sm:gap-2">
-      <div class="flex items-center space-x-2 min-w-0">
+    <div class="max-w-7xl mx-auto px-3 sm:px-4 h-14 sm:h-16 flex items-center justify-between gap-2">
+      <!-- Left: Menu + Title -->
+      <div class="flex items-center space-x-2 shrink-0">
         <button id="btnSystemMenu" onclick="toggleMenu()" class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-slate-800 active:bg-slate-700 text-slate-200 flex items-center justify-center shrink-0">
           <i class="fa-solid fa-bars text-sm sm:text-base"></i>
         </button>
-        <div class="truncate">
-          <div class="flex items-center space-x-1.5">
-            <h1 class="text-xs sm:text-base font-extrabold tracking-tight text-white truncate">MV INTAKE</h1>
-            <span id="badgeOrgCode" class="text-[9px] font-mono font-bold uppercase px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 shrink-0">SECURE</span>
-          </div>
-          <p class="text-[9px] sm:text-[10px] text-slate-400 truncate hidden xs:block">Cargo Management</p>
-        </div>
+        <h1 class="text-sm sm:text-base font-black tracking-tight text-white shrink-0">MV INTAKE</h1>
       </div>
 
-      <div class="flex items-center space-x-1 sm:space-x-1.5 shrink-0">
-        <button id="btnHeaderCloud" onclick="handleCloudClick()" class="h-9 px-2 sm:px-2.5 rounded-xl bg-cyan-800 active:bg-cyan-900 text-cyan-200 border border-cyan-700/60 flex items-center space-x-1.5 shadow-2xs" title="Cloud Live Sync">
-          <i class="fa-solid fa-cloud text-xs text-cyan-300"></i>
-          <span id="dotCloud" class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-          <span id="txtCloud" class="text-[10px] font-bold hidden md:inline">SYNC</span>
+      <!-- Right: Compact & Proportionate Action Buttons -->
+      <div class="flex items-center space-x-1.5 shrink-0">
+        <!-- Cloud Sync Button -->
+        <button id="btnHeaderCloud" onclick="handleCloudClick()" class="w-9 h-9 rounded-xl bg-cyan-900/60 active:bg-cyan-800 text-cyan-300 border border-cyan-700/60 flex items-center justify-center relative shadow-xs shrink-0" title="Cloud Live Sync">
+          <i class="fa-solid fa-cloud text-xs"></i>
+          <span id="dotCloud" class="w-2 h-2 rounded-full bg-emerald-400 absolute top-1.5 right-1.5 animate-pulse"></span>
         </button>
 
-        <button id="btnHeaderUsers" onclick="openUserManagerModal()" class="w-9 h-9 sm:w-auto sm:px-2.5 rounded-xl bg-emerald-600 active:bg-emerald-700 text-white flex items-center justify-center space-x-1 shadow-2xs" title="Team Manager">
+        <!-- Team Button -->
+        <button id="btnHeaderUsers" onclick="openUserManagerModal()" class="w-9 h-9 sm:w-auto sm:px-2.5 rounded-xl bg-emerald-600 active:bg-emerald-700 text-white flex items-center justify-center space-x-1 shadow-xs shrink-0" title="Team Manager">
           <i class="fa-solid fa-users-gear text-xs"></i>
           <span class="text-xs font-bold hidden md:inline">Team</span>
         </button>
 
-        <button id="btnHeaderShare" onclick="openShareModal()" class="w-9 h-9 sm:w-auto sm:px-2.5 rounded-xl bg-indigo-600 active:bg-indigo-700 text-white flex items-center justify-center space-x-1 shadow-2xs" title="Invite Links">
+        <!-- Share Links Button -->
+        <button id="btnHeaderShare" onclick="openShareModal()" class="w-9 h-9 sm:w-auto sm:px-2.5 rounded-xl bg-indigo-600 active:bg-indigo-700 text-white flex items-center justify-center space-x-1 shadow-xs shrink-0" title="Invite Links">
           <i class="fa-solid fa-share-nodes text-xs"></i>
           <span class="text-xs font-bold hidden md:inline">Links</span>
         </button>
 
-        <button onclick="handleUserBadgeClick()" id="userBadge" class="h-9 flex items-center space-x-1.5 px-2.5 rounded-xl bg-slate-800 border border-slate-700 text-xs max-w-[130px] sm:max-w-[190px]">
+        <!-- User Profile Badge (Compact on mobile) -->
+        <button onclick="handleUserBadgeClick()" id="userBadge" class="h-9 flex items-center space-x-1.5 px-2.5 rounded-xl bg-slate-800 border border-slate-700 text-xs max-w-[105px] sm:max-w-[170px] shrink-0">
           <span class="w-2 h-2 rounded-full bg-emerald-400 shrink-0"></span>
           <span id="userBadgeName" class="font-bold text-slate-200 truncate text-[11px] sm:text-xs">User</span>
           <i id="userBadgeIcon" class="fa-solid fa-chevron-down text-[9px] text-slate-400 shrink-0"></i>
@@ -125,7 +123,6 @@
         </div>
 
         <div class="space-y-1 text-xs font-bold">
-          <!-- MASTER OWNER ONLY: AUTHORIZED ORG LICENSES MANAGER -->
           <button id="menuBtnOrgLicenses" onclick="openOrgLicensesModal(); closeMenu()" class="w-full flex items-center space-x-3 px-3 py-3 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-950 font-bold border border-amber-200">
             <i class="fa-solid fa-key w-5 text-amber-600 text-sm"></i>
             <span>Authorize Org Codes (ခွင့်ပြုကုဒ်များ)</span>
@@ -214,8 +211,10 @@
 
   <!-- MAIN CONTENT AREA -->
   <main class="max-w-7xl mx-auto px-2 sm:px-4 mt-3 w-full flex-1 space-y-3">
-    <!-- ACTIVE VESSEL BANNER -->
-    <div class="bg-white rounded-2xl border border-slate-200 p-3 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+
+    <!-- ACTIVE VESSEL BANNER (PERFECTLY BALANCED ON MOBILE & DESKTOP) -->
+    <div class="bg-white rounded-2xl border border-slate-200 p-3.5 shadow-xs space-y-2.5 sm:space-y-0 sm:flex sm:items-center sm:justify-between sm:gap-3">
+      <!-- Vessel Title & Status -->
       <div class="flex items-center space-x-2.5 min-w-0">
         <div class="w-9 h-9 rounded-xl bg-cyan-50 border border-cyan-200 text-cyan-600 flex items-center justify-center font-bold text-base shrink-0">
           <i class="fa-solid fa-ship"></i>
@@ -224,23 +223,24 @@
           <div class="flex items-center space-x-1.5">
             <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Active Vessel Account</span>
             <span id="lockBadge" class="hidden text-[9px] bg-amber-100 text-amber-800 border border-amber-300 font-bold px-1.5 py-0.2 rounded">
-              <i class="fa-solid fa-lock text-[8px]"></i> Locked Account
+              <i class="fa-solid fa-lock text-[8px]"></i> Locked
             </span>
           </div>
           <div id="bannerBoatName" class="text-sm sm:text-base font-extrabold text-slate-800 truncate">No Vessel Account</div>
         </div>
       </div>
 
-      <div class="flex items-center space-x-1.5 w-full sm:w-auto">
-        <select id="selectActiveBoat" onchange="changeActiveBoat(this.value)" class="flex-1 sm:w-48 h-10 bg-slate-50 border border-slate-300 text-slate-800 text-xs rounded-xl px-2.5 font-bold focus:ring-2 focus:ring-cyan-500">
+      <!-- Select Box & Action Buttons: Fitted 100% without overflowing -->
+      <div class="flex items-center gap-1.5 w-full sm:w-auto">
+        <select id="selectActiveBoat" onchange="changeActiveBoat(this.value)" class="flex-1 min-w-0 sm:w-44 h-10 bg-slate-50 border border-slate-300 text-slate-800 text-xs rounded-xl px-2.5 font-bold focus:ring-2 focus:ring-cyan-500 truncate">
         </select>
         
-        <button id="btnGearBoat" onclick="openAccountModal()" class="h-10 px-2.5 rounded-xl bg-cyan-600 active:bg-cyan-700 text-white flex items-center justify-center space-x-1 shrink-0 text-xs font-bold shadow-xs" title="Manage Vessels">
+        <button id="btnGearBoat" onclick="openAccountModal()" class="h-10 px-3 rounded-xl bg-cyan-600 active:bg-cyan-700 text-white flex items-center justify-center space-x-1 shrink-0 text-xs font-bold shadow-xs whitespace-nowrap" title="Manage Vessels">
           <i class="fa-solid fa-plus text-xs"></i>
           <span>Vessel</span>
         </button>
 
-        <button id="btnDirectShipper" onclick="openShipperModal()" class="h-10 px-2.5 rounded-xl bg-indigo-600 active:bg-indigo-700 text-white flex items-center justify-center space-x-1 shrink-0 text-xs font-bold shadow-xs" title="Manage Shippers / Companies">
+        <button id="btnDirectShipper" onclick="openShipperModal()" class="h-10 px-3 rounded-xl bg-indigo-600 active:bg-indigo-700 text-white flex items-center justify-center space-x-1 shrink-0 text-xs font-bold shadow-xs whitespace-nowrap" title="Manage Shippers">
           <i class="fa-solid fa-building text-xs"></i>
           <span>Shipper</span>
         </button>
@@ -1016,13 +1016,10 @@
       }
     });
 
-    // =========================================================
-    // AUTHORIZED ORG LICENSES SYSTEM (CONFIDENTIAL MASTER KEY)
-    // =========================================================
+    // AUTHORIZED ORG LICENSES SYSTEM
     const ORG_STORAGE_KEY = 'MV_INTAKE_ACTIVE_ORG';
     const ALLOWED_ORGS_KEY = 'MV_INTAKE_ALLOWED_ORGS_CACHE';
     
-    // Master Owner Secret Code - Kept secure, never exposed as hint
     let allowedOrgCodes = ['KNA-001'];
     let currentOrgCode = localStorage.getItem(ORG_STORAGE_KEY) || '';
 
@@ -1197,9 +1194,7 @@
       }
     }
 
-    // =========================================================
     // MULTI-ORG DATA & CLOUD SYNC
-    // =========================================================
     let appData = {
       cloudUrl: '',
       activeBoatId: null,
@@ -1426,18 +1421,15 @@
 
     function updateCloudBadgeUI(online) {
       const dot = document.getElementById('dotCloud');
-      const txt = document.getElementById('txtCloud');
+      if (!dot) return;
       if (!appData.cloudUrl) {
-        dot.className = 'w-1.5 h-1.5 rounded-full bg-amber-400';
-        txt.textContent = 'LOCAL';
+        dot.className = 'w-2 h-2 rounded-full bg-amber-400 absolute top-1.5 right-1.5';
         return;
       }
       if (online) {
-        dot.className = 'w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse';
-        txt.textContent = 'LIVE';
+        dot.className = 'w-2 h-2 rounded-full bg-emerald-400 absolute top-1.5 right-1.5 animate-pulse';
       } else {
-        dot.className = 'w-1.5 h-1.5 rounded-full bg-rose-400';
-        txt.textContent = 'OFFLINE';
+        dot.className = 'w-2 h-2 rounded-full bg-rose-400 absolute top-1.5 right-1.5';
       }
     }
 
@@ -2141,7 +2133,6 @@
       document.getElementById('btnTabAttendance').style.display = isMember ? 'none' : '';
       if (isMember) switchTab('tabEntry');
 
-      // Master Owner controls
       const isMasterKNA = (currentOrgCode === 'KNA-001' && isSuperAdmin);
       const menuBtnOrgLicenses = document.getElementById('menuBtnOrgLicenses');
       if (menuBtnOrgLicenses) {
