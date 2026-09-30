@@ -24,8 +24,8 @@
 </head>
 <body class="bg-slate-100 text-slate-800 min-h-screen flex flex-col pb-16 select-none">
 
-  <!-- MODAL: SECURE ORG CODE ACCESS GATE -->
-  <div id="modalOrgGate" class="hidden fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-md flex items-center justify-center p-4">
+  <!-- MODAL: SECURE ORG CODE ACCESS GATE (CLEAN & NO HINT) -->
+  <div id="modalOrgGate" class="hidden fixed inset-0 z-50 bg-slate-950/95 backdrop-blur-md flex items-center justify-center p-4">
     <div class="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl text-center space-y-4">
       <div class="w-14 h-14 rounded-2xl bg-cyan-100 text-cyan-600 flex items-center justify-center mx-auto text-2xl font-bold">
         <i class="fa-solid fa-shield-halved"></i>
@@ -35,7 +35,14 @@
         <p class="text-xs text-slate-500 mt-1">Master Owner ခွင့်ပြုပေးထားသော တရားဝင် Organization Code ကို ရိုက်ထည့်ပါ -</p>
       </div>
       <div>
-        <input type="text" id="inputOrgGateCode" placeholder="e.g. KNA-001" class="w-full h-12 bg-slate-50 border-2 border-slate-300 focus:border-cyan-500 rounded-xl px-3 font-mono text-center font-bold text-slate-800 uppercase tracking-widest outline-none">
+        <!-- PLACEHOLDER COMPLETELY HIDDEN / GENERIC -->
+        <input type="password" id="inputOrgGateCode" placeholder="••••••••••••" class="w-full h-12 bg-slate-50 border-2 border-slate-300 focus:border-cyan-500 rounded-xl px-3 font-mono text-center font-bold text-slate-800 uppercase tracking-widest outline-none">
+        <div class="flex items-center justify-end mt-1 px-1">
+          <button type="button" onclick="toggleGatePasswordVisibility()" class="text-[11px] text-slate-400 hover:text-slate-600 font-semibold flex items-center space-x-1">
+            <i id="iconToggleGateEye" class="fa-solid fa-eye text-xs"></i>
+            <span id="lblToggleGateEye">Show Code</span>
+          </button>
+        </div>
         <p id="txtOrgGateError" class="hidden text-rose-500 text-[11px] font-bold mt-2"></p>
       </div>
       <button id="btnOrgGateSubmit" onclick="submitOrgGate()" class="w-full h-12 bg-cyan-600 hover:bg-cyan-700 text-white rounded-xl font-extrabold text-sm shadow-md active:scale-95 transition-all flex items-center justify-center space-x-1.5">
@@ -66,7 +73,7 @@
         <div class="truncate">
           <div class="flex items-center space-x-1.5">
             <h1 class="text-xs sm:text-base font-extrabold tracking-tight text-white truncate">MV INTAKE</h1>
-            <span id="badgeOrgCode" class="text-[9px] font-mono font-bold uppercase px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30 shrink-0">KNA-001</span>
+            <span id="badgeOrgCode" class="text-[9px] font-mono font-bold uppercase px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 shrink-0">SECURE</span>
           </div>
           <p class="text-[9px] sm:text-[10px] text-slate-400 truncate hidden xs:block">Cargo Management</p>
         </div>
@@ -118,11 +125,6 @@
         </div>
 
         <div class="space-y-1 text-xs font-bold">
-          <div class="p-2.5 bg-slate-50 border border-slate-200 rounded-xl mb-2 text-[11px]">
-            <span class="text-slate-400 block text-[9px] uppercase font-bold">Active Organization</span>
-            <span id="menuOrgDisplay" class="font-mono font-extrabold text-slate-800 text-xs">KNA-001</span>
-          </div>
-
           <!-- MASTER OWNER ONLY: AUTHORIZED ORG LICENSES MANAGER -->
           <button id="menuBtnOrgLicenses" onclick="openOrgLicensesModal(); closeMenu()" class="w-full flex items-center space-x-3 px-3 py-3 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-950 font-bold border border-amber-200">
             <i class="fa-solid fa-key w-5 text-amber-600 text-sm"></i>
@@ -612,9 +614,7 @@
     </section>
   </main>
 
-  <!-- ========================================== -->
   <!-- MODAL: MASTER OWNER - ORG LICENSES MANAGER -->
-  <!-- ========================================== -->
   <div id="modalOrgLicenses" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-end sm:items-center justify-center p-0 sm:p-4">
     <div class="bg-white rounded-t-3xl sm:rounded-2xl max-w-md w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
       <div class="p-4 bg-amber-950 text-white flex items-center justify-between">
@@ -632,7 +632,7 @@
         <div class="bg-amber-50 border border-amber-200 p-3 rounded-2xl space-y-2">
           <label class="block text-[11px] font-bold text-amber-900 uppercase">Authorize New Organization Code</label>
           <div class="flex items-center space-x-1.5">
-            <input type="text" id="inputNewAllowedOrg" placeholder="e.g. DELTA-CARGO" class="flex-1 h-11 bg-white border border-amber-300 rounded-xl px-3 font-mono font-bold uppercase text-slate-800">
+            <input type="text" id="inputNewAllowedOrg" placeholder="Enter New Org Code..." class="flex-1 h-11 bg-white border border-amber-300 rounded-xl px-3 font-mono font-bold uppercase text-slate-800">
             <button onclick="addAllowedOrgCode()" class="h-11 px-4 bg-amber-600 active:bg-amber-700 text-white rounded-xl font-bold shrink-0">
               Authorize
             </button>
@@ -1017,12 +1017,12 @@
     });
 
     // =========================================================
-    // AUTHORIZED ORG LICENSES SYSTEM (UPDATED MASTER: KNA-001)
+    // AUTHORIZED ORG LICENSES SYSTEM (CONFIDENTIAL MASTER KEY)
     // =========================================================
     const ORG_STORAGE_KEY = 'MV_INTAKE_ACTIVE_ORG';
     const ALLOWED_ORGS_KEY = 'MV_INTAKE_ALLOWED_ORGS_CACHE';
     
-    // Master Owner Org Code: KNA-001 is now pre-authorized by default
+    // Master Owner Secret Code - Kept secure, never exposed as hint
     let allowedOrgCodes = ['KNA-001'];
     let currentOrgCode = localStorage.getItem(ORG_STORAGE_KEY) || '';
 
@@ -1075,8 +1075,21 @@
         document.getElementById('modalOrgGate').classList.remove('hidden');
       } else {
         document.getElementById('modalOrgGate').classList.add('hidden');
-        document.getElementById('badgeOrgCode').textContent = currentOrgCode;
-        document.getElementById('menuOrgDisplay').textContent = currentOrgCode;
+      }
+    }
+
+    function toggleGatePasswordVisibility() {
+      const inp = document.getElementById('inputOrgGateCode');
+      const icon = document.getElementById('iconToggleGateEye');
+      const lbl = document.getElementById('lblToggleGateEye');
+      if (inp.type === 'password') {
+        inp.type = 'text';
+        icon.className = 'fa-solid fa-eye-slash text-xs';
+        lbl.textContent = 'Hide Code';
+      } else {
+        inp.type = 'password';
+        icon.className = 'fa-solid fa-eye text-xs';
+        lbl.textContent = 'Show Code';
       }
     }
 
@@ -1117,7 +1130,7 @@
       loadData();
       renderAll();
       if (appData.cloudUrl) pullFromCloud(false);
-      showToast(`Access Granted: ${code}`);
+      showToast('Access Granted');
     }
 
     function openOrgLicensesModal() {
@@ -1243,7 +1256,7 @@
     function backupSystemData() {
       const exportObject = {
         app: 'MV_INTAKE_AUTOMATED',
-        version: '7.0',
+        version: '7.5',
         org: currentOrgCode,
         exportedAt: new Date().toISOString(),
         data: {
@@ -1260,7 +1273,7 @@
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `MV_INTAKE_BACKUP_${currentOrgCode}_${new Date().toISOString().slice(0, 10)}.json`;
+      a.download = `MV_INTAKE_BACKUP_${new Date().toISOString().slice(0, 10)}.json`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
@@ -2128,7 +2141,7 @@
       document.getElementById('btnTabAttendance').style.display = isMember ? 'none' : '';
       if (isMember) switchTab('tabEntry');
 
-      // Master Owner licenses button: Visible ONLY on KNA-001 for Super Admin!
+      // Master Owner controls
       const isMasterKNA = (currentOrgCode === 'KNA-001' && isSuperAdmin);
       const menuBtnOrgLicenses = document.getElementById('menuBtnOrgLicenses');
       if (menuBtnOrgLicenses) {
@@ -2711,7 +2724,7 @@
       const wsBoat = XLSX.utils.aoa_to_sheet(rowsBoat);
       XLSX.utils.book_append_sheet(wb, wsBoat, 'BOAT_ACCOUNTS');
 
-      const fileName = `MV_INTAKE_${currentOrgCode || 'REPORT'}_${(active ? active.name : '').replace(/[^a-zA-Z0-9]/g, '_')}.xlsx`;
+      const fileName = `MV_INTAKE_REPORT_${new Date().toISOString().slice(0, 10)}.xlsx`;
       XLSX.writeFile(wb, fileName);
       showToast('Excel downloaded');
     }
