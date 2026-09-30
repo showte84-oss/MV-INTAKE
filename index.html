@@ -24,38 +24,44 @@
 </head>
 <body class="bg-slate-100 text-slate-800 min-h-screen flex flex-col select-none">
 
-  <!-- TOP HEADER BAR: CLEAN & UNCLUTTERED (NO UNWANTED IMAGES) -->
+  <!-- APP HEADER: PERFECTLY BALANCED & PROPORTIONATE ON ALL MOBILE SCREENS -->
   <header class="bg-slate-950 text-white sticky top-0 z-40 shadow-md">
-    <div class="max-w-7xl mx-auto px-3 sm:px-4 h-13 sm:h-14 flex items-center justify-between gap-2">
-      <!-- Left: Menu + Clean VESSEL DETAIL Title -->
-      <div class="flex items-center space-x-2.5 shrink-0">
-        <button id="btnSystemMenu" onclick="toggleMenu()" class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-slate-800 active:bg-slate-700 text-slate-200 flex items-center justify-center shrink-0 shadow-2xs" title="Menu">
-          <i class="fa-solid fa-bars text-sm sm:text-base"></i>
+    <div class="max-w-7xl mx-auto px-2 sm:px-4 h-14 flex items-center justify-between gap-1">
+      
+      <!-- Left: Menu + VESSEL DETAIL Title -->
+      <div class="flex items-center space-x-2 min-w-0 shrink-0">
+        <button id="btnSystemMenu" onclick="toggleMenu()" class="w-9 h-9 rounded-xl bg-slate-800 active:bg-slate-700 text-slate-200 flex items-center justify-center shrink-0 shadow-2xs" title="Menu">
+          <i class="fa-solid fa-bars text-sm"></i>
         </button>
-        <span class="text-xs sm:text-sm font-black tracking-widest text-slate-100 uppercase">VESSEL DETAIL</span>
+        <span class="text-xs sm:text-sm font-black tracking-wider text-slate-100 uppercase truncate">VESSEL DETAIL</span>
       </div>
 
-      <!-- Right: Compact & Proportionate Action Icons -->
-      <div class="flex items-center space-x-1.5 sm:space-x-2 shrink-0">
-        <button id="btnHeaderCloud" onclick="handleCloudClick()" class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-cyan-900/70 active:bg-cyan-800 text-cyan-300 border border-cyan-700/60 flex items-center justify-center relative shadow-xs shrink-0" title="Cloud Live Sync">
-          <i class="fa-solid fa-cloud text-xs sm:text-sm"></i>
-          <span id="dotCloud" class="w-2 h-2 rounded-full bg-emerald-400 absolute top-1.5 right-1.5 animate-pulse"></span>
+      <!-- Right: Compact Action Icons & Strictly Bounded User Badge -->
+      <div class="flex items-center space-x-1 shrink-0">
+        <!-- Cloud Sync -->
+        <button id="btnHeaderCloud" onclick="handleCloudClick()" class="w-9 h-9 rounded-xl bg-cyan-900/70 active:bg-cyan-800 text-cyan-300 border border-cyan-700/60 flex items-center justify-center relative shadow-xs shrink-0" title="Cloud Live Sync">
+          <i class="fa-solid fa-cloud text-xs"></i>
+          <span id="dotCloud" class="w-2 h-2 rounded-full bg-emerald-400 absolute top-1 right-1 animate-pulse"></span>
         </button>
 
-        <button id="btnHeaderUsers" onclick="openUserManagerModal()" class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-emerald-600 active:bg-emerald-700 text-white flex items-center justify-center shadow-xs shrink-0" title="Team Manager">
-          <i class="fa-solid fa-users-gear text-xs sm:text-sm"></i>
+        <!-- Team Manager -->
+        <button id="btnHeaderUsers" onclick="openUserManagerModal()" class="w-9 h-9 rounded-xl bg-emerald-600 active:bg-emerald-700 text-white flex items-center justify-center shadow-xs shrink-0" title="Team Manager">
+          <i class="fa-solid fa-users-gear text-xs"></i>
         </button>
 
-        <button id="btnHeaderShare" onclick="openShareModal()" class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-indigo-600 active:bg-indigo-700 text-white flex items-center justify-center shadow-xs shrink-0" title="Invite Links">
-          <i class="fa-solid fa-share-nodes text-xs sm:text-sm"></i>
+        <!-- Invite Links -->
+        <button id="btnHeaderShare" onclick="openShareModal()" class="w-9 h-9 rounded-xl bg-indigo-600 active:bg-indigo-700 text-white flex items-center justify-center shadow-xs shrink-0" title="Invite Links">
+          <i class="fa-solid fa-share-nodes text-xs"></i>
         </button>
 
-        <button onclick="handleUserBadgeClick()" id="userBadge" class="h-9 sm:h-10 flex items-center space-x-1.5 px-2.5 rounded-xl bg-slate-800 border border-slate-700 text-xs max-w-[120px] sm:max-w-[170px] shrink-0">
+        <!-- User Profile Badge (Fixed max-width to prevent any overflow) -->
+        <button onclick="handleUserBadgeClick()" id="userBadge" class="h-9 flex items-center space-x-1 px-2 rounded-xl bg-slate-800 border border-slate-700 text-xs max-w-[95px] sm:max-w-[140px] shrink-0">
           <span class="w-2 h-2 rounded-full bg-emerald-400 shrink-0"></span>
-          <span id="userBadgeName" class="font-bold text-slate-200 truncate text-[11px] sm:text-xs">User</span>
-          <i id="userBadgeIcon" class="fa-solid fa-chevron-down text-[9px] text-slate-400 shrink-0"></i>
+          <span id="userBadgeName" class="font-bold text-slate-200 truncate text-[11px]">User</span>
+          <i id="userBadgeIcon" class="fa-solid fa-chevron-down text-[8px] text-slate-400 shrink-0"></i>
         </button>
       </div>
+
     </div>
   </header>
 
@@ -171,14 +177,14 @@
       </div>
 
       <div class="pt-3 border-t border-slate-100 text-[11px] text-slate-400 flex items-center justify-between">
-        <span>MV INTAKE Multi-Org</span>
+        <span>VESSEL DETAIL Multi-Org</span>
         <button id="menuBtnReset" onclick="resetData(); closeMenu()" class="text-rose-500 font-semibold hover:underline">Change Org Code</button>
       </div>
     </div>
   </div>
 
   <!-- NAVIGATION TABS -->
-  <nav id="mainNavBar" class="bg-white border-b border-slate-200 sticky top-13 sm:top-14 z-30 shadow-xs">
+  <nav id="mainNavBar" class="bg-white border-b border-slate-200 sticky top-14 z-30 shadow-xs">
     <div class="max-w-7xl mx-auto px-2 sm:px-4 flex space-x-1.5 overflow-x-auto py-2 custom-scroll">
       <button onclick="switchTab('tabEntry')" id="btnTabEntry" class="tab-btn px-3 py-2 rounded-xl text-xs font-bold whitespace-nowrap bg-cyan-600 text-white shadow-xs flex items-center space-x-1.5">
         <i class="fa-solid fa-pen-to-square"></i>
@@ -357,7 +363,7 @@
             <div class="flex items-center justify-between border-b border-indigo-100 pb-2">
               <span class="text-xs font-extrabold text-indigo-950 flex items-center space-x-1.5">
                 <i class="fa-solid fa-clock text-indigo-600"></i>
-                <span>Loading / Discharging Time (24-Hour Military Format)</span>
+                <span>Loading / Discharging Time (24-Hour Format)</span>
               </span>
               <span class="text-[10px] text-indigo-700 font-bold bg-indigo-100 px-2 py-0.5 rounded">24 HR Dial</span>
             </div>
@@ -545,7 +551,7 @@
       </div>
     </section>
 
-    <!-- TAB 3: MV INTAKE TEMPLATE PREVIEW (SHIPPER UNDER BOAT NO + RED TOTALS) -->
+    <!-- TAB 3: MV INTAKE TEMPLATE PREVIEW -->
     <section id="tabTemplate" class="hidden space-y-3">
       <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-xs flex flex-wrap items-center justify-between gap-3">
         <div>
@@ -1130,9 +1136,6 @@
       }
     });
 
-    // =========================================================
-    // 24-HOUR MILITARY CLOCK DIAL PICKER CONTROLLER
-    // =========================================================
     let clock24TargetInputId = null;
     let clock24TargetCallback = null;
     let clock24CurrentMode = 'HOURS';
@@ -1319,9 +1322,6 @@
       close24HrClockModal();
     }
 
-    // =========================================================
-    // 24-HR TIME & DURATION CALCULATION UTILITIES
-    // =========================================================
     function parse24TimeToMinutes(tStr) {
       if (!tStr) return null;
       tStr = tStr.trim();
@@ -1387,9 +1387,6 @@
       return 0;
     }
 
-    // =========================================================
-    // DYNAMIC STOPPAGES UI
-    // =========================================================
     function renderStoppagesList(containerId, stoppagesArray) {
       const container = document.getElementById(containerId);
       if (!container) return;
@@ -1501,9 +1498,7 @@
       renderStoppagesList(containerId, current);
     }
 
-    // =========================================================
     // AUTHORIZED ORG LICENSES SYSTEM
-    // =========================================================
     const ORG_STORAGE_KEY = 'MV_INTAKE_ACTIVE_ORG';
     const ALLOWED_ORGS_KEY = 'MV_INTAKE_ALLOWED_ORGS_CACHE';
     
@@ -1681,9 +1676,7 @@
       }
     }
 
-    // =========================================================
     // MULTI-ORG DATA & CLOUD SYNC
-    // =========================================================
     let appData = {
       cloudUrl: '',
       activeBoatId: null,
@@ -1740,7 +1733,7 @@
     function backupSystemData() {
       const exportObject = {
         app: 'MV_INTAKE_AUTOMATED',
-        version: '10.0',
+        version: '10.1',
         org: currentOrgCode,
         exportedAt: new Date().toISOString(),
         data: {
@@ -1912,13 +1905,13 @@
       const dot = document.getElementById('dotCloud');
       if (!dot) return;
       if (!appData.cloudUrl) {
-        dot.className = 'w-2 h-2 rounded-full bg-amber-400 absolute top-1.5 right-1.5';
+        dot.className = 'w-2 h-2 rounded-full bg-amber-400 absolute top-1 right-1';
         return;
       }
       if (online) {
-        dot.className = 'w-2 h-2 rounded-full bg-emerald-400 absolute top-1.5 right-1.5 animate-pulse';
+        dot.className = 'w-2 h-2 rounded-full bg-emerald-400 absolute top-1 right-1 animate-pulse';
       } else {
-        dot.className = 'w-2 h-2 rounded-full bg-rose-400 absolute top-1.5 right-1.5';
+        dot.className = 'w-2 h-2 rounded-full bg-rose-400 absolute top-1 right-1';
       }
     }
 
@@ -3011,14 +3004,14 @@
           <td class="py-2 px-2.5 font-bold">${r.boatName}</td>
           <td class="py-2 px-2.5">${r.shipper}</td>
           <td class="py-2 px-2.5 font-bold text-cyan-700">H-${r.hatch}</td>
-          <td class="py-2.5 px-2.5 text-right font-bold">${r.dTotal.toLocaleString()}</td>
-          <td class="py-2.5 px-2.5 text-right font-bold text-emerald-600">${r.totalTons.toFixed(3)}</td>
+          <td class="py-2 px-2.5 text-right font-bold">${r.dTotal.toLocaleString()}</td>
+          <td class="py-2 px-2.5 text-right font-bold text-emerald-600">${r.totalTons.toFixed(3)}</td>
         `;
         tbody.appendChild(tr);
       });
     }
 
-    // TAB 3: TEMPLATE PREVIEW (CHRONOLOGICAL + SHIPPER UNDER BOAT NO + RED TOTALS)
+    // TAB 3: TEMPLATE PREVIEW
     function renderTemplateTable() {
       const active = getActiveBoat();
       const tbody = document.getElementById('tblTemplateBody');
@@ -3172,8 +3165,8 @@
           <td class="py-2 px-2.5">${r.shipper}</td>
           <td class="py-2 px-2.5 text-slate-500">${r.checkerName}</td>
           <td class="py-2 px-2.5 text-right font-bold">${r.dTotal.toLocaleString()} ${r.unit}</td>
-          <td class="py-2.5 px-2.5 text-right font-bold text-emerald-600">${r.totalTons.toFixed(3)}</td>
-          <td class="py-2.5 px-2.5 text-center whitespace-nowrap">
+          <td class="py-2 px-2.5 text-right font-bold text-emerald-600">${r.totalTons.toFixed(3)}</td>
+          <td class="py-2 px-2.5 text-center whitespace-nowrap">
             <button onclick="editRecord('${r.id}')" class="w-7 h-7 rounded bg-cyan-50 text-cyan-600 mr-1" title="Edit Record"><i class="fa-solid fa-pen"></i></button>
             <button onclick="deleteRecord('${r.id}')" class="w-7 h-7 rounded bg-rose-50 text-rose-500" title="Delete Record"><i class="fa-solid fa-trash"></i></button>
           </td>
@@ -3284,7 +3277,7 @@
       });
     }
 
-    // EXCEL EXPORT (SHIPPER NAME IN BOAT NO COLUMN + RED DAILY TOTALS)
+    // EXCEL EXPORT
     function downloadExcel() {
       const active = getActiveBoat();
       const wb = XLSX.utils.book_new();
