@@ -24,6 +24,12 @@
 </head>
 <body class="bg-slate-100 text-slate-800 min-h-screen flex flex-col select-none">
 
+  <!-- TOP BAR: VESSEL DETAIL (REPLACED MV INTAKE) & SHIP THUMBNAIL -->
+  <div class="bg-black text-white px-3.5 py-2.5 flex items-center justify-between border-b border-slate-800 shadow-xs">
+    <span class="text-sm sm:text-base font-serif font-black tracking-wider text-slate-100 uppercase">VESSEL DETAIL</span>
+    <img src="https://images.unsplash.com/photo-1559136555-9303baea8ebd?auto=format&fit=crop&w=120&q=80" alt="Vessel" class="w-12 h-7 object-cover rounded shadow-xs border border-slate-700 shrink-0">
+  </div>
+
   <!-- MODAL: SECURE ORG CODE ACCESS GATE -->
   <div id="modalOrgGate" class="hidden fixed inset-0 z-50 bg-slate-950/95 backdrop-blur-md flex items-center justify-center p-4">
     <div class="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl text-center space-y-4">
@@ -62,33 +68,32 @@
     </button>
   </div>
 
-  <!-- TOP APP BAR -->
+  <!-- APP NAVBAR (CLEAN, NO TITLE, PERFECTLY PROPORTIONED ICONS) -->
   <header class="bg-slate-900 text-white sticky top-0 z-40 shadow-md">
-    <div class="max-w-7xl mx-auto px-3 sm:px-4 h-14 sm:h-16 flex items-center justify-between gap-2">
+    <div class="max-w-7xl mx-auto px-2.5 sm:px-4 h-13 sm:h-14 flex items-center justify-between gap-1.5 sm:gap-2">
+      <!-- Left: Hamburger Menu Button -->
       <div class="flex items-center space-x-2 shrink-0">
-        <button id="btnSystemMenu" onclick="toggleMenu()" class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-slate-800 active:bg-slate-700 text-slate-200 flex items-center justify-center shrink-0">
+        <button id="btnSystemMenu" onclick="toggleMenu()" class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-slate-800 active:bg-slate-700 text-slate-200 flex items-center justify-center shrink-0 shadow-2xs" title="Menu">
           <i class="fa-solid fa-bars text-sm sm:text-base"></i>
         </button>
-        <h1 class="text-sm sm:text-base font-black tracking-tight text-white shrink-0">MV INTAKE</h1>
       </div>
 
-      <div class="flex items-center space-x-1.5 shrink-0">
-        <button id="btnHeaderCloud" onclick="handleCloudClick()" class="w-9 h-9 rounded-xl bg-cyan-900/60 active:bg-cyan-800 text-cyan-300 border border-cyan-700/60 flex items-center justify-center relative shadow-xs shrink-0" title="Cloud Live Sync">
-          <i class="fa-solid fa-cloud text-xs"></i>
+      <!-- Right: Compact, Proportional Action Buttons -->
+      <div class="flex items-center space-x-1.5 sm:space-x-2 shrink-0">
+        <button id="btnHeaderCloud" onclick="handleCloudClick()" class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-cyan-900/70 active:bg-cyan-800 text-cyan-300 border border-cyan-700/60 flex items-center justify-center relative shadow-xs shrink-0" title="Cloud Live Sync">
+          <i class="fa-solid fa-cloud text-xs sm:text-sm"></i>
           <span id="dotCloud" class="w-2 h-2 rounded-full bg-emerald-400 absolute top-1.5 right-1.5 animate-pulse"></span>
         </button>
 
-        <button id="btnHeaderUsers" onclick="openUserManagerModal()" class="w-9 h-9 sm:w-auto sm:px-2.5 rounded-xl bg-emerald-600 active:bg-emerald-700 text-white flex items-center justify-center space-x-1 shadow-xs shrink-0" title="Team Manager">
-          <i class="fa-solid fa-users-gear text-xs"></i>
-          <span class="text-xs font-bold hidden md:inline">Team</span>
+        <button id="btnHeaderUsers" onclick="openUserManagerModal()" class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-emerald-600 active:bg-emerald-700 text-white flex items-center justify-center shadow-xs shrink-0" title="Team Manager">
+          <i class="fa-solid fa-users-gear text-xs sm:text-sm"></i>
         </button>
 
-        <button id="btnHeaderShare" onclick="openShareModal()" class="w-9 h-9 sm:w-auto sm:px-2.5 rounded-xl bg-indigo-600 active:bg-indigo-700 text-white flex items-center justify-center space-x-1 shadow-xs shrink-0" title="Invite Links">
-          <i class="fa-solid fa-share-nodes text-xs"></i>
-          <span class="text-xs font-bold hidden md:inline">Links</span>
+        <button id="btnHeaderShare" onclick="openShareModal()" class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-indigo-600 active:bg-indigo-700 text-white flex items-center justify-center shadow-xs shrink-0" title="Invite Links">
+          <i class="fa-solid fa-share-nodes text-xs sm:text-sm"></i>
         </button>
 
-        <button onclick="handleUserBadgeClick()" id="userBadge" class="h-9 flex items-center space-x-1.5 px-2.5 rounded-xl bg-slate-800 border border-slate-700 text-xs max-w-[105px] sm:max-w-[170px] shrink-0">
+        <button onclick="handleUserBadgeClick()" id="userBadge" class="h-9 sm:h-10 flex items-center space-x-1.5 px-2.5 rounded-xl bg-slate-800 border border-slate-700 text-xs max-w-[125px] sm:max-w-[170px] shrink-0">
           <span class="w-2 h-2 rounded-full bg-emerald-400 shrink-0"></span>
           <span id="userBadgeName" class="font-bold text-slate-200 truncate text-[11px] sm:text-xs">User</span>
           <i id="userBadgeIcon" class="fa-solid fa-chevron-down text-[9px] text-slate-400 shrink-0"></i>
@@ -178,7 +183,7 @@
   </div>
 
   <!-- NAVIGATION TABS -->
-  <nav id="mainNavBar" class="bg-white border-b border-slate-200 sticky top-14 sm:top-16 z-30 shadow-xs">
+  <nav id="mainNavBar" class="bg-white border-b border-slate-200 sticky top-13 sm:top-14 z-30 shadow-xs">
     <div class="max-w-7xl mx-auto px-2 sm:px-4 flex space-x-1.5 overflow-x-auto py-2 custom-scroll">
       <button onclick="switchTab('tabEntry')" id="btnTabEntry" class="tab-btn px-3 py-2 rounded-xl text-xs font-bold whitespace-nowrap bg-cyan-600 text-white shadow-xs flex items-center space-x-1.5">
         <i class="fa-solid fa-pen-to-square"></i>
@@ -339,6 +344,7 @@
             </select>
           </div>
 
+          <!-- HATCH SELECTION -->
           <div>
             <label class="block text-[11px] font-bold text-slate-600 uppercase mb-1.5">Select Hatch Number (H1 - H5)</label>
             <div class="grid grid-cols-5 gap-1.5 sm:gap-2">
@@ -356,7 +362,7 @@
             <div class="flex items-center justify-between border-b border-indigo-100 pb-2">
               <span class="text-xs font-extrabold text-indigo-950 flex items-center space-x-1.5">
                 <i class="fa-solid fa-clock text-indigo-600"></i>
-                <span>Loading / Discharging Time (24-Hour Military Format)</span>
+                <span>Loading / Discharging Time (24-Hour Format)</span>
               </span>
               <span class="text-[10px] text-indigo-700 font-bold bg-indigo-100 px-2 py-0.5 rounded">24 HR Dial</span>
             </div>
@@ -544,7 +550,7 @@
       </div>
     </section>
 
-    <!-- TAB 3: MV INTAKE TEMPLATE PREVIEW (CHRONOLOGICAL ORDER + RED DAILY TOTALS) -->
+    <!-- TAB 3: MV INTAKE TEMPLATE PREVIEW (CHRONOLOGICAL + SHIPPER UNDER BOAT NO + RED DAILY TOTALS) -->
     <section id="tabTemplate" class="hidden space-y-3">
       <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-xs flex flex-wrap items-center justify-between gap-3">
         <div>
@@ -552,7 +558,7 @@
             <i class="fa-solid fa-table text-cyan-600"></i>
             <span>MV INTAKE Master Template</span>
           </h2>
-          <p class="text-[11px] text-slate-500">ရက်စွဲအစမှ အစီအစဉ်လိုက်ပြသပြီး တစ်ရက်ချင်းစီအတွက် Day/Night Total အနီရောင်ဖြင့် ဖော်ပြထားပါသည်</p>
+          <p class="text-[11px] text-slate-500">BOAT NO Column တွင် Shipper အမည်များကို အစမှအဆုံး အစီအစဉ်လိုက် ဖော်ပြထားပါသည်</p>
         </div>
         <button onclick="downloadExcel()" class="h-10 px-4 bg-emerald-600 active:bg-emerald-700 text-white rounded-xl text-xs font-bold shadow-xs flex items-center space-x-2">
           <i class="fa-solid fa-file-excel"></i>
@@ -606,7 +612,7 @@
               <th class="py-2.5 px-2.5">Boat No</th>
               <th class="py-2.5 px-2.5">Hatch</th>
               <th class="py-2.5 px-2.5">Shipper</th>
-              <th class="py-2.5 px-2.5 text-slate-500">Checker</th>
+              <th class="py-2.5 px-2.5 text-slate-500">Tally/Sample</th>
               <th class="py-2.5 px-2.5 text-right">D Total</th>
               <th class="py-2.5 px-2.5 text-right">TONS</th>
               <th class="py-2.5 px-2.5 text-center">Action</th>
@@ -638,7 +644,7 @@
             <tr class="bg-slate-100 text-slate-700 uppercase text-[10px] tracking-wider border-b border-slate-200 font-bold">
               <th class="py-3 px-3">Date</th>
               <th class="py-3 px-3">Shift</th>
-              <th class="py-3 px-3">Checker</th>
+              <th class="py-3 px-3">Tally/Sample</th>
               <th class="py-3 px-3">Hatch</th>
               <th class="py-3 px-3">Operation Time (24h)</th>
               <th class="py-3 px-3">Stoppages / Delays Log</th>
@@ -890,7 +896,7 @@
       <div class="p-4 bg-slate-900 text-white flex items-center justify-between">
         <div class="flex items-center space-x-2">
           <i class="fa-solid fa-users-gear text-emerald-400"></i>
-          <span class="font-bold text-sm">Team Manager (Admins & Members)</span>
+          <span class="font-bold text-sm">Team Manager (Admins & Tally/Sample)</span>
         </div>
         <button onclick="closeUserManagerModal()" class="w-8 h-8 rounded-lg bg-slate-800 text-slate-300 flex items-center justify-center">
           <i class="fa-solid fa-xmark"></i>
@@ -907,13 +913,13 @@
 
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
             <div class="sm:col-span-2">
-              <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Full Name / Checker Name</label>
+              <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Full Name (Tally / Sample)</label>
               <input type="text" id="inputUserName" placeholder="Enter name..." class="w-full h-11 bg-white border border-slate-300 rounded-xl px-3 font-bold text-slate-800">
             </div>
             <div>
               <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Assign Role</label>
               <select id="inputUserRole" class="w-full h-11 bg-white border border-slate-300 rounded-xl px-2.5 font-bold text-slate-800">
-                <option value="MEMBER">MEMBER (Tally)</option>
+                <option value="MEMBER">Member (Tally/Sample)</option>
                 <option value="ADMIN">ADMIN (Supervisor)</option>
                 <option value="SUPER_ADMIN">SUPER ADMIN</option>
               </select>
@@ -1090,7 +1096,7 @@
 
         <div class="bg-cyan-50 border border-cyan-200 rounded-2xl p-3.5 space-y-2">
           <div class="font-extrabold text-cyan-950 flex items-center justify-between">
-            <span><i class="fa-solid fa-helmet-safety mr-1.5 text-cyan-600"></i>Member (Hatch Tally) Links</span>
+            <span><i class="fa-solid fa-helmet-safety mr-1.5 text-cyan-600"></i>Member (Tally/Sample) Links</span>
             <span class="text-[10px] px-2 py-0.5 rounded bg-cyan-200 text-cyan-900 font-bold">Data Entry Only</span>
           </div>
           <div id="listUniqueMemberLinks" class="space-y-2 max-h-64 overflow-y-auto custom-scroll"></div>
@@ -1379,7 +1385,6 @@
       return `${m} mins`;
     }
 
-    // Helper: Parse DD/MM/YYYY string to epoch milliseconds
     function parseDMYTimestamp(str) {
       if (!str) return 0;
       const parts = str.split('/');
@@ -1742,7 +1747,7 @@
     function backupSystemData() {
       const exportObject = {
         app: 'MV_INTAKE_AUTOMATED',
-        version: '9.8',
+        version: '10.0',
         org: currentOrgCode,
         exportedAt: new Date().toISOString(),
         data: {
@@ -2708,13 +2713,15 @@
           ? 'bg-amber-100 text-amber-800 border-amber-300'
           : (u.role === 'ADMIN' ? 'bg-indigo-100 text-indigo-800 border-indigo-300' : 'bg-cyan-100 text-cyan-800 border-cyan-300');
 
+        const roleDisplay = u.role === 'MEMBER' ? 'Member (Tally/Sample)' : u.role;
+
         const div = document.createElement('div');
         div.className = 'flex items-center justify-between p-3 rounded-2xl bg-slate-50 border border-slate-200 text-xs gap-2';
         div.innerHTML = `
           <div class="min-w-0 flex-1">
             <div class="font-extrabold text-slate-800 truncate">${u.name}</div>
             <div class="mt-1 flex items-center space-x-1.5">
-              <span class="text-[9px] font-extrabold uppercase px-2 py-0.5 rounded-md border ${badgeColor}">${u.role}</span>
+              <span class="text-[9px] font-extrabold uppercase px-2 py-0.5 rounded-md border ${badgeColor}">${roleDisplay}</span>
               <span class="text-[10px] text-slate-400 font-mono">${u.id} • ${u.accessKey}</span>
             </div>
           </div>
@@ -2812,7 +2819,7 @@
         return;
       }
 
-      if (confirm(`Delete user "${target.name}" (${target.role})?`)) {
+      if (confirm(`Delete user "${target.name}"?`)) {
         appData.users = appData.users.filter(u => u.id !== id);
         if (appData.currentUser.id === id) {
           appData.currentUser = appData.users[0];
@@ -3011,16 +3018,16 @@
           <td class="py-2 px-2.5 font-bold">${r.boatName}</td>
           <td class="py-2 px-2.5">${r.shipper}</td>
           <td class="py-2 px-2.5 font-bold text-cyan-700">H-${r.hatch}</td>
-          <td class="py-2 px-2.5 text-right font-bold">${r.dTotal.toLocaleString()}</td>
-          <td class="py-2 px-2.5 text-right font-bold text-emerald-600">${r.totalTons.toFixed(3)}</td>
+          <td class="py-2.5 px-2.5 text-right font-bold">${r.dTotal.toLocaleString()}</td>
+          <td class="py-2.5 px-2.5 text-right font-bold text-emerald-600">${r.totalTons.toFixed(3)}</td>
         `;
         tbody.appendChild(tr);
       });
     }
 
-    // =========================================================
-    // TAB 3: MV INTAKE TEMPLATE PREVIEW (CHRONOLOGICAL + RED DAILY TOTALS)
-    // =========================================================
+    // ==============================================================================
+    // TAB 3: TEMPLATE PREVIEW (CHRONOLOGICAL + SHIPPER UNDER BOAT NO + RED TOTALS)
+    // ==============================================================================
     function renderTemplateTable() {
       const active = getActiveBoat();
       const tbody = document.getElementById('tblTemplateBody');
@@ -3039,76 +3046,75 @@
         return;
       }
 
-      // Group records by Date and Shift
+      // Group records by Date and then by (Shift + Shipper)
       const dateMap = {};
       logs.forEach(r => {
         if (!dateMap[r.date]) {
           dateMap[r.date] = {
             date: r.date,
             timestamp: parseDMYTimestamp(r.date),
-            shifts: {},
-            boatName: r.boatName || active.name
+            entries: {}
           };
         }
-        if (!dateMap[r.date].shifts[r.shift]) {
-          dateMap[r.date].shifts[r.shift] = {
+        const entryKey = `${r.shift}_${r.shipper}`;
+        if (!dateMap[r.date].entries[entryKey]) {
+          dateMap[r.date].entries[entryKey] = {
             shift: r.shift,
-            boat: r.boatName || active.name,
+            shipper: r.shipper,
             h: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 },
             kgs: 0,
             tons: 0,
             remarks: []
           };
         }
-        dateMap[r.date].shifts[r.shift].h[r.hatch] += r.dTotal;
-        dateMap[r.date].shifts[r.shift].kgs += r.totalKgs;
-        dateMap[r.date].shifts[r.shift].tons += r.totalTons;
-        if (r.remarks && !dateMap[r.date].shifts[r.shift].remarks.includes(r.remarks)) {
-          dateMap[r.date].shifts[r.shift].remarks.push(r.remarks);
+        dateMap[r.date].entries[entryKey].h[r.hatch] += r.dTotal;
+        dateMap[r.date].entries[entryKey].kgs += r.totalKgs;
+        dateMap[r.date].entries[entryKey].tons += r.totalTons;
+        if (r.remarks && !dateMap[r.date].entries[entryKey].remarks.includes(r.remarks)) {
+          dateMap[r.date].entries[entryKey].remarks.push(r.remarks);
         }
       });
 
-      // Sort dates CHRONOLOGICALLY (Starting date at the top -> then subsequent dates)
+      // Sort dates chronologically: Earliest starting date at the top!
       const sortedDates = Object.values(dateMap).sort((a, b) => a.timestamp - b.timestamp);
 
       let grandH = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 }, grandKgs = 0, grandTons = 0;
 
       sortedDates.forEach(dateObj => {
         const dateStr = dateObj.date;
-        const shifts = dateObj.shifts;
-
-        // Daily accumulator for Day + Night Total
         const dailyH = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
         let dailyKgs = 0;
         let dailyTons = 0;
 
-        // Render Day Shift first, then Night Shift
-        ['Day', 'Night'].forEach(shiftName => {
-          if (shifts[shiftName]) {
-            const sData = shifts[shiftName];
-            dailyKgs += sData.kgs;
-            dailyTons += sData.tons;
-            for (let i = 1; i <= 5; i++) {
-              dailyH[i] += sData.h[i];
-            }
+        // Sort entries so Day shift is shown first, then Night shift
+        const entriesList = Object.values(dateObj.entries).sort((a, b) => {
+          if (a.shift === b.shift) return a.shipper.localeCompare(b.shipper);
+          return a.shift === 'Day' ? -1 : 1;
+        });
 
-            const tr = document.createElement('tr');
-            tr.className = 'border-b border-slate-200 text-[11px]';
-            tr.innerHTML = `
-              <td class="py-2 px-2 border-r border-slate-200 font-semibold text-slate-800">${dateStr}</td>
-              <td class="py-2 px-2 border-r border-slate-200 font-bold ${shiftName === 'Day' ? 'text-amber-600' : 'text-indigo-600'}">${shiftName}</td>
-              <td class="py-2 px-2 border-r border-slate-200 text-left font-semibold">${sData.boat}</td>
-              <td class="py-2 px-2 border-r border-slate-200 text-right">${sData.h[1] ? sData.h[1].toLocaleString() : '-'}</td>
-              <td class="py-2 px-2 border-r border-slate-200 text-right">${sData.h[2] ? sData.h[2].toLocaleString() : '-'}</td>
-              <td class="py-2 px-2 border-r border-slate-200 text-right">${sData.h[3] ? sData.h[3].toLocaleString() : '-'}</td>
-              <td class="py-2 px-2 border-r border-slate-200 text-right">${sData.h[4] ? sData.h[4].toLocaleString() : '-'}</td>
-              <td class="py-2 px-2 border-r border-slate-200 text-right">${sData.h[5] ? sData.h[5].toLocaleString() : '-'}</td>
-              <td class="py-2 px-2 border-r border-slate-200 text-right font-bold text-slate-900">${sData.kgs.toLocaleString()}</td>
-              <td class="py-2 px-2 border-r border-slate-200 text-right font-bold text-emerald-600">${sData.tons.toFixed(3)}</td>
-              <td class="py-2 px-2 text-left text-slate-500">${sData.remarks.join(', ')}</td>
-            `;
-            tbody.appendChild(tr);
+        entriesList.forEach(entry => {
+          dailyKgs += entry.kgs;
+          dailyTons += entry.tons;
+          for (let i = 1; i <= 5; i++) {
+            dailyH[i] += entry.h[i];
           }
+
+          const tr = document.createElement('tr');
+          tr.className = 'border-b border-slate-200 text-[11px]';
+          tr.innerHTML = `
+            <td class="py-2 px-2 border-r border-slate-200 font-semibold text-slate-800">${dateStr}</td>
+            <td class="py-2 px-2 border-r border-slate-200 font-bold ${entry.shift === 'Day' ? 'text-amber-600' : 'text-indigo-600'}">${entry.shift}</td>
+            <td class="py-2 px-2 border-r border-slate-200 text-left font-bold text-slate-800">${entry.shipper}</td>
+            <td class="py-2 px-2 border-r border-slate-200 text-right">${entry.h[1] ? entry.h[1].toLocaleString() : '-'}</td>
+            <td class="py-2 px-2 border-r border-slate-200 text-right">${entry.h[2] ? entry.h[2].toLocaleString() : '-'}</td>
+            <td class="py-2 px-2 border-r border-slate-200 text-right">${entry.h[3] ? entry.h[3].toLocaleString() : '-'}</td>
+            <td class="py-2 px-2 border-r border-slate-200 text-right">${entry.h[4] ? entry.h[4].toLocaleString() : '-'}</td>
+            <td class="py-2 px-2 border-r border-slate-200 text-right">${entry.h[5] ? entry.h[5].toLocaleString() : '-'}</td>
+            <td class="py-2 px-2 border-r border-slate-200 text-right font-bold text-slate-900">${entry.kgs.toLocaleString()}</td>
+            <td class="py-2 px-2 border-r border-slate-200 text-right font-bold text-emerald-600">${entry.tons.toFixed(3)}</td>
+            <td class="py-2 px-2 text-left text-slate-500">${entry.remarks.join(', ')}</td>
+          `;
+          tbody.appendChild(tr);
         });
 
         // Add to Grand Totals
@@ -3118,13 +3124,13 @@
           grandH[i] += dailyH[i];
         }
 
-        // SEPARATE DAILY TOTAL ROW IN BOLD RED (စာသား အနီရောင်ဖြင့် Day+Night စုစုပေါင်း Row)
+        // DAILY TOTAL ROW IN BOLD RED (စာသား အနီရောင်ဖြင့် သီးသန့် Day+Night Total Row)
         const trDailyTotal = document.createElement('tr');
         trDailyTotal.className = 'bg-rose-50/70 border-y-2 border-rose-300 font-black text-rose-600 text-[11px]';
         trDailyTotal.innerHTML = `
           <td class="py-2 px-2 border-r border-rose-200 font-black">${dateStr}</td>
           <td class="py-2 px-2 border-r border-rose-200 font-black tracking-wide">TOTAL</td>
-          <td class="py-2 px-2 border-r border-rose-200 text-left font-black">${dateObj.boatName}</td>
+          <td class="py-2 px-2 border-r border-rose-200 text-left font-black">Daily Total (D+N)</td>
           <td class="py-2 px-2 border-r border-rose-200 text-right font-black">${dailyH[1] ? dailyH[1].toLocaleString() : '-'}</td>
           <td class="py-2 px-2 border-r border-rose-200 text-right font-black">${dailyH[2] ? dailyH[2].toLocaleString() : '-'}</td>
           <td class="py-2 px-2 border-r border-rose-200 text-right font-black">${dailyH[3] ? dailyH[3].toLocaleString() : '-'}</td>
@@ -3132,7 +3138,7 @@
           <td class="py-2 px-2 border-r border-rose-200 text-right font-black">${dailyH[5] ? dailyH[5].toLocaleString() : '-'}</td>
           <td class="py-2 px-2 border-r border-rose-200 text-right font-black">${dailyKgs.toLocaleString()}</td>
           <td class="py-2 px-2 border-r border-rose-200 text-right font-black">${dailyTons.toFixed(3)}</td>
-          <td class="py-2 px-2 text-left italic text-[10px]">Daily Total (D+N)</td>
+          <td class="py-2 px-2 text-left italic text-[10px]">Day + Night Total</td>
         `;
         tbody.appendChild(trDailyTotal);
       });
@@ -3179,8 +3185,8 @@
           <td class="py-2 px-2.5 font-semibold">${r.boatName}</td>
           <td class="py-2 px-2.5 font-bold text-cyan-700">H-${r.hatch}</td>
           <td class="py-2 px-2.5">${r.shipper}</td>
-          <td class="py-2.5 px-2.5 text-slate-500">${r.checkerName}</td>
-          <td class="py-2.5 px-2.5 text-right font-bold">${r.dTotal.toLocaleString()} ${r.unit}</td>
+          <td class="py-2 px-2.5 text-slate-500">${r.checkerName}</td>
+          <td class="py-2 px-2.5 text-right font-bold">${r.dTotal.toLocaleString()} ${r.unit}</td>
           <td class="py-2.5 px-2.5 text-right font-bold text-emerald-600">${r.totalTons.toFixed(3)}</td>
           <td class="py-2.5 px-2.5 text-center whitespace-nowrap">
             <button onclick="editRecord('${r.id}')" class="w-7 h-7 rounded bg-cyan-50 text-cyan-600 mr-1" title="Edit Record"><i class="fa-solid fa-pen"></i></button>
@@ -3293,7 +3299,7 @@
       });
     }
 
-    // EXCEL EXPORT (INCLUDES CHRONOLOGICAL ORDER & DAILY TOTAL ROWS)
+    // EXCEL EXPORT (SHIPPER NAME IN BOAT NO COLUMN + RED DAILY TOTALS)
     function downloadExcel() {
       const active = getActiveBoat();
       const wb = XLSX.utils.book_new();
@@ -3305,32 +3311,32 @@
 
       const activeLogs = active ? appData.records.filter(r => r.boatId === active.id) : appData.records;
 
-      // Group records by Date and Shift for Excel export
+      // Group records by Date and then by (Shift + Shipper)
       const dateMap = {};
       activeLogs.forEach(r => {
         if (!dateMap[r.date]) {
           dateMap[r.date] = {
             date: r.date,
             timestamp: parseDMYTimestamp(r.date),
-            shifts: {},
-            boatName: r.boatName || (active ? active.name : '')
+            entries: {}
           };
         }
-        if (!dateMap[r.date].shifts[r.shift]) {
-          dateMap[r.date].shifts[r.shift] = {
+        const entryKey = `${r.shift}_${r.shipper}`;
+        if (!dateMap[r.date].entries[entryKey]) {
+          dateMap[r.date].entries[entryKey] = {
             shift: r.shift,
-            boat: r.boatName || (active ? active.name : ''),
+            shipper: r.shipper,
             h: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 },
             kgs: 0,
             tons: 0,
             remarks: []
           };
         }
-        dateMap[r.date].shifts[r.shift].h[r.hatch] += r.dTotal;
-        dateMap[r.date].shifts[r.shift].kgs += r.totalKgs;
-        dateMap[r.date].shifts[r.shift].tons += r.totalTons;
-        if (r.remarks && !dateMap[r.date].shifts[r.shift].remarks.includes(r.remarks)) {
-          dateMap[r.date].shifts[r.shift].remarks.push(r.remarks);
+        dateMap[r.date].entries[entryKey].h[r.hatch] += r.dTotal;
+        dateMap[r.date].entries[entryKey].kgs += r.totalKgs;
+        dateMap[r.date].entries[entryKey].tons += r.totalTons;
+        if (r.remarks && !dateMap[r.date].entries[entryKey].remarks.includes(r.remarks)) {
+          dateMap[r.date].entries[entryKey].remarks.push(r.remarks);
         }
       });
 
@@ -3338,31 +3344,33 @@
 
       sortedDates.forEach(dateObj => {
         const dateStr = dateObj.date;
-        const shifts = dateObj.shifts;
         const dailyH = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
         let dailyKgs = 0;
         let dailyTons = 0;
 
-        ['Day', 'Night'].forEach(shiftName => {
-          if (shifts[shiftName]) {
-            const s = shifts[shiftName];
-            dailyKgs += s.kgs;
-            dailyTons += s.tons;
-            for (let i = 1; i <= 5; i++) dailyH[i] += s.h[i];
+        const entriesList = Object.values(dateObj.entries).sort((a, b) => {
+          if (a.shift === b.shift) return a.shipper.localeCompare(b.shipper);
+          return a.shift === 'Day' ? -1 : 1;
+        });
 
-            rowsTemplate.push([
-              dateStr, s.shift, s.boat,
-              s.h[1] || '', s.h[2] || '', s.h[3] || '', s.h[4] || '', s.h[5] || '',
-              s.kgs, s.tons, s.remarks.join(', ')
-            ]);
-          }
+        entriesList.forEach(entry => {
+          dailyKgs += entry.kgs;
+          dailyTons += entry.tons;
+          for (let i = 1; i <= 5; i++) dailyH[i] += entry.h[i];
+
+          // Under BOAT NO, write the Shipper Name
+          rowsTemplate.push([
+            dateStr, entry.shift, entry.shipper,
+            entry.h[1] || '', entry.h[2] || '', entry.h[3] || '', entry.h[4] || '', entry.h[5] || '',
+            entry.kgs, entry.tons, entry.remarks.join(', ')
+          ]);
         });
 
         // Insert Daily Total row into Excel
         rowsTemplate.push([
-          dateStr, 'TOTAL', dateObj.boatName,
+          dateStr, 'TOTAL', 'Daily Total (Day + Night)',
           dailyH[1] || '', dailyH[2] || '', dailyH[3] || '', dailyH[4] || '', dailyH[5] || '',
-          dailyKgs, dailyTons, 'Daily Total (Day + Night)'
+          dailyKgs, dailyTons, 'Daily Total'
         ]);
       });
 
@@ -3370,7 +3378,7 @@
       XLSX.utils.book_append_sheet(wb, wsTemplate, 'MV_INTAKE_TEMPLATE');
 
       const rowsLog = [
-        ['ENTRY ID', 'DATE', 'SHIFT', 'BOAT NO', 'HATCH NO', 'COMMENCED (24H)', 'COMPLETED (24H)', 'TOTAL DELAY', 'ALL STOPPAGES DETAIL', 'SHIPPER', 'CHECKER', 'UNIT', 'WEIGHT OPTION', 'D TOTAL', 'TOTAL KGS', 'TOTAL TONS', 'REMARKS']
+        ['ENTRY ID', 'DATE', 'SHIFT', 'BOAT NO', 'HATCH NO', 'COMMENCED (24H)', 'COMPLETED (24H)', 'TOTAL DELAY', 'ALL STOPPAGES DETAIL', 'SHIPPER', 'TALLY/SAMPLE', 'UNIT', 'WEIGHT OPTION', 'D TOTAL', 'TOTAL KGS', 'TOTAL TONS', 'REMARKS']
       ];
       activeLogs.forEach(r => {
         const stList = Array.isArray(r.stoppages) ? r.stoppages : [];
@@ -3385,7 +3393,7 @@
       XLSX.utils.book_append_sheet(wb, wsLog, 'HATCH_ENTRY_LOG');
 
       const rowsAttendance = [
-        ['DATE', 'SHIFT', 'CHECKER NAME', 'HATCH NO', 'COMMENCED (24H)', 'COMPLETED (24H)', 'TOTAL DELAY TIME', 'STOPPAGES DETAIL', 'VESSEL', 'SHIPPER', 'TOTAL INTAKE', 'UNIT', 'METRIC TONS', 'MODIFIED BY']
+        ['DATE', 'SHIFT', 'TALLY/SAMPLE NAME', 'HATCH NO', 'COMMENCED (24H)', 'COMPLETED (24H)', 'TOTAL DELAY TIME', 'STOPPAGES DETAIL', 'VESSEL', 'SHIPPER', 'TOTAL INTAKE', 'UNIT', 'METRIC TONS', 'MODIFIED BY']
       ];
       appData.records.forEach(r => {
         const stList = Array.isArray(r.stoppages) ? r.stoppages : [];
