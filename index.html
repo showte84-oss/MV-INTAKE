@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>MV INTAKE AUTOMATED - Multi-Org System</title>
+  <title>VESSEL DETAIL - Multi-Org System</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
@@ -24,11 +24,40 @@
 </head>
 <body class="bg-slate-100 text-slate-800 min-h-screen flex flex-col select-none">
 
-  <!-- TOP BAR: VESSEL DETAIL (REPLACED MV INTAKE) & SHIP THUMBNAIL -->
-  <div class="bg-black text-white px-3.5 py-2.5 flex items-center justify-between border-b border-slate-800 shadow-xs">
-    <span class="text-sm sm:text-base font-serif font-black tracking-wider text-slate-100 uppercase">VESSEL DETAIL</span>
-    <img src="https://images.unsplash.com/photo-1559136555-9303baea8ebd?auto=format&fit=crop&w=120&q=80" alt="Vessel" class="w-12 h-7 object-cover rounded shadow-xs border border-slate-700 shrink-0">
-  </div>
+  <!-- TOP HEADER BAR: CLEAN & UNCLUTTERED (NO UNWANTED IMAGES) -->
+  <header class="bg-slate-950 text-white sticky top-0 z-40 shadow-md">
+    <div class="max-w-7xl mx-auto px-3 sm:px-4 h-13 sm:h-14 flex items-center justify-between gap-2">
+      <!-- Left: Menu + Clean VESSEL DETAIL Title -->
+      <div class="flex items-center space-x-2.5 shrink-0">
+        <button id="btnSystemMenu" onclick="toggleMenu()" class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-slate-800 active:bg-slate-700 text-slate-200 flex items-center justify-center shrink-0 shadow-2xs" title="Menu">
+          <i class="fa-solid fa-bars text-sm sm:text-base"></i>
+        </button>
+        <span class="text-xs sm:text-sm font-black tracking-widest text-slate-100 uppercase">VESSEL DETAIL</span>
+      </div>
+
+      <!-- Right: Compact & Proportionate Action Icons -->
+      <div class="flex items-center space-x-1.5 sm:space-x-2 shrink-0">
+        <button id="btnHeaderCloud" onclick="handleCloudClick()" class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-cyan-900/70 active:bg-cyan-800 text-cyan-300 border border-cyan-700/60 flex items-center justify-center relative shadow-xs shrink-0" title="Cloud Live Sync">
+          <i class="fa-solid fa-cloud text-xs sm:text-sm"></i>
+          <span id="dotCloud" class="w-2 h-2 rounded-full bg-emerald-400 absolute top-1.5 right-1.5 animate-pulse"></span>
+        </button>
+
+        <button id="btnHeaderUsers" onclick="openUserManagerModal()" class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-emerald-600 active:bg-emerald-700 text-white flex items-center justify-center shadow-xs shrink-0" title="Team Manager">
+          <i class="fa-solid fa-users-gear text-xs sm:text-sm"></i>
+        </button>
+
+        <button id="btnHeaderShare" onclick="openShareModal()" class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-indigo-600 active:bg-indigo-700 text-white flex items-center justify-center shadow-xs shrink-0" title="Invite Links">
+          <i class="fa-solid fa-share-nodes text-xs sm:text-sm"></i>
+        </button>
+
+        <button onclick="handleUserBadgeClick()" id="userBadge" class="h-9 sm:h-10 flex items-center space-x-1.5 px-2.5 rounded-xl bg-slate-800 border border-slate-700 text-xs max-w-[120px] sm:max-w-[170px] shrink-0">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 shrink-0"></span>
+          <span id="userBadgeName" class="font-bold text-slate-200 truncate text-[11px] sm:text-xs">User</span>
+          <i id="userBadgeIcon" class="fa-solid fa-chevron-down text-[9px] text-slate-400 shrink-0"></i>
+        </button>
+      </div>
+    </div>
+  </header>
 
   <!-- MODAL: SECURE ORG CODE ACCESS GATE -->
   <div id="modalOrgGate" class="hidden fixed inset-0 z-50 bg-slate-950/95 backdrop-blur-md flex items-center justify-center p-4">
@@ -67,40 +96,6 @@
       <i class="fa-solid fa-rotate-left mr-1"></i>Return to Super Admin
     </button>
   </div>
-
-  <!-- APP NAVBAR (CLEAN, NO TITLE, PERFECTLY PROPORTIONED ICONS) -->
-  <header class="bg-slate-900 text-white sticky top-0 z-40 shadow-md">
-    <div class="max-w-7xl mx-auto px-2.5 sm:px-4 h-13 sm:h-14 flex items-center justify-between gap-1.5 sm:gap-2">
-      <!-- Left: Hamburger Menu Button -->
-      <div class="flex items-center space-x-2 shrink-0">
-        <button id="btnSystemMenu" onclick="toggleMenu()" class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-slate-800 active:bg-slate-700 text-slate-200 flex items-center justify-center shrink-0 shadow-2xs" title="Menu">
-          <i class="fa-solid fa-bars text-sm sm:text-base"></i>
-        </button>
-      </div>
-
-      <!-- Right: Compact, Proportional Action Buttons -->
-      <div class="flex items-center space-x-1.5 sm:space-x-2 shrink-0">
-        <button id="btnHeaderCloud" onclick="handleCloudClick()" class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-cyan-900/70 active:bg-cyan-800 text-cyan-300 border border-cyan-700/60 flex items-center justify-center relative shadow-xs shrink-0" title="Cloud Live Sync">
-          <i class="fa-solid fa-cloud text-xs sm:text-sm"></i>
-          <span id="dotCloud" class="w-2 h-2 rounded-full bg-emerald-400 absolute top-1.5 right-1.5 animate-pulse"></span>
-        </button>
-
-        <button id="btnHeaderUsers" onclick="openUserManagerModal()" class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-emerald-600 active:bg-emerald-700 text-white flex items-center justify-center shadow-xs shrink-0" title="Team Manager">
-          <i class="fa-solid fa-users-gear text-xs sm:text-sm"></i>
-        </button>
-
-        <button id="btnHeaderShare" onclick="openShareModal()" class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-indigo-600 active:bg-indigo-700 text-white flex items-center justify-center shadow-xs shrink-0" title="Invite Links">
-          <i class="fa-solid fa-share-nodes text-xs sm:text-sm"></i>
-        </button>
-
-        <button onclick="handleUserBadgeClick()" id="userBadge" class="h-9 sm:h-10 flex items-center space-x-1.5 px-2.5 rounded-xl bg-slate-800 border border-slate-700 text-xs max-w-[125px] sm:max-w-[170px] shrink-0">
-          <span class="w-2 h-2 rounded-full bg-emerald-400 shrink-0"></span>
-          <span id="userBadgeName" class="font-bold text-slate-200 truncate text-[11px] sm:text-xs">User</span>
-          <i id="userBadgeIcon" class="fa-solid fa-chevron-down text-[9px] text-slate-400 shrink-0"></i>
-        </button>
-      </div>
-    </div>
-  </header>
 
   <!-- SLIDE-OUT SYSTEM MENU -->
   <div id="systemMenuDropdown" class="hidden fixed inset-0 z-50 bg-black/50 backdrop-blur-xs" onclick="closeMenu()">
@@ -362,7 +357,7 @@
             <div class="flex items-center justify-between border-b border-indigo-100 pb-2">
               <span class="text-xs font-extrabold text-indigo-950 flex items-center space-x-1.5">
                 <i class="fa-solid fa-clock text-indigo-600"></i>
-                <span>Loading / Discharging Time (24-Hour Format)</span>
+                <span>Loading / Discharging Time (24-Hour Military Format)</span>
               </span>
               <span class="text-[10px] text-indigo-700 font-bold bg-indigo-100 px-2 py-0.5 rounded">24 HR Dial</span>
             </div>
@@ -550,7 +545,7 @@
       </div>
     </section>
 
-    <!-- TAB 3: MV INTAKE TEMPLATE PREVIEW (CHRONOLOGICAL + SHIPPER UNDER BOAT NO + RED DAILY TOTALS) -->
+    <!-- TAB 3: MV INTAKE TEMPLATE PREVIEW (SHIPPER UNDER BOAT NO + RED TOTALS) -->
     <section id="tabTemplate" class="hidden space-y-3">
       <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-xs flex flex-wrap items-center justify-between gap-3">
         <div>
@@ -898,9 +893,7 @@
           <i class="fa-solid fa-users-gear text-emerald-400"></i>
           <span class="font-bold text-sm">Team Manager (Admins & Tally/Sample)</span>
         </div>
-        <button onclick="closeUserManagerModal()" class="w-8 h-8 rounded-lg bg-slate-800 text-slate-300 flex items-center justify-center">
-          <i class="fa-solid fa-xmark"></i>
-        </button>
+        <button onclick="closeUserManagerModal()" class="w-8 h-8 rounded-lg bg-slate-800 text-slate-300 flex items-center justify-center"><i class="fa-solid fa-xmark"></i></button>
       </div>
 
       <div class="p-4 overflow-y-auto space-y-4 custom-scroll">
@@ -1395,7 +1388,7 @@
     }
 
     // =========================================================
-    // DYNAMIC STOPPAGES UI (CONNECTED WITH 24-HR CLOCK PICKER)
+    // DYNAMIC STOPPAGES UI
     // =========================================================
     function renderStoppagesList(containerId, stoppagesArray) {
       const container = document.getElementById(containerId);
@@ -3025,9 +3018,7 @@
       });
     }
 
-    // ==============================================================================
     // TAB 3: TEMPLATE PREVIEW (CHRONOLOGICAL + SHIPPER UNDER BOAT NO + RED TOTALS)
-    // ==============================================================================
     function renderTemplateTable() {
       const active = getActiveBoat();
       const tbody = document.getElementById('tblTemplateBody');
@@ -3046,7 +3037,6 @@
         return;
       }
 
-      // Group records by Date and then by (Shift + Shipper)
       const dateMap = {};
       logs.forEach(r => {
         if (!dateMap[r.date]) {
@@ -3075,7 +3065,6 @@
         }
       });
 
-      // Sort dates chronologically: Earliest starting date at the top!
       const sortedDates = Object.values(dateMap).sort((a, b) => a.timestamp - b.timestamp);
 
       let grandH = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 }, grandKgs = 0, grandTons = 0;
@@ -3086,7 +3075,6 @@
         let dailyKgs = 0;
         let dailyTons = 0;
 
-        // Sort entries so Day shift is shown first, then Night shift
         const entriesList = Object.values(dateObj.entries).sort((a, b) => {
           if (a.shift === b.shift) return a.shipper.localeCompare(b.shipper);
           return a.shift === 'Day' ? -1 : 1;
@@ -3117,14 +3105,12 @@
           tbody.appendChild(tr);
         });
 
-        // Add to Grand Totals
         grandKgs += dailyKgs;
         grandTons += dailyTons;
         for (let i = 1; i <= 5; i++) {
           grandH[i] += dailyH[i];
         }
 
-        // DAILY TOTAL ROW IN BOLD RED (စာသား အနီရောင်ဖြင့် သီးသန့် Day+Night Total Row)
         const trDailyTotal = document.createElement('tr');
         trDailyTotal.className = 'bg-rose-50/70 border-y-2 border-rose-300 font-black text-rose-600 text-[11px]';
         trDailyTotal.innerHTML = `
@@ -3143,7 +3129,6 @@
         tbody.appendChild(trDailyTotal);
       });
 
-      // Bottom Grand Total Foot
       tfoot.innerHTML = `
         <td colspan="3" class="py-2.5 px-3 text-left border-r border-slate-300 font-black">GRAND TOTAL</td>
         <td class="py-2.5 px-2 text-right border-r border-slate-300 font-black">${grandH[1].toLocaleString()}</td>
@@ -3197,7 +3182,7 @@
       });
     }
 
-    // ATTENDANCE & OPERATION TIMELINE REPORT (24-HR FORMAT WITH STOPPAGE DURATIONS)
+    // ATTENDANCE & OPERATION TIMELINE REPORT
     function renderAttendanceTable() {
       const q = (document.getElementById('searchAttendance') ? document.getElementById('searchAttendance').value : '').toLowerCase();
       const tbody = document.getElementById('tblAttendanceBody');
@@ -3281,7 +3266,7 @@
           </td>
           <td class="py-2.5 px-3 font-extrabold text-slate-800 flex items-center space-x-1.5">
             <i class="fa-solid fa-user-circle text-slate-400"></i>
-            <span>${r.checkerName || 'Checker'}</span>
+            <span>${r.checkerName || 'Tally/Sample'}</span>
           </td>
           <td class="py-2.5 px-3 font-extrabold text-cyan-700">H-${r.hatch}</td>
           <td class="py-2.5 px-3">
@@ -3311,7 +3296,6 @@
 
       const activeLogs = active ? appData.records.filter(r => r.boatId === active.id) : appData.records;
 
-      // Group records by Date and then by (Shift + Shipper)
       const dateMap = {};
       activeLogs.forEach(r => {
         if (!dateMap[r.date]) {
@@ -3358,7 +3342,6 @@
           dailyTons += entry.tons;
           for (let i = 1; i <= 5; i++) dailyH[i] += entry.h[i];
 
-          // Under BOAT NO, write the Shipper Name
           rowsTemplate.push([
             dateStr, entry.shift, entry.shipper,
             entry.h[1] || '', entry.h[2] || '', entry.h[3] || '', entry.h[4] || '', entry.h[5] || '',
@@ -3366,7 +3349,6 @@
           ]);
         });
 
-        // Insert Daily Total row into Excel
         rowsTemplate.push([
           dateStr, 'TOTAL', 'Daily Total (Day + Night)',
           dailyH[1] || '', dailyH[2] || '', dailyH[3] || '', dailyH[4] || '', dailyH[5] || '',
