@@ -63,43 +63,38 @@
 
   <!-- TOP APP BAR -->
   <header class="bg-slate-950 text-white sticky top-0 z-40 shadow-md">
-    <div class="max-w-7xl mx-auto px-2 sm:px-4 h-14 flex items-center justify-between gap-1">
-      <div class="flex items-center space-x-2 min-w-0 shrink-0">
-        <button id="btnSystemMenu" onclick="toggleMenu()" class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-slate-800 active:bg-slate-700 text-slate-200 flex items-center justify-center shrink-0 shadow-2xs" title="Menu">
-          <i class="fa-solid fa-bars text-sm sm:text-base"></i>
+    <div class="max-w-7xl mx-auto px-2 sm:px-4 h-14 flex items-center justify-between gap-1.5">
+      <div class="flex items-center space-x-1.5 shrink-0 min-w-0">
+        <button id="btnSystemMenu" onclick="toggleMenu()" class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-slate-800 active:bg-slate-700 text-slate-200 flex items-center justify-center shrink-0 shadow-2xs" title="Menu">
+          <i class="fa-solid fa-bars text-sm"></i>
         </button>
-        <span class="text-xs sm:text-sm font-black tracking-widest text-slate-100 uppercase truncate">VESSEL DETAIL</span>
+        <span class="text-[11px] sm:text-sm font-black tracking-widest text-slate-100 uppercase truncate max-w-[100px] sm:max-w-[200px]">VESSEL DETAIL</span>
       </div>
 
       <div class="flex items-center space-x-1 sm:space-x-1.5 shrink-0">
-        <!-- Message Box (Chat) -->
-        <button onclick="openChatModal()" class="w-9 h-9 rounded-xl bg-slate-800 text-amber-300 flex items-center justify-center relative shadow-xs shrink-0" title="Message Box">
-          <i class="fa-solid fa-comment-dots text-xs"></i>
-          <span id="badgeChatUnread" class="hidden absolute top-2 right-1.5 w-2 h-2 rounded-full bg-rose-500 border border-slate-800"></span>
+        <button onclick="openChatModal()" class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-300 flex items-center justify-center relative shadow-xs shrink-0" title="Message Box">
+          <i class="fa-solid fa-comment-dots text-[11px] sm:text-xs"></i>
+          <span id="badgeChatUnread" class="hidden absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-rose-500 border border-slate-800"></span>
         </button>
 
-        <!-- Notifications -->
-        <button onclick="openNotiModal()" class="w-9 h-9 rounded-xl bg-slate-800 text-indigo-300 flex items-center justify-center relative shadow-xs shrink-0" title="Notifications">
-          <i class="fa-solid fa-bell text-xs"></i>
-          <span id="badgeNotiUnread" class="hidden absolute top-2 right-2 w-2 h-2 rounded-full bg-rose-500 border border-slate-800"></span>
+        <button onclick="openNotiModal()" class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-slate-800 hover:bg-slate-700 text-indigo-300 flex items-center justify-center relative shadow-xs shrink-0" title="Notifications">
+          <i class="fa-solid fa-bell text-[11px] sm:text-xs"></i>
+          <span id="badgeNotiUnread" class="hidden absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-rose-500 border border-slate-800"></span>
         </button>
 
-        <!-- Cloud Sync -->
-        <button id="btnHeaderCloud" onclick="handleCloudClick()" class="w-9 h-9 rounded-xl bg-cyan-900/70 active:bg-cyan-800 text-cyan-300 border border-cyan-700/60 flex items-center justify-center relative shadow-xs shrink-0" title="Cloud Live Sync">
-          <i class="fa-solid fa-cloud text-xs"></i>
-          <span id="dotCloud" class="w-1.5 h-1.5 rounded-full bg-emerald-400 absolute top-1 right-1 animate-pulse"></span>
+        <button id="btnHeaderCloud" onclick="handleCloudClick()" class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-cyan-900/70 active:bg-cyan-800 text-cyan-300 flex items-center justify-center relative shadow-xs shrink-0" title="Cloud Live Sync">
+          <i class="fa-solid fa-cloud text-[11px] sm:text-xs"></i>
+          <span id="dotCloud" class="w-1.5 h-1.5 rounded-full bg-emerald-400 absolute top-1.5 right-1.5 animate-pulse"></span>
         </button>
 
-        <!-- Team -->
-        <button id="btnHeaderUsers" onclick="openUserManagerModal()" class="w-9 h-9 rounded-xl bg-emerald-600 active:bg-emerald-700 text-white flex items-center justify-center shadow-xs shrink-0" title="Team Manager">
-          <i class="fa-solid fa-users-gear text-xs"></i>
+        <button id="btnHeaderUsers" onclick="openUserManagerModal()" class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-emerald-600 active:bg-emerald-700 text-white flex items-center justify-center shadow-xs shrink-0 hidden sm:flex" title="Team Manager">
+          <i class="fa-solid fa-users-gear text-[11px] sm:text-xs"></i>
         </button>
 
-        <!-- Profile Badge -->
-        <button onclick="handleUserBadgeClick()" id="userBadge" class="h-9 flex items-center space-x-1 px-2 rounded-xl bg-slate-800 border border-slate-700 text-xs max-w-[95px] sm:max-w-[140px] shrink-0">
-          <span class="w-2 h-2 rounded-full bg-emerald-400 shrink-0"></span>
-          <span id="userBadgeName" class="font-bold text-slate-200 truncate text-[11px]">User</span>
-          <i id="userBadgeIcon" class="fa-solid fa-chevron-down text-[8px] text-slate-400 shrink-0"></i>
+        <button onclick="handleUserBadgeClick()" id="userBadge" class="h-8 sm:h-9 flex items-center space-x-1 px-1.5 sm:px-2 rounded-xl bg-slate-800 border border-slate-700 text-xs max-w-[80px] sm:max-w-[130px] shrink-0">
+          <span class="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-emerald-400 shrink-0"></span>
+          <span id="userBadgeName" class="font-bold text-slate-200 truncate text-[9px] sm:text-[11px]">User</span>
+          <i id="userBadgeIcon" class="fa-solid fa-chevron-down text-[7px] text-slate-400 shrink-0"></i>
         </button>
       </div>
     </div>
@@ -129,6 +124,7 @@
             <i class="fa-solid fa-key w-5 text-amber-600 text-sm"></i>
             <span>Authorize Org Codes</span>
           </button>
+
           <button id="menuBtnCloud" onclick="openCloudModal(); closeMenu()" class="w-full flex items-center space-x-3 px-3 py-3 rounded-xl bg-cyan-50 hover:bg-cyan-100 text-cyan-900">
             <i class="fa-solid fa-cloud-arrow-up w-5 text-cyan-600 text-sm"></i>
             <span>Cloud Live Sync Setup</span>
@@ -161,16 +157,22 @@
           <div class="pt-2 border-t border-slate-100 space-y-1">
             <button onclick="backupSystemData(); closeMenu()" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl bg-slate-50 hover:bg-slate-100 text-slate-700">
               <i class="fa-solid fa-download w-5 text-indigo-600 text-sm"></i>
-              <span>Backup Data (JSON)</span>
+              <span>Backup Data (Export JSON)</span>
             </button>
             <label class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl bg-slate-50 hover:bg-slate-100 text-slate-700 cursor-pointer">
               <i class="fa-solid fa-upload w-5 text-emerald-600 text-sm"></i>
-              <span>Restore Data (JSON)</span>
+              <span>Restore Data (Import JSON)</span>
               <input type="file" id="fileRestore" accept=".json" onchange="restoreSystemData(event)" class="hidden">
             </label>
           </div>
+
+          <button id="menuBtnExcel" onclick="downloadExcel(); closeMenu()" class="w-full flex items-center space-x-3 px-3 py-3 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-bold mt-2">
+            <i class="fa-solid fa-file-excel w-5 text-emerald-600 text-sm"></i>
+            <span>Download Excel (.xlsx)</span>
+          </button>
         </div>
       </div>
+
       <div class="pt-3 border-t border-slate-100 text-[11px] text-slate-400 flex items-center justify-between">
         <span>MULTI-ORG SYSTEM</span>
         <button id="menuBtnReset" onclick="resetData(); closeMenu()" class="text-rose-500 font-semibold hover:underline">Change Code</button>
@@ -220,10 +222,10 @@
 
       <div class="flex items-center gap-1.5 w-full sm:w-auto">
         <select id="selectActiveBoat" onchange="changeActiveBoat(this.value)" class="flex-1 min-w-0 sm:w-44 h-10 bg-slate-50 border border-slate-300 text-slate-800 text-xs rounded-xl px-2.5 font-bold focus:ring-2 focus:ring-cyan-500 truncate"></select>
-        <button id="btnGearBoat" onclick="openAccountModal()" class="h-10 px-3 rounded-xl bg-cyan-600 active:bg-cyan-700 text-white flex items-center justify-center space-x-1 shrink-0 text-xs font-bold shadow-xs whitespace-nowrap" title="Manage Vessels">
+        <button id="btnGearBoat" onclick="openAccountModal()" class="h-10 px-3 rounded-xl bg-cyan-600 active:bg-cyan-700 text-white flex items-center justify-center space-x-1 shrink-0 text-xs font-bold shadow-xs whitespace-nowrap">
           <i class="fa-solid fa-plus text-xs"></i><span>Vessel</span>
         </button>
-        <button id="btnDirectShipper" onclick="openShipperModal()" class="h-10 px-3 rounded-xl bg-indigo-600 active:bg-indigo-700 text-white flex items-center justify-center space-x-1 shrink-0 text-xs font-bold shadow-xs whitespace-nowrap" title="Manage Shippers">
+        <button id="btnDirectShipper" onclick="openShipperModal()" class="h-10 px-3 rounded-xl bg-indigo-600 active:bg-indigo-700 text-white flex items-center justify-center space-x-1 shrink-0 text-xs font-bold shadow-xs whitespace-nowrap">
           <i class="fa-solid fa-building text-xs"></i><span>Shipper</span>
         </button>
       </div>
@@ -428,20 +430,16 @@
       </div>
       <div class="grid grid-cols-2 lg:grid-cols-4 gap-2.5">
         <div class="bg-white border border-slate-200 rounded-2xl p-3 shadow-xs">
-          <div class="text-[10px] font-bold text-slate-400 uppercase">Day Bags</div>
-          <div id="pDayBags" class="text-lg font-black text-amber-600">0</div>
+          <div class="text-[10px] font-bold text-slate-400 uppercase">Day Bags</div><div id="pDayBags" class="text-lg font-black text-amber-600">0</div>
         </div>
         <div class="bg-white border border-slate-200 rounded-2xl p-3 shadow-xs">
-          <div class="text-[10px] font-bold text-slate-400 uppercase">Night Bags</div>
-          <div id="pNightBags" class="text-lg font-black text-indigo-600">0</div>
+          <div class="text-[10px] font-bold text-slate-400 uppercase">Night Bags</div><div id="pNightBags" class="text-lg font-black text-indigo-600">0</div>
         </div>
         <div class="bg-white border border-slate-200 rounded-2xl p-3 shadow-xs">
-          <div class="text-[10px] font-bold text-slate-400 uppercase">Total Bags</div>
-          <div id="pTotBags" class="text-lg font-black text-cyan-600">0</div>
+          <div class="text-[10px] font-bold text-slate-400 uppercase">Total Bags</div><div id="pTotBags" class="text-lg font-black text-cyan-600">0</div>
         </div>
         <div class="bg-white border border-slate-200 rounded-2xl p-3 shadow-xs">
-          <div class="text-[10px] font-bold text-slate-400 uppercase">Metric Tons</div>
-          <div id="pTotTons" class="text-lg font-black text-emerald-600">0.00 MT</div>
+          <div class="text-[10px] font-bold text-slate-400 uppercase">Metric Tons</div><div id="pTotTons" class="text-lg font-black text-emerald-600">0.00 MT</div>
         </div>
       </div>
       <div class="bg-white rounded-2xl border border-slate-200 p-3.5 shadow-xs overflow-x-auto custom-scroll">
@@ -457,7 +455,7 @@
       </div>
     </section>
 
-    <!-- TAB 3: MV INTAKE TEMPLATE PREVIEW -->
+    <!-- TAB 3: TEMPLATE PREVIEW -->
     <section id="tabTemplate" class="hidden space-y-3">
       <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-xs flex flex-wrap items-center justify-between gap-3">
         <div>
@@ -519,7 +517,7 @@
       </div>
     </section>
 
-    <!-- TAB 5: SHIFT ATTENDANCE & OPERATION TIMELINE REPORT -->
+    <!-- TAB 5: ATTENDANCE & OPERATION TIMELINE -->
     <section id="tabAttendance" class="hidden space-y-3">
       <div class="bg-white rounded-2xl border border-slate-200 p-3.5 sm:p-5 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
@@ -578,7 +576,7 @@
   </div>
 
   <!-- 24-HOUR MILITARY CLOCK DIAL PICKER -->
-  <div id="modal24HrClockPicker" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-xs flex items-center justify-center p-4">
+  <div id="modal24HrClockPicker" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
     <div class="bg-white rounded-3xl max-w-[320px] w-full p-4 shadow-2xl flex flex-col items-center space-y-3" onclick="event.stopPropagation()">
       <div class="w-full text-center pb-2 border-b border-slate-100">
         <span id="lbl24ClockPickerTitle" class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider block mb-1">Select Time (24-Hour)</span>
@@ -605,7 +603,7 @@
   <div id="modalAdminEdit" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-end sm:items-center justify-center p-0 sm:p-4">
     <div class="bg-white rounded-t-3xl sm:rounded-2xl max-w-lg w-full max-h-[92vh] flex flex-col shadow-2xl overflow-hidden">
       <div class="p-4 bg-slate-900 text-white flex items-center justify-between">
-        <div class="flex items-center space-x-2"><i class="fa-solid fa-pen-to-square text-cyan-400"></i><span class="font-bold text-sm">Edit Hatch Intake Record (Admin)</span></div>
+        <div class="flex items-center space-x-2"><i class="fa-solid fa-pen-to-square text-cyan-400"></i><span class="font-bold text-sm">Edit Hatch Intake Record</span></div>
         <button onclick="closeAdminEditModal()" class="w-8 h-8 rounded-lg bg-slate-800 text-slate-300 flex items-center justify-center"><i class="fa-solid fa-xmark"></i></button>
       </div>
       <form id="adminEditForm" onsubmit="saveAdminDirectEdit(event)" class="p-4 space-y-3.5 overflow-y-auto custom-scroll text-xs">
@@ -634,7 +632,7 @@
             </div>
           </div>
           <div class="pt-2 border-t border-indigo-200 space-y-2">
-            <div class="flex items-center justify-between"><span class="text-[10px] font-extrabold text-slate-700 uppercase">Work Stoppages (24-Hour)</span><button type="button" onclick="addStoppageRow('adminStoppagesList')" class="px-2 py-0.5 rounded bg-indigo-600 active:bg-indigo-700 text-white text-[10px] font-bold flex items-center space-x-1"><i class="fa-solid fa-plus text-[8px]"></i><span>+ Add Row</span></button></div>
+            <div class="flex items-center justify-between"><span class="text-[10px] font-extrabold text-slate-700 uppercase">Work Stoppages</span><button type="button" onclick="addStoppageRow('adminStoppagesList')" class="px-2 py-0.5 rounded bg-indigo-600 active:bg-indigo-700 text-white text-[10px] font-bold flex items-center space-x-1"><i class="fa-solid fa-plus text-[8px]"></i><span>+ Add Row</span></button></div>
             <div id="adminStoppagesList" class="space-y-2"></div>
           </div>
         </div>
@@ -688,7 +686,10 @@
               </select>
             </div>
           </div>
-          <div class="flex space-x-2"><button onclick="saveUserRecord()" class="flex-1 h-11 bg-emerald-600 text-white rounded-xl text-xs font-extrabold">Save</button></div>
+          <div class="flex space-x-2">
+            <button onclick="saveUserRecord()" class="flex-1 h-11 bg-emerald-600 text-white rounded-xl text-xs font-extrabold">Save</button>
+            <button onclick="cancelUserEdit()" id="btnCancelUserEdit" class="hidden h-11 px-4 bg-slate-200 text-slate-700 rounded-xl text-xs font-bold">Cancel</button>
+          </div>
         </div>
         <div id="listTeamUsers" class="space-y-2"></div>
       </div>
@@ -733,18 +734,6 @@
     </div>
   </div>
 
-  <div id="modalProfile" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-end sm:items-center justify-center p-0 sm:p-4">
-    <div class="bg-white rounded-t-3xl sm:rounded-2xl max-w-md w-full max-h-[85vh] flex flex-col shadow-2xl overflow-hidden">
-      <div class="p-4 bg-slate-900 text-white flex items-center justify-between">
-        <span class="font-bold text-sm text-cyan-400">Switch User Profile</span>
-        <button onclick="closeProfileModal()" class="w-8 h-8 rounded-lg bg-slate-800 text-slate-300 flex items-center justify-center"><i class="fa-solid fa-xmark"></i></button>
-      </div>
-      <div class="p-4 overflow-y-auto space-y-2.5 custom-scroll">
-        <div id="listProfiles" class="space-y-2"></div>
-      </div>
-    </div>
-  </div>
-
   <div id="modalShare" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-end sm:items-center justify-center p-0 sm:p-4">
     <div class="bg-white rounded-t-3xl sm:rounded-2xl max-w-lg w-full max-h-[92vh] flex flex-col shadow-2xl overflow-hidden">
       <div class="p-4 bg-indigo-950 text-white flex items-center justify-between">
@@ -754,7 +743,7 @@
       <div class="p-4 overflow-y-auto space-y-4 custom-scroll text-xs">
         <div class="bg-amber-50 border border-amber-200 rounded-2xl p-3 space-y-1.5">
           <input type="text" id="linkSuperAdmin" readonly class="w-full h-9 bg-white border border-amber-300 rounded-xl px-2.5 font-mono text-[10px] text-slate-700 truncate mb-1">
-          <button onclick="copyDirectLink(document.getElementById('linkSuperAdmin').value, 'Super Admin')" class="w-full h-9 bg-amber-600 text-white rounded-xl font-bold">Copy Master Link</button>
+          <button onclick="copyDirectLink(document.getElementById('linkSuperAdmin').value)" class="w-full h-9 bg-amber-600 text-white rounded-xl font-bold">Copy Master Link</button>
         </div>
         <select id="shareModalBoatSelect" onchange="renderUniqueInviteLinks()" class="w-full h-11 bg-white border border-slate-300 rounded-xl px-3 font-extrabold"></select>
         <div id="listUniqueAdminLinks" class="space-y-2"></div>
@@ -763,20 +752,15 @@
     </div>
   </div>
 
-  <!-- TOAST NOTIFICATION -->
-  <div id="toast" class="hidden fixed bottom-5 left-1/2 -translate-x-1/2 z-50 bg-slate-900 text-white px-4 py-3 rounded-2xl shadow-2xl border border-slate-700 flex items-center space-x-2 text-xs font-bold whitespace-nowrap">
-    <i class="fa-solid fa-circle-check text-emerald-400 text-sm"></i>
-    <span id="toastMsg">Success</span>
-  </div>
-
   <footer class="mt-auto py-4 text-center text-xs text-slate-400 font-semibold tracking-wider">
     <div class="flex items-center justify-center space-x-1.5 opacity-80">
-      <span>MV INTAKE AUTOMATED</span><span>•</span><span class="font-extrabold text-cyan-600">By KNA</span>
+      <span>VESSEL DETAIL AUTOMATED</span><span>•</span><span class="font-extrabold text-cyan-600">By KNA</span>
     </div>
   </footer>
 
   <!-- JAVASCRIPT LOGIC -->
   <script>
+    // System Utilities
     let audioCtx = null;
     function playBeepSound() {
       try {
@@ -794,39 +778,15 @@
         oscillator.stop(audioCtx.currentTime + 0.3);
       } catch(e) {}
     }
-    document.body.addEventListener('click', () => {
-      if (!audioCtx) { try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch(e){} }
-    }, { once: true });
-
-    // Modals & Menu
+    document.body.addEventListener('click', () => { if (!audioCtx) { try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch(e){} } }, { once: true });
+    function showToast(msg) {
+      const t = document.getElementById('toast'); document.getElementById('toastMsg').textContent = msg;
+      t.classList.remove('hidden'); setTimeout(() => t.classList.add('hidden'), 2600);
+    }
     function toggleMenu() { document.getElementById('systemMenuDropdown').classList.toggle('hidden'); }
     function closeMenu() { document.getElementById('systemMenuDropdown').classList.add('hidden'); }
-    function switchTab(tabId) {
-      if (appData.currentUser && appData.currentUser.role === 'MEMBER' && tabId !== 'tabEntry') tabId = 'tabEntry';
-      ['tabEntry', 'tabPicker', 'tabTemplate', 'tabRecords', 'tabAttendance'].forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.classList.add('hidden');
-      });
-      document.getElementById(tabId).classList.remove('hidden');
-      ['btnTabEntry', 'btnTabPicker', 'btnTabTemplate', 'btnTabRecords', 'btnTabAttendance'].forEach(btn => {
-        const b = document.getElementById(btn);
-        if (!b) return;
-        if(b.id === `btn${tabId.charAt(0).toUpperCase() + tabId.slice(1)}`) b.className = 'tab-btn px-3 py-2 rounded-xl text-xs font-bold whitespace-nowrap bg-cyan-600 text-white shadow-xs flex items-center space-x-1.5';
-        else b.className = 'tab-btn px-3 py-2 rounded-xl text-xs font-semibold whitespace-nowrap bg-slate-100 text-slate-600 flex items-center space-x-1.5';
-      });
-      if(tabId === 'tabPicker') runShipperFilter();
-      if(tabId === 'tabTemplate') renderTemplateTable();
-      if(tabId === 'tabRecords') renderAllRecordsTable();
-      if(tabId === 'tabAttendance') renderAttendanceTable();
-    }
-    function showToast(msg) {
-      const t = document.getElementById('toast');
-      document.getElementById('toastMsg').textContent = msg;
-      t.classList.remove('hidden');
-      setTimeout(() => t.classList.add('hidden'), 2600);
-    }
 
-    // Auth & Init Data
+    // Init App Data
     const ORG_STORAGE_KEY = 'MV_INTAKE_ACTIVE_ORG';
     const ALLOWED_ORGS_KEY = 'MV_INTAKE_ALLOWED_ORGS_CACHE';
     let allowedOrgCodes = ['KNA-001'];
@@ -841,17 +801,14 @@
     };
 
     function getStorageKeyForOrg(code) { return `MV_INTAKE_DATA_ORG_${code.toUpperCase().replace(/[^A-Z0-9_-]/g, '')}`; }
-
     function loadData() {
       if (!currentOrgCode) return;
       const stored = localStorage.getItem(getStorageKeyForOrg(currentOrgCode));
-      if (stored) {
-        try { appData = { ...appData, ...JSON.parse(stored) }; } catch (e) {}
-      }
+      if (stored) { try { appData = { ...appData, ...JSON.parse(stored) }; } catch (e) {} }
       if(!appData.notifications) appData.notifications = [];
       if(!appData.chatMessages) appData.chatMessages = [];
+      if(!appData.users.some(u=>u.id===appData.currentUser.id)) appData.users.push(appData.currentUser);
     }
-
     function saveData(skipCloudPush = false) {
       if (!currentOrgCode) return;
       appData.lastUpdated = Date.now();
@@ -874,18 +831,11 @@
       } else { previewBanner.classList.add('hidden'); }
 
       const badgeIcon = document.getElementById('userBadgeIcon');
-      if (!appData.sessionLocked) {
-        badgeIcon.className = 'fa-solid fa-chevron-down text-[9px] text-slate-400 shrink-0';
-      } else {
-        badgeIcon.className = 'fa-solid fa-lock text-[10px] text-amber-400 shrink-0';
-      }
+      badgeIcon.className = !appData.sessionLocked ? 'fa-solid fa-chevron-down text-[7px] text-slate-400 shrink-0' : 'fa-solid fa-lock text-[8px] text-amber-400 shrink-0';
 
       document.getElementById('menuBtnSwitchProfile').style.display = !appData.sessionLocked ? '' : 'none';
       const selBoat = document.getElementById('selectActiveBoat');
-      if (selBoat) {
-        selBoat.disabled = isMember;
-        isMember ? selBoat.classList.add('bg-slate-200', 'cursor-not-allowed', 'opacity-75') : selBoat.classList.remove('bg-slate-200', 'cursor-not-allowed', 'opacity-75');
-      }
+      if (selBoat) { selBoat.disabled = isMember; isMember ? selBoat.classList.add('bg-slate-200', 'cursor-not-allowed', 'opacity-75') : selBoat.classList.remove('bg-slate-200', 'cursor-not-allowed', 'opacity-75'); }
 
       document.getElementById('memberEntryFormWrapper').style.display = isMember ? 'block' : 'none';
       document.getElementById('btnDirectShipper').style.display = isMember ? 'none' : '';
@@ -907,7 +857,11 @@
       if (!currentOrgCode) document.getElementById('modalOrgGate').classList.remove('hidden');
       else document.getElementById('modalOrgGate').classList.add('hidden');
     }
-
+    function toggleGatePasswordVisibility() {
+      const inp = document.getElementById('inputOrgGateCode'); const icon = document.getElementById('iconToggleGateEye');
+      if (inp.type === 'password') { inp.type = 'text'; icon.className = 'fa-solid fa-eye-slash text-xs'; } 
+      else { inp.type = 'password'; icon.className = 'fa-solid fa-eye text-xs'; }
+    }
     async function submitOrgGate() {
       const code = document.getElementById('inputOrgGateCode').value.trim().toUpperCase();
       if (!code) return;
@@ -917,111 +871,75 @@
         document.getElementById('txtOrgGateError').classList.remove('hidden');
         return;
       }
-      currentOrgCode = code;
-      localStorage.setItem(ORG_STORAGE_KEY, code);
+      currentOrgCode = code; localStorage.setItem(ORG_STORAGE_KEY, code);
       document.getElementById('modalOrgGate').classList.add('hidden');
-      loadData();
-      renderAll();
-      if (appData.cloudUrl) pullFromCloud(false);
-      showToast('Access Granted');
-    }
-    
-    function toggleGatePasswordVisibility() {
-      const inp = document.getElementById('inputOrgGateCode');
-      const icon = document.getElementById('iconToggleGateEye');
-      if (inp.type === 'password') { inp.type = 'text'; icon.className = 'fa-solid fa-eye-slash text-xs'; } 
-      else { inp.type = 'password'; icon.className = 'fa-solid fa-eye text-xs'; }
+      loadData(); renderAll(); if (appData.cloudUrl) pullFromCloud(false); showToast('Access Granted');
     }
 
-    function handleUserBadgeClick() {
-      if (!appData.sessionLocked) openProfileModal();
-      else showToast(`Locked to ${appData.currentUser.name}`);
-    }
-
+    function handleUserBadgeClick() { if (!appData.sessionLocked) openProfileModal(); else showToast(`Locked to ${appData.currentUser.name}`); }
     function returnToSuperAdmin() {
       appData.currentUser = appData.users.find(u => u.role === 'SUPER_ADMIN') || appData.users[0];
-      appData.sessionLocked = false;
-      appData.lockedBoatId = null;
-      saveData(true); renderAll();
-      showToast('Returned to Super Admin mode');
+      appData.sessionLocked = false; appData.lockedBoatId = null;
+      saveData(true); renderAll(); showToast('Returned to Super Admin mode');
     }
 
-    // User Manager Modals
+    // Modal Managers
     function openProfileModal() { renderProfileList(); document.getElementById('modalProfile').classList.remove('hidden'); }
     function closeProfileModal() { document.getElementById('modalProfile').classList.add('hidden'); }
     function renderProfileList() {
-      const container = document.getElementById('listProfiles');
-      container.innerHTML = '';
+      const c = document.getElementById('listProfiles'); c.innerHTML = '';
       appData.users.forEach(u => {
-        const isActive = appData.currentUser.id === u.id;
-        const btn = document.createElement('button');
+        const isActive = appData.currentUser.id === u.id; const btn = document.createElement('button');
         btn.onclick = () => { appData.currentUser = u; saveData(true); renderAll(); closeProfileModal(); };
-        btn.className = `w-full text-left p-3.5 rounded-2xl border flex items-center justify-between text-xs font-bold ${isActive ? 'bg-cyan-50 border-cyan-500' : 'bg-slate-50 border-slate-200'}`;
-        btn.innerHTML = `<div><div class="font-extrabold text-sm">${u.name}</div><div class="text-[10px] text-slate-400 mt-0.5">${u.role}</div></div>`;
-        container.appendChild(btn);
+        btn.className = `w-full text-left p-3.5 rounded-2xl border flex items-center justify-between text-xs font-bold ${isActive ? 'bg-cyan-50 border-cyan-500' : 'bg-slate-50 border-slate-200 hover:bg-slate-100'}`;
+        btn.innerHTML = `<div><div class="font-extrabold text-sm">${u.name}</div><div class="text-[10px] text-slate-400 mt-0.5">${u.role}</div></div>`; c.appendChild(btn);
       });
     }
 
-    // Cloud
+    // Cloud Sync
     function openCloudModal() { document.getElementById('inputCloudUrl').value = appData.cloudUrl; document.getElementById('modalCloud').classList.remove('hidden'); }
     function closeCloudModal() { document.getElementById('modalCloud').classList.add('hidden'); }
     function handleCloudClick() { (!appData.sessionLocked && appData.currentUser.role === 'SUPER_ADMIN') ? openCloudModal() : forceCloudPull(); }
     function disconnectCloud() { appData.cloudUrl = ''; saveData(true); updateCloudBadgeUI(false); closeCloudModal(); }
     async function saveCloudConfig() {
-      let val = document.getElementById('inputCloudUrl').value.trim();
-      if(!val) return;
-      if(!val.startsWith('http')) val = 'https://' + val;
-      appData.cloudUrl = val;
-      saveData(true); await pushToCloud(); await pullFromCloud(true); closeCloudModal();
+      let val = document.getElementById('inputCloudUrl').value.trim(); if(!val) return; if(!val.startsWith('http')) val = 'https://' + val;
+      appData.cloudUrl = val; saveData(true); await pushToCloud(); await pullFromCloud(true); closeCloudModal();
     }
     function updateCloudBadgeUI(online) {
-      const dot = document.getElementById('dotCloud');
-      if (!dot) return;
-      if (!appData.cloudUrl) { dot.className = 'w-1.5 h-1.5 rounded-full bg-amber-400 absolute top-2 right-2'; return; }
-      dot.className = online ? 'w-1.5 h-1.5 rounded-full bg-emerald-400 absolute top-2 right-2 animate-pulse' : 'w-1.5 h-1.5 rounded-full bg-rose-400 absolute top-2 right-2';
+      const dot = document.getElementById('dotCloud'); if (!dot) return;
+      if (!appData.cloudUrl) { dot.className = 'w-1.5 h-1.5 rounded-full bg-amber-400 absolute top-1.5 right-1.5'; return; }
+      dot.className = online ? 'w-1.5 h-1.5 rounded-full bg-emerald-400 absolute top-1.5 right-1.5 animate-pulse' : 'w-1.5 h-1.5 rounded-full bg-rose-400 absolute top-1.5 right-1.5';
     }
 
-    // Time Pickers & Logic
-    let clock24TargetInputId = null;
-    let clock24TargetCallback = null;
-    let clock24SelectedHour = 8;
-    let clock24SelectedMinute = 0;
+    // Interactive Clock Picker
+    let clock24TargetInputId = null; let clock24TargetCallback = null; let clock24SelectedHour = 8; let clock24SelectedMinute = 0;
     function open24HrClockModal(tid, title, cb) {
-      clock24TargetInputId = tid; clock24TargetCallback = cb;
-      document.getElementById('lbl24ClockPickerTitle').textContent = title || 'Select Time';
+      clock24TargetInputId = tid; clock24TargetCallback = cb; document.getElementById('lbl24ClockPickerTitle').textContent = title || 'Select Time';
       const val = document.getElementById(tid).value.trim();
-      if(val) {
-        let match = val.match(/^(\d{1,2}):(\d{2})$/);
-        if(match) { clock24SelectedHour=parseInt(match[1])%24; clock24SelectedMinute=parseInt(match[2])%60; }
-      }
-      switch24ClockMode('HOURS');
-      document.getElementById('modal24HrClockPicker').classList.remove('hidden');
+      if(val) { let m = val.match(/^(\d{1,2}):(\d{2})$/); if(m) { clock24SelectedHour=parseInt(m[1])%24; clock24SelectedMinute=parseInt(m[2])%60; } }
+      switch24ClockMode('HOURS'); document.getElementById('modal24HrClockPicker').classList.remove('hidden');
     }
     function close24HrClockModal() { document.getElementById('modal24HrClockPicker').classList.add('hidden'); }
     function switch24ClockMode(mode) {
       document.getElementById('btn24ClockHourVal').textContent = String(clock24SelectedHour).padStart(2,'0');
       document.getElementById('btn24ClockMinuteVal').textContent = String(clock24SelectedMinute).padStart(2,'0');
-      const c = document.getElementById('clock24NumbersContainer'); c.innerHTML='';
-      const cntr = 115;
+      const c = document.getElementById('clock24NumbersContainer'); c.innerHTML=''; const cntr = 115;
       if (mode === 'HOURS') {
         [0,13,14,15,16,17,18,19,20,21,22,23].forEach((h,i)=>{
-          const a = ((i*30)-60)*(Math.PI/180);
-          const btn = document.createElement('button'); btn.textContent=String(h).padStart(2,'0');
+          const a = ((i*30)-60)*(Math.PI/180); const btn = document.createElement('button'); btn.textContent=String(h).padStart(2,'0');
           btn.className=`absolute w-7 h-7 rounded-full flex items-center justify-center font-mono font-extrabold text-[11px] -translate-x-1/2 -translate-y-1/2 ${h===clock24SelectedHour?'bg-cyan-600 text-white':'text-slate-800'}`;
           btn.style.left = `${cntr + 88*Math.cos(a)}px`; btn.style.top = `${cntr + 88*Math.sin(a)}px`;
           btn.onclick=()=>{ clock24SelectedHour=h; switch24ClockMode('MINUTES'); }; c.appendChild(btn);
         });
         for(let h=1;h<=12;h++){
-          const i=(h===12)?0:h; const a = ((i*30)-60)*(Math.PI/180);
-          const btn = document.createElement('button'); btn.textContent=h;
+          const i=(h===12)?0:h; const a = ((i*30)-60)*(Math.PI/180); const btn = document.createElement('button'); btn.textContent=h;
           btn.className=`absolute w-6 h-6 rounded-full flex items-center justify-center font-mono font-bold text-[10px] -translate-x-1/2 -translate-y-1/2 ${h===clock24SelectedHour?'bg-indigo-600 text-white':'text-slate-500'}`;
           btn.style.left = `${cntr + 55*Math.cos(a)}px`; btn.style.top = `${cntr + 55*Math.sin(a)}px`;
           btn.onclick=()=>{ clock24SelectedHour=h; switch24ClockMode('MINUTES'); }; c.appendChild(btn);
         }
       } else {
         for(let i=0;i<12;i++){
-          const m = i*5; const a = ((i*30)-60)*(Math.PI/180);
-          const btn = document.createElement('button'); btn.textContent=String(m).padStart(2,'0');
+          const m = i*5; const a = ((i*30)-60)*(Math.PI/180); const btn = document.createElement('button'); btn.textContent=String(m).padStart(2,'0');
           btn.className=`absolute w-8 h-8 rounded-full flex items-center justify-center font-mono font-extrabold text-xs -translate-x-1/2 -translate-y-1/2 ${m===clock24SelectedMinute?'bg-cyan-600 text-white':'text-slate-700'}`;
           btn.style.left = `${cntr + 85*Math.cos(a)}px`; btn.style.top = `${cntr + 85*Math.sin(a)}px`;
           btn.onclick=()=>{ clock24SelectedMinute=m; switch24ClockMode('MINUTES'); }; c.appendChild(btn);
@@ -1031,32 +949,18 @@
     function confirm24ClockSelection() {
       const val = `${String(clock24SelectedHour).padStart(2,'0')}:${String(clock24SelectedMinute).padStart(2,'0')}`;
       if(clock24TargetInputId) document.getElementById(clock24TargetInputId).value = val;
-      if(clock24TargetCallback) clock24TargetCallback();
-      close24HrClockModal();
+      if(clock24TargetCallback) clock24TargetCallback(); close24HrClockModal();
     }
-    function parse24TimeToMinutes(t) {
-      if(!t) return null; let match=t.match(/^(\d{1,2}):(\d{2})$/);
-      if(match) return parseInt(match[1])*60+parseInt(match[2]); return null;
-    }
+    function parse24TimeToMinutes(t) { if(!t) return null; let match=t.match(/^(\d{1,2}):(\d{2})$/); if(match) return parseInt(match[1])*60+parseInt(match[2]); return null; }
     function calcDur(f,t) {
-      const m1=parse24TimeToMinutes(f), m2=parse24TimeToMinutes(t);
-      if(m1===null||m2===null) return '';
-      let d = m2-m1; if(d<0) d+=24*60;
-      const h=Math.floor(d/60), m=d%60;
+      const m1=parse24TimeToMinutes(f), m2=parse24TimeToMinutes(t); if(m1===null||m2===null) return '';
+      let d = m2-m1; if(d<0) d+=24*60; const h=Math.floor(d/60), m=d%60;
       if(h>0&&m>0) return `${h}hr ${m}m`; if(h>0) return `${h}hr`; return `${m}m`;
     }
-    function calcTotDur(arr) {
-      let t=0; arr.forEach(s=>{
-        const m1=parse24TimeToMinutes(s.from), m2=parse24TimeToMinutes(s.to);
-        if(m1!==null&&m2!==null) { let d=m2-m1; if(d<0) d+=24*60; t+=d; }
-      }); return t;
-    }
-    function fmtMins(mins) {
-      if(!mins) return '0m'; const h=Math.floor(mins/60), m=mins%60;
-      if(h>0&&m>0) return `${h}hr ${m}m`; if(h>0) return `${h}hr`; return `${m}m`;
-    }
+    function calcTotDur(arr) { let t=0; arr.forEach(s=>{ const m1=parse24TimeToMinutes(s.from), m2=parse24TimeToMinutes(s.to); if(m1!==null&&m2!==null) { let d=m2-m1; if(d<0) d+=24*60; t+=d; } }); return t; }
+    function fmtMins(mins) { if(!mins) return '0m'; const h=Math.floor(mins/60), m=mins%60; if(h>0&&m>0) return `${h}hr ${m}m`; if(h>0) return `${h}hr`; return `${m}m`; }
 
-    // Stoppages
+    // Stoppages Dynamic UI
     function renderStoppagesList(cid, arr) {
       const c = document.getElementById(cid); c.innerHTML='';
       if(!arr||arr.length===0){ c.innerHTML='<div class="text-[10px] text-slate-400 italic">No stoppages</div>'; return; }
@@ -1064,12 +968,8 @@
         const rowId=`${cid}_r_${i}`, dur=calcDur(s.from,s.to);
         const div=document.createElement('div'); div.className='p-2 rounded bg-white border border-slate-200';
         div.innerHTML = `
-          <div class="flex justify-between mb-1">
-            <span class="text-[10px] font-bold">Stoppage ${i+1}</span>
-            <div class="flex space-x-1">
-              ${dur ? `<span class="text-[9px] bg-amber-100 text-amber-900 px-1 rounded">${dur}</span>`:''}
-              <button type="button" onclick="remStop('${cid}',${i})" class="text-rose-500 text-[10px]"><i class="fa-solid fa-trash"></i></button>
-            </div>
+          <div class="flex justify-between mb-1"><span class="text-[10px] font-bold">Stoppage ${i+1}</span>
+            <div class="flex space-x-1">${dur ? `<span class="text-[9px] bg-amber-100 text-amber-900 px-1 rounded">${dur}</span>`:''}<button type="button" onclick="remStop('${cid}',${i})" class="text-rose-500 text-[10px]"><i class="fa-solid fa-trash"></i></button></div>
           </div>
           <div class="grid grid-cols-2 gap-1 mb-1">
             <input type="text" id="${rowId}_f" readonly value="${s.from||''}" placeholder="From" onclick="open24HrClockModal('${rowId}_f','From',()=>updStop('${cid}',${i}))" class="h-8 bg-slate-50 border border-slate-300 rounded px-2 text-xs cursor-pointer">
@@ -1081,32 +981,17 @@
       });
     }
     function getStops(cid) {
-      const c=document.getElementById(cid); if(!c) return [];
-      const arr=[];
-      c.querySelectorAll('.p-2.rounded').forEach((r,i)=>{
-        arr.push({
-          from: r.querySelector(`[id$='_f']`).value.trim(),
-          to: r.querySelector(`[id$='_t']`).value.trim(),
-          reason: r.querySelectorAll('input[type="text"]')[2].value.trim()
-        });
-      }); return arr;
+      const c=document.getElementById(cid); if(!c) return []; const arr=[];
+      c.querySelectorAll('.p-2.rounded').forEach((r)=>{ arr.push({ from: r.querySelector(`[id$='_f']`).value.trim(), to: r.querySelector(`[id$='_t']`).value.trim(), reason: r.querySelectorAll('input[type="text"]')[2].value.trim() }); }); return arr;
     }
     function updStop(cid,i) { const arr=getStops(cid); renderStoppagesList(cid,arr); }
     function updStopReason(cid,i,val) { const arr=getStops(cid); arr[i].reason=val; renderStoppagesList(cid,arr); }
     function addStoppageRow(cid) { const arr=getStops(cid); arr.push({from:'',to:'',reason:''}); renderStoppagesList(cid,arr); }
     function remStop(cid,i) { const arr=getStops(cid); arr.splice(i,1); renderStoppagesList(cid,arr); }
 
-    // Notifications & Chat
-    function pushSystemNotification(txt) {
-      appData.notifications.unshift({ id: 'N-'+Date.now(), text: txt, timestamp: new Date().toISOString() });
-      if(appData.notifications.length>50) appData.notifications.pop();
-    }
-    function openNotiModal() {
-      document.getElementById('modalNoti').classList.remove('hidden');
-      document.getElementById('badgeNotiUnread').classList.add('hidden');
-      if(currentOrgCode) localStorage.setItem(`LSN_${currentOrgCode}`, Date.now());
-      renderNotifications();
-    }
+    // Notifications & Chat System
+    function pushSystemNotification(txt) { appData.notifications.unshift({ id: 'N-'+Date.now(), text: txt, timestamp: new Date().toISOString() }); if(appData.notifications.length>50) appData.notifications.pop(); }
+    function openNotiModal() { document.getElementById('modalNoti').classList.remove('hidden'); document.getElementById('badgeNotiUnread').classList.add('hidden'); if(currentOrgCode) localStorage.setItem(`LSN_${currentOrgCode}`, Date.now()); renderNotifications(); }
     function closeNotiModal() { document.getElementById('modalNoti').classList.add('hidden'); }
     function renderNotifications() {
       const c = document.getElementById('listNotifications'); c.innerHTML='';
@@ -1119,70 +1004,45 @@
     function checkUnreadNotifications() {
       if(!currentOrgCode || appData.notifications.length===0) return;
       const ls = parseInt(localStorage.getItem(`LSN_${currentOrgCode}`)||'0');
-      if(new Date(appData.notifications[0].timestamp).getTime() > ls) {
-        document.getElementById('badgeNotiUnread').classList.remove('hidden'); playBeepSound();
-      }
+      if(new Date(appData.notifications[0].timestamp).getTime() > ls) { document.getElementById('badgeNotiUnread').classList.remove('hidden'); playBeepSound(); }
     }
-    function openChatModal() {
-      document.getElementById('modalChat').classList.remove('hidden');
-      document.getElementById('badgeChatUnread').classList.add('hidden');
-      if(currentOrgCode) localStorage.setItem(`LSC_${currentOrgCode}`, Date.now());
-      renderChatMessages(); setTimeout(()=>document.getElementById('listChatMessages').scrollTop=9999,50);
-    }
+    function openChatModal() { document.getElementById('modalChat').classList.remove('hidden'); document.getElementById('badgeChatUnread').classList.add('hidden'); if(currentOrgCode) localStorage.setItem(`LSC_${currentOrgCode}`, Date.now()); renderChatMessages(); setTimeout(()=>document.getElementById('listChatMessages').scrollTop=9999,50); }
     function closeChatModal() { document.getElementById('modalChat').classList.add('hidden'); }
     function sendChatMessage(e) {
       e.preventDefault(); const inp = document.getElementById('inputChatMessage'); const txt=inp.value.trim(); if(!txt) return;
       appData.chatMessages.push({ id:'M-'+Date.now(), text:txt, senderId:appData.currentUser.id, senderName:appData.currentUser.name, timestamp:new Date().toISOString() });
       if(appData.chatMessages.length>200) appData.chatMessages.shift();
-      inp.value=''; saveData(false); renderChatMessages();
-      setTimeout(()=>document.getElementById('listChatMessages').scrollTop=9999,50);
+      inp.value=''; saveData(false); renderChatMessages(); setTimeout(()=>document.getElementById('listChatMessages').scrollTop=9999,50);
     }
     function renderChatMessages() {
       const c = document.getElementById('listChatMessages'); c.innerHTML='';
       appData.chatMessages.forEach(m=>{
-        const isMe = m.senderId === appData.currentUser.id;
-        const div=document.createElement('div'); div.className=`max-w-[85%] ${isMe?'self-end text-right':'self-start'}`;
-        div.innerHTML = `
-          ${!isMe ? `<div class="text-[9px] text-slate-500 font-bold ml-1">${m.senderName}</div>` : ''}
-          <div class="px-3 py-2 text-xs rounded-xl ${isMe?'bg-cyan-600 text-white rounded-tr-none':'bg-white border rounded-tl-none'} break-words text-left">${m.text}</div>
-        `;
+        const isMe = m.senderId === appData.currentUser.id; const div=document.createElement('div'); div.className=`max-w-[85%] ${isMe?'self-end text-right':'self-start'}`;
+        div.innerHTML = `${!isMe ? `<div class="text-[9px] text-slate-500 font-bold ml-1">${m.senderName}</div>` : ''}<div class="px-3 py-2 text-xs rounded-xl ${isMe?'bg-cyan-600 text-white rounded-tr-none':'bg-white border rounded-tl-none'} break-words text-left">${m.text}</div>`;
         c.appendChild(div);
       });
     }
     function checkUnreadChat() {
       if(!currentOrgCode || appData.chatMessages.length===0) return;
-      const ls = parseInt(localStorage.getItem(`LSC_${currentOrgCode}`)||'0');
-      const lastM = appData.chatMessages[appData.chatMessages.length-1];
-      if(new Date(lastM.timestamp).getTime() > ls && lastM.senderId !== appData.currentUser.id) {
-        document.getElementById('badgeChatUnread').classList.remove('hidden'); playBeepSound();
-      }
+      const ls = parseInt(localStorage.getItem(`LSC_${currentOrgCode}`)||'0'); const lastM = appData.chatMessages[appData.chatMessages.length-1];
+      if(new Date(lastM.timestamp).getTime() > ls && lastM.senderId !== appData.currentUser.id) { document.getElementById('badgeChatUnread').classList.remove('hidden'); playBeepSound(); }
     }
 
-    // Main App Functionality
+    // App Data Forms
     function handleFormSubmit(e) {
-      e.preventDefault();
-      const b = getActiveBoat(); if(!b) { showToast('Add Vessel Account!'); return; }
+      e.preventDefault(); const b = getActiveBoat(); if(!b) { showToast('Add Vessel Account!'); return; }
       const s = document.getElementById('selectShipper').value; if(!s) { showToast('Add Shipper!'); return; }
       
       const recId = document.getElementById('entryRecordId').value;
-      const dTotal = parseFloat(document.getElementById('inputDTotal').value)||0;
-      const unit = document.getElementById('selectUnit').value;
+      const dTotal = parseFloat(document.getElementById('inputDTotal').value)||0; const unit = document.getElementById('selectUnit').value;
       const effKg = unit === 'KG' ? 1 : (document.getElementById('selectWeightOpt').value === 'Other' ? (parseFloat(document.getElementById('inputOtherKg').value)||50) : parseInt(document.getElementById('selectWeightOpt').value)||50);
       const totalKgs = dTotal * effKg;
 
       const rec = {
-        id: recId || 'R-'+Date.now(),
-        boatId: b.id, boatName: b.name,
-        date: document.getElementById('inputDate').value,
-        shift: document.getElementById('inputShift').value,
-        shipper: s,
-        hatch: parseInt(document.getElementById('inputHatch').value),
-        unit: unit, weightOpt: document.getElementById('selectWeightOpt').value, otherKg: parseFloat(document.getElementById('inputOtherKg').value)||50,
-        dTotal: dTotal, totalKgs: totalKgs, totalTons: totalKgs/1000,
-        remarks: document.getElementById('inputRemarks').value,
-        commencedTime: document.getElementById('inputCommencedTime').value,
-        completedTime: document.getElementById('inputCompletedTime').value,
-        stoppages: getStops('memberStoppagesList')
+        id: recId || 'R-'+Date.now(), boatId: b.id, boatName: b.name, date: document.getElementById('inputDate').value, shift: document.getElementById('inputShift').value, shipper: s,
+        hatch: parseInt(document.getElementById('inputHatch').value), unit: unit, weightOpt: document.getElementById('selectWeightOpt').value, otherKg: parseFloat(document.getElementById('inputOtherKg').value)||50,
+        dTotal: dTotal, totalKgs: totalKgs, totalTons: totalKgs/1000, remarks: document.getElementById('inputRemarks').value,
+        commencedTime: document.getElementById('inputCommencedTime').value, completedTime: document.getElementById('inputCompletedTime').value, stoppages: getStops('memberStoppagesList')
       };
 
       if(recId) {
@@ -1190,78 +1050,122 @@
         if(idx!==-1) appData.records[idx] = { ...appData.records[idx], ...rec, lastModifiedBy: appData.currentUser.name };
         pushSystemNotification(`${appData.currentUser.name} updated Hatch ${rec.hatch}.`);
       } else {
-        rec.checkerId = appData.currentUser.id; rec.checkerName = appData.currentUser.name;
-        appData.records.unshift(rec);
+        rec.checkerId = appData.currentUser.id; rec.checkerName = appData.currentUser.name; appData.records.unshift(rec);
         pushSystemNotification(`${appData.currentUser.name} added ${dTotal} ${unit} to Hatch ${rec.hatch}.`);
       }
       saveData(); cancelEditing(); renderAll(); showToast('Saved');
     }
 
     function saveAdminDirectEdit(e) {
-      e.preventDefault();
-      const recId = document.getElementById('adminEditRecId').value;
-      const idx = appData.records.findIndex(r => r.id === recId);
-      if(idx===-1) return;
-
-      const dTotal = parseFloat(document.getElementById('adminEditDTotal').value)||0;
-      const unit = document.getElementById('adminEditUnit').value;
-      const totalKgs = unit==='KG' ? dTotal : dTotal*50;
-
+      e.preventDefault(); const recId = document.getElementById('adminEditRecId').value; const idx = appData.records.findIndex(r => r.id === recId); if(idx===-1) return;
+      const dTotal = parseFloat(document.getElementById('adminEditDTotal').value)||0; const unit = document.getElementById('adminEditUnit').value; const totalKgs = unit==='KG' ? dTotal : dTotal*50;
       appData.records[idx] = {
-        ...appData.records[idx],
-        date: document.getElementById('adminEditDate').value,
-        shift: document.getElementById('adminEditShift').value,
-        hatch: parseInt(document.getElementById('adminEditHatch').value),
-        shipper: document.getElementById('adminEditShipper').value,
-        dTotal: dTotal, unit: unit, totalKgs: totalKgs, totalTons: totalKgs/1000,
-        remarks: document.getElementById('adminEditRemarks').value,
-        commencedTime: document.getElementById('adminEditCommenced').value,
-        completedTime: document.getElementById('adminEditCompleted').value,
-        stoppages: getStops('adminStoppagesList'),
-        lastModifiedBy: appData.currentUser.name
+        ...appData.records[idx], date: document.getElementById('adminEditDate').value, shift: document.getElementById('adminEditShift').value, hatch: parseInt(document.getElementById('adminEditHatch').value),
+        shipper: document.getElementById('adminEditShipper').value, dTotal: dTotal, unit: unit, totalKgs: totalKgs, totalTons: totalKgs/1000, remarks: document.getElementById('adminEditRemarks').value,
+        commencedTime: document.getElementById('adminEditCommenced').value, completedTime: document.getElementById('adminEditCompleted').value, stoppages: getStops('adminStoppagesList'), lastModifiedBy: appData.currentUser.name
       };
       saveData(); closeAdminEditModal(); renderAll(); showToast('Updated');
     }
 
-    // Data Export
-    function downloadExcel() {
-      const active = getActiveBoat();
-      const wb = XLSX.utils.book_new();
-      const rowsTemplate = [['', '', '', '', '   HATCH NUMBERS', '', '', '', '                TOTAL', '', ''],
-        ['DATE', 'SHIFT', 'SHIPPER', '1', '2', '3', '4', '5', 'KGS', 'TONS', 'REMARKS']];
-
-      const activeLogs = active ? appData.records.filter(r => r.boatId === active.id) : appData.records;
-      const dateMap = {};
-      activeLogs.forEach(r => {
-        if (!dateMap[r.date]) dateMap[r.date] = { date: r.date, timestamp: parseDMYTimestamp(r.date), entries: {} };
-        const eKey = `${r.shift}_${r.shipper}`;
-        if (!dateMap[r.date].entries[eKey]) dateMap[r.date].entries[eKey] = { shift: r.shift, shipper: r.shipper, h: {1:0,2:0,3:0,4:0,5:0}, kgs:0, tons:0, remarks:[] };
-        dateMap[r.date].entries[eKey].h[r.hatch] += r.dTotal;
-        dateMap[r.date].entries[eKey].kgs += r.totalKgs;
-        dateMap[r.date].entries[eKey].tons += r.totalTons;
-        if (r.remarks && !dateMap[r.date].entries[eKey].remarks.includes(r.remarks)) dateMap[r.date].entries[eKey].remarks.push(r.remarks);
+    // Modal Manager Logic Re-Attachment
+    function openAccountModal() { renderVesselList(); document.getElementById('modalAccount').classList.remove('hidden'); }
+    function closeAccountModal() { document.getElementById('modalAccount').classList.add('hidden'); cancelBoatEdit(); }
+    function renderVesselList() {
+      const c = document.getElementById('listVessels'); c.innerHTML='';
+      appData.boats.forEach(b=>{
+        const d = document.createElement('div'); d.className='flex justify-between p-3 bg-white border rounded-xl text-xs';
+        d.innerHTML=`<div><div class="font-bold">${b.name}</div><div class="text-[10px] text-slate-400">${b.unit}</div></div><div class="flex space-x-1"><button onclick="editBoatAccount('${b.id}')" class="w-8 h-8 rounded bg-slate-50 text-cyan-600"><i class="fa-solid fa-pen"></i></button><button onclick="deleteBoatAccount('${b.id}')" class="w-8 h-8 rounded bg-rose-50 text-rose-500"><i class="fa-solid fa-trash"></i></button></div>`; c.appendChild(d);
       });
+    }
+    function saveBoatAccount() {
+      const name = document.getElementById('inputBoatName').value.trim(); const unit = document.getElementById('inputBoatUnit').value; const weight = document.getElementById('inputBoatWeight').value; const editId = document.getElementById('editBoatId').value;
+      if(!name) return;
+      if(editId) { const idx = appData.boats.findIndex(b=>b.id===editId); if(idx!==-1) { appData.boats[idx]={...appData.boats[idx], name, unit, weight}; appData.records.forEach(r=>{if(r.boatId===editId) r.boatName=name;}); } } 
+      else { const b = { id: 'B-'+Date.now(), name, unit, weight }; appData.boats.push(b); appData.activeBoatId = b.id; }
+      saveData(); cancelBoatEdit(); renderVesselList(); renderAll();
+    }
+    function editBoatAccount(id) { const b=appData.boats.find(x=>x.id===id); if(!b) return; document.getElementById('editBoatId').value=b.id; document.getElementById('inputBoatName').value=b.name; document.getElementById('inputBoatUnit').value=b.unit; document.getElementById('inputBoatWeight').value=b.weight; document.getElementById('btnCancelBoat').classList.remove('hidden'); }
+    function cancelBoatEdit() { document.getElementById('editBoatId').value=''; document.getElementById('inputBoatName').value=''; document.getElementById('btnCancelBoat').classList.add('hidden'); }
+    function deleteBoatAccount(id) { if(confirm('Delete?')) { appData.boats=appData.boats.filter(b=>b.id!==id); appData.records=appData.records.filter(r=>r.boatId!==id); saveData(); renderVesselList(); renderAll(); } }
 
-      Object.values(dateMap).sort((a,b)=>a.timestamp-b.timestamp).forEach(dObj => {
-        const dH = {1:0,2:0,3:0,4:0,5:0}; let dK=0, dT=0;
-        Object.values(dObj.entries).sort((a,b)=>a.shift==='Day'?-1:1).forEach(e => {
-          dK+=e.kgs; dT+=e.tons; for(let i=1;i<=5;i++) dH[i]+=e.h[i];
-          rowsTemplate.push([dObj.date, e.shift, e.shipper, e.h[1]||'', e.h[2]||'', e.h[3]||'', e.h[4]||'', e.h[5]||'', e.kgs, e.tons, e.remarks.join(', ')]);
-        });
-        rowsTemplate.push([dObj.date, 'TOTAL', 'Daily Total (D+N)', dH[1]||'', dH[2]||'', dH[3]||'', dH[4]||'', dH[5]||'', dK, dT, 'Daily Total']);
+    function openShipperModal() { renderShipperList(); document.getElementById('modalShipper').classList.remove('hidden'); }
+    function closeShipperModal() { document.getElementById('modalShipper').classList.add('hidden'); cancelShipperEdit(); }
+    function renderShipperList() {
+      const c = document.getElementById('listShippers'); c.innerHTML='';
+      appData.shippers.forEach((s,i)=>{
+        const d = document.createElement('div'); d.className='flex justify-between p-3 bg-white border rounded-xl text-xs';
+        d.innerHTML=`<span class="font-bold">${s}</span><div class="flex space-x-1"><button onclick="startEditShipper(${i})" class="w-8 h-8 rounded bg-slate-50 text-cyan-600"><i class="fa-solid fa-pen"></i></button><button onclick="deleteShipper(${i})" class="w-8 h-8 rounded bg-rose-50 text-rose-500"><i class="fa-solid fa-trash"></i></button></div>`; c.appendChild(d);
       });
+    }
+    function saveShipperItem() {
+      const name = document.getElementById('inputNewShipper').value.trim(); const editIdx = document.getElementById('editShipperIndex').value; if(!name) return;
+      if(editIdx!=='') { const idx = parseInt(editIdx); const old = appData.shippers[idx]; appData.shippers[idx]=name; appData.records.forEach(r=>{if(r.shipper===old) r.shipper=name;}); } 
+      else { if(!appData.shippers.includes(name)) appData.shippers.push(name); }
+      saveData(); cancelShipperEdit(); renderShipperList(); renderAll();
+    }
+    function startEditShipper(i) { document.getElementById('editShipperIndex').value=i; document.getElementById('inputNewShipper').value=appData.shippers[i]; document.getElementById('btnCancelShipper').classList.remove('hidden'); }
+    function cancelShipperEdit() { document.getElementById('editShipperIndex').value=''; document.getElementById('inputNewShipper').value=''; document.getElementById('btnCancelShipper').classList.add('hidden'); }
+    function deleteShipper(i) { if(confirm('Delete?')) { appData.shippers.splice(i,1); saveData(); renderShipperList(); renderAll(); } }
 
-      XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(rowsTemplate), 'MV_INTAKE_TEMPLATE');
-      XLSX.writeFile(wb, `MV_INTAKE_REPORT_${new Date().toISOString().slice(0, 10)}.xlsx`);
-      showToast('Excel downloaded');
+    function openUserManagerModal() { renderTeamUsersList(); document.getElementById('modalUserManager').classList.remove('hidden'); }
+    function closeUserManagerModal() { document.getElementById('modalUserManager').classList.add('hidden'); cancelUserEdit(); }
+    function renderTeamUsersList() {
+      const c = document.getElementById('listTeamUsers'); c.innerHTML='';
+      appData.users.forEach(u=>{
+        const d = document.createElement('div'); d.className='flex justify-between p-3 bg-white border rounded-xl text-xs';
+        d.innerHTML=`<div><div class="font-bold">${u.name}</div><div class="text-[10px] text-slate-400">${u.role}</div></div><div class="flex space-x-1"><button onclick="startEditUser('${u.id}')" class="w-8 h-8 rounded bg-slate-50 text-cyan-600"><i class="fa-solid fa-pen"></i></button><button onclick="deleteUserRecord('${u.id}')" class="w-8 h-8 rounded bg-rose-50 text-rose-500"><i class="fa-solid fa-trash"></i></button></div>`; c.appendChild(d);
+      });
+    }
+    function saveUserRecord() {
+      const name = document.getElementById('inputUserName').value.trim(); const role = document.getElementById('inputUserRole').value; const editId = document.getElementById('editUserId').value; if(!name) return;
+      if(editId) { const idx = appData.users.findIndex(u=>u.id===editId); if(idx!==-1) { appData.users[idx]={...appData.users[idx], name, role}; if(appData.currentUser.id===editId) appData.currentUser={...appData.users[idx]}; } } 
+      else { appData.users.push({ id: 'U-'+Date.now(), name, role, accessKey: 'KEY-'+Math.random().toString(36).substring(2,8).toUpperCase() }); }
+      saveData(); cancelUserEdit(); renderTeamUsersList(); renderAll();
+    }
+    function startEditUser(id) { const u=appData.users.find(x=>x.id===id); if(u){ document.getElementById('editUserId').value=u.id; document.getElementById('inputUserName').value=u.name; document.getElementById('inputUserRole').value=u.role; document.getElementById('btnCancelUserEdit').classList.remove('hidden'); } }
+    function cancelUserEdit() { document.getElementById('editUserId').value=''; document.getElementById('inputUserName').value=''; document.getElementById('btnCancelUserEdit').classList.add('hidden'); }
+    function deleteUserRecord(id) { if(confirm('Delete user?')) { appData.users=appData.users.filter(u=>u.id!==id); saveData(); renderTeamUsersList(); renderAll(); } }
+
+    function openShareModal() {
+      document.getElementById('linkSuperAdmin').value = `${window.location.origin}${window.location.pathname}#master=unlock&org=${currentOrgCode}`;
+      const selBoat = document.getElementById('shareModalBoatSelect'); selBoat.innerHTML='';
+      appData.boats.forEach(b=>{ const opt=document.createElement('option'); opt.value=b.id; opt.textContent=b.name; selBoat.appendChild(opt); });
+      renderUniqueInviteLinks(); document.getElementById('modalShare').classList.remove('hidden');
+    }
+    function closeShareModal() { document.getElementById('modalShare').classList.add('hidden'); }
+    function renderUniqueInviteLinks() {
+      const tb = appData.boats.find(b=>b.id===document.getElementById('shareModalBoatSelect').value) || appData.boats[0];
+      const ac = document.getElementById('listUniqueAdminLinks'); ac.innerHTML=''; const mc = document.getElementById('listUniqueMemberLinks'); mc.innerHTML='';
+      if(!tb) return;
+      appData.users.filter(u=>u.role==='ADMIN').forEach(u=>{
+        const d = document.createElement('div'); d.className='flex justify-between items-center p-2 bg-white border rounded';
+        d.innerHTML=`<span class="text-[10px] font-bold">${u.name}</span><button onclick="copyDirectLink('${buildPersonalInviteLink(u,tb)}')" class="bg-indigo-600 text-white px-2 py-1 rounded text-[10px]">Copy</button>`; ac.appendChild(d);
+      });
+      appData.users.filter(u=>u.role==='MEMBER').forEach(u=>{
+        const d = document.createElement('div'); d.className='flex justify-between items-center p-2 bg-white border rounded';
+        d.innerHTML=`<span class="text-[10px] font-bold">${u.name}</span><button onclick="copyDirectLink('${buildPersonalInviteLink(u,tb)}')" class="bg-cyan-600 text-white px-2 py-1 rounded text-[10px]">Copy</button>`; mc.appendChild(d);
+      });
+    }
+
+    // Render Engines
+    function renderAll() { checkOrgGate(); applyRolePermissions(); updateCloudBadgeUI(!!appData.cloudUrl); renderActiveBoatUI(); renderStats(); renderMyEntries(); renderShippersDropdown(); renderUserBadge(); checkUnreadNotifications(); checkUnreadChat(); }
+    
+    function renderMyEntries() {
+      const active = getActiveBoat(); const tbody = document.getElementById('tblMyEntriesBody'); tbody.innerHTML = '';
+      if (!active) { document.getElementById('badgeEntryCount').textContent = '0'; return; }
+      const isPriv = appData.currentUser.role !== 'MEMBER';
+      const myLogs = appData.records.filter(r => r.boatId === active.id && (isPriv || r.checkerId === appData.currentUser.id));
+      document.getElementById('badgeEntryCount').textContent = myLogs.length;
+      myLogs.forEach(r => {
+        const tr = document.createElement('tr'); tr.className = 'border-b hover:bg-slate-50';
+        tr.innerHTML = `<td class="p-2 font-bold">${r.date} <span class="text-[9px] bg-slate-200 px-1 rounded">${r.shift}</span></td><td class="p-2 text-cyan-700 font-bold">H-${r.hatch}</td><td class="p-2">${r.shipper}</td><td class="p-2 text-right font-bold">${r.dTotal}</td><td class="p-2 text-right text-emerald-600">${r.totalTons.toFixed(2)}</td><td class="p-2 text-center"><button onclick="editRecord('${r.id}')" class="text-cyan-600 mr-2"><i class="fa-solid fa-pen"></i></button><button onclick="deleteRecord('${r.id}')" class="text-rose-500"><i class="fa-solid fa-trash"></i></button></td>`;
+        tbody.appendChild(tr);
+      });
     }
 
     function renderTemplateTable() {
-      const active = getActiveBoat();
-      const tbody = document.getElementById('tblTemplateBody'); const tfoot = document.getElementById('tblTemplateFoot');
-      tbody.innerHTML = ''; tfoot.innerHTML = '';
-      if (!active) { tbody.innerHTML = '<tr><td colspan="11" class="py-6 text-center text-slate-400">No vessel account selected.</td></tr>'; return; }
-      
+      const active = getActiveBoat(); const tbody = document.getElementById('tblTemplateBody'); const tfoot = document.getElementById('tblTemplateFoot');
+      tbody.innerHTML = ''; tfoot.innerHTML = ''; if (!active) return;
       const logs = appData.records.filter(r => r.boatId === active.id);
       const dMap = {};
       logs.forEach(r => {
@@ -1277,99 +1181,66 @@
         let dH={1:0,2:0,3:0,4:0,5:0}, dK=0, dT=0;
         Object.values(dObj.e).sort((a,b)=>a.shift==='Day'?-1:1).forEach(e => {
           dK+=e.kgs; dT+=e.tons; for(let i=1;i<=5;i++) dH[i]+=e.h[i];
-          const tr = document.createElement('tr'); tr.className='border-b text-[11px]';
+          const tr = document.createElement('tr'); tr.className='border-b text-[11px] hover:bg-slate-50';
           tr.innerHTML = `<td class="py-2 px-2 border-r font-semibold">${dObj.date}</td><td class="py-2 px-2 border-r font-bold ${e.shift==='Day'?'text-amber-600':'text-indigo-600'}">${e.shift}</td><td class="py-2 px-2 border-r text-left font-bold text-slate-800">${e.shipper}</td>
             <td class="py-2 px-2 border-r text-right">${e.h[1]||'-'}</td><td class="py-2 px-2 border-r text-right">${e.h[2]||'-'}</td><td class="py-2 px-2 border-r text-right">${e.h[3]||'-'}</td><td class="py-2 px-2 border-r text-right">${e.h[4]||'-'}</td><td class="py-2 px-2 border-r text-right">${e.h[5]||'-'}</td>
             <td class="py-2 px-2 border-r text-right font-bold text-slate-900">${e.kgs.toLocaleString()}</td><td class="py-2 px-2 border-r text-right font-bold text-emerald-600">${e.tons.toFixed(3)}</td><td class="py-2 px-2 text-left">${e.rmks.join(', ')}</td>`;
           tbody.appendChild(tr);
         });
         gK+=dK; gT+=dT; for(let i=1;i<=5;i++) gH[i]+=dH[i];
-        const trD = document.createElement('tr'); trD.className='bg-rose-50 border-y-2 border-rose-300 text-rose-600 text-[11px]';
-        trD.innerHTML = `<td class="py-2 px-2 border-r font-black">${dObj.date}</td><td class="py-2 px-2 border-r font-black">TOTAL</td><td class="py-2 px-2 border-r text-left font-black">Daily Total (D+N)</td>
-          <td class="py-2 px-2 border-r text-right font-black">${dH[1]||'-'}</td><td class="py-2 px-2 border-r text-right font-black">${dH[2]||'-'}</td><td class="py-2 px-2 border-r text-right font-black">${dH[3]||'-'}</td><td class="py-2 px-2 border-r text-right font-black">${dH[4]||'-'}</td><td class="py-2 px-2 border-r text-right font-black">${dH[5]||'-'}</td>
-          <td class="py-2 px-2 border-r text-right font-black">${dK.toLocaleString()}</td><td class="py-2 px-2 border-r text-right font-black">${dT.toFixed(3)}</td><td class="py-2 px-2 text-left text-[10px]">Daily Total</td>`;
+        const trD = document.createElement('tr'); trD.className='bg-rose-50 border-y-2 border-rose-300 text-rose-600 text-[11px] font-black';
+        trD.innerHTML = `<td class="py-2 px-2 border-r">${dObj.date}</td><td class="py-2 px-2 border-r">TOTAL</td><td class="py-2 px-2 border-r text-left">Daily Total (D+N)</td>
+          <td class="py-2 px-2 border-r text-right">${dH[1]||'-'}</td><td class="py-2 px-2 border-r text-right">${dH[2]||'-'}</td><td class="py-2 px-2 border-r text-right">${dH[3]||'-'}</td><td class="py-2 px-2 border-r text-right">${dH[4]||'-'}</td><td class="py-2 px-2 border-r text-right">${dH[5]||'-'}</td>
+          <td class="py-2 px-2 border-r text-right">${dK.toLocaleString()}</td><td class="py-2 px-2 border-r text-right">${dT.toFixed(3)}</td><td class="py-2 px-2 text-left text-[10px] italic">Daily Total</td>`;
         tbody.appendChild(trD);
       });
       tfoot.innerHTML = `<td colspan="3" class="py-2.5 px-3 text-left border-r font-black">GRAND TOTAL</td><td class="py-2.5 px-2 text-right border-r font-black">${gH[1].toLocaleString()}</td><td class="py-2.5 px-2 text-right border-r font-black">${gH[2].toLocaleString()}</td><td class="py-2.5 px-2 text-right border-r font-black">${gH[3].toLocaleString()}</td><td class="py-2.5 px-2 text-right border-r font-black">${gH[4].toLocaleString()}</td><td class="py-2.5 px-2 text-right border-r font-black">${gH[5].toLocaleString()}</td><td class="py-2.5 px-2 text-right border-r font-black">${gK.toLocaleString()}</td><td class="py-2.5 px-2 text-right border-r font-black text-emerald-700">${gT.toFixed(3)}</td><td></td>`;
     }
 
-    // Other Utility UI renders (Stoppages, Attendance, etc.)
     function renderAttendanceTable() {
-      const q = (document.getElementById('searchAttendance') ? document.getElementById('searchAttendance').value : '').toLowerCase();
       const tbody = document.getElementById('tblAttendanceBody'); if (!tbody) return; tbody.innerHTML = '';
-      const filtered = appData.records.filter(r => {
-        const rStr = Array.isArray(r.stoppages)?r.stoppages.map(s=>s.reason).join(' '):'';
-        return !q || r.date.includes(q) || r.checkerName?.toLowerCase().includes(q) || r.shift.toLowerCase().includes(q) || ('h-'+r.hatch).includes(q) || r.boatName.toLowerCase().includes(q) || rStr.toLowerCase().includes(q);
-      });
-      if (filtered.length === 0) { tbody.innerHTML = '<tr><td colspan="9" class="text-center py-8 text-slate-400">No records found.</td></tr>'; return; }
-
-      filtered.forEach(r => {
-        let stList = Array.isArray(r.stoppages) ? r.stoppages : [];
-        let stHtml = '<span class="text-slate-400">- Nil -</span>';
-        if (stList.length > 0) {
-          stHtml = `<div class="space-y-1"><div class="px-1.5 py-0.5 rounded text-[9px] font-black bg-rose-100 text-rose-900 border border-rose-300 inline-block">Delay: ${fmtMins(calcTotDur(stList))}</div><div class="bg-slate-50 p-2 rounded-xl border">${stList.map(s=>`<div class="py-1 border-b last:border-0"><span class="font-bold text-rose-700">[${s.from}-${s.to}]</span> <span class="text-[11px] text-slate-700">${s.reason}</span></div>`).join('')}</div></div>`;
-        }
+      if (appData.records.length === 0) { tbody.innerHTML = '<tr><td colspan="9" class="text-center py-8 text-slate-400">No records found.</td></tr>'; return; }
+      appData.records.forEach(r => {
+        const stList = Array.isArray(r.stoppages) ? r.stoppages : []; let stHtml = '<span class="text-slate-400">- Nil -</span>';
+        if (stList.length > 0) stHtml = `<div class="space-y-1"><div class="px-1.5 py-0.5 rounded text-[9px] font-black bg-rose-100 text-rose-900 border border-rose-300 inline-block">Delay: ${fmtMins(calcTotDur(stList))}</div><div class="bg-slate-50 p-2 rounded-xl border">${stList.map(s=>`<div class="py-1 border-b last:border-0"><span class="font-bold text-rose-700">[${s.from}-${s.to}]</span> <span class="text-[11px] text-slate-700">${s.reason}</span></div>`).join('')}</div></div>`;
         const tr = document.createElement('tr'); tr.className = 'hover:bg-slate-50 border-b';
-        tr.innerHTML = `<td class="py-2.5 px-3 font-bold">${r.date}</td><td class="py-2.5 px-3 font-bold">${r.shift}</td><td class="py-2.5 px-3">${r.checkerName||'Member'}</td><td class="py-2.5 px-3 font-bold text-cyan-700">H-${r.hatch}</td><td class="py-2.5 px-3 text-[11px]">S: ${r.commencedTime||'-'}<br>E: ${r.completedTime||'-'}</td><td class="py-2.5 px-3">${stHtml}</td><td class="py-2.5 px-3 text-right font-bold">${r.dTotal} ${r.unit}</td><td class="py-2.5 px-3 text-right font-bold text-emerald-600">${r.totalTons.toFixed(2)} MT</td><td class="py-2.5 px-3 text-[9px]">${r.lastModifiedBy?`Edited: ${r.lastModifiedBy}`:'Original'}</td>`;
+        tr.innerHTML = `<td class="py-2.5 px-3 font-bold">${r.date}</td><td class="py-2.5 px-3 font-bold">${r.shift}</td><td class="py-2.5 px-3">${r.checkerName||'Member'}</td><td class="py-2.5 px-3 font-bold text-cyan-700">H-${r.hatch}</td><td class="py-2.5 px-3 text-[11px] font-mono">S: ${r.commencedTime||'-'}<br>E: ${r.completedTime||'-'}</td><td class="py-2.5 px-3">${stHtml}</td><td class="py-2.5 px-3 text-right font-bold">${r.dTotal} ${r.unit}</td><td class="py-2.5 px-3 text-right font-bold text-emerald-600">${r.totalTons.toFixed(2)} MT</td><td class="py-2.5 px-3 text-[9px]">${r.lastModifiedBy?`Edited: ${r.lastModifiedBy}`:'Original'}</td>`;
         tbody.appendChild(tr);
       });
     }
 
     function renderAllRecordsTable() {
-      const q = (document.getElementById('searchAllRecords').value || '').toLowerCase();
       const tbody = document.getElementById('tblAllRecordsBody'); tbody.innerHTML = '';
-      const filtered = appData.records.filter(r => !q || r.boatName.toLowerCase().includes(q) || r.shipper.toLowerCase().includes(q) || r.checkerName.toLowerCase().includes(q) || r.date.includes(q) || r.shift.toLowerCase().includes(q));
-      if (filtered.length === 0) { tbody.innerHTML = '<tr><td colspan="9" class="text-center py-6 text-slate-400">No records found.</td></tr>'; return; }
-      filtered.forEach(r => {
+      if (appData.records.length === 0) { tbody.innerHTML = '<tr><td colspan="9" class="text-center py-6 text-slate-400">No records found.</td></tr>'; return; }
+      appData.records.forEach(r => {
         const tr = document.createElement('tr'); tr.className = 'hover:bg-slate-50 text-xs border-b';
         tr.innerHTML = `<td class="py-2 px-2.5">${r.date}</td><td class="py-2 px-2.5">${r.shift}</td><td class="py-2 px-2.5">${r.boatName}</td><td class="py-2 px-2.5 font-bold text-cyan-700">H-${r.hatch}</td><td class="py-2 px-2.5">${r.shipper}</td><td class="py-2 px-2.5 text-slate-500">${r.checkerName}</td><td class="py-2 px-2.5 text-right font-bold">${r.dTotal} ${r.unit}</td><td class="py-2 px-2.5 text-right font-bold text-emerald-600">${r.totalTons.toFixed(3)}</td><td class="py-2 px-2.5 text-center"><button onclick="editRecord('${r.id}')" class="w-7 h-7 rounded bg-cyan-50 text-cyan-600 mr-1"><i class="fa-solid fa-pen"></i></button><button onclick="deleteRecord('${r.id}')" class="w-7 h-7 rounded bg-rose-50 text-rose-500"><i class="fa-solid fa-trash"></i></button></td>`;
         tbody.appendChild(tr);
       });
     }
 
-    // Standard remaining functions mapped properly to logic
-    function getActiveBoat() { return appData.boats.find(b => b.id === appData.activeBoatId) || appData.boats[0]; }
-    function changeActiveBoat(id) { appData.activeBoatId = id; saveData(true); renderAll(); }
-    function openAccountModal() { renderVesselList(); document.getElementById('modalAccount').classList.remove('hidden'); }
-    function closeAccountModal() { document.getElementById('modalAccount').classList.add('hidden'); }
-    function openShipperModal() { renderShipperList(); document.getElementById('modalShipper').classList.remove('hidden'); }
-    function closeShipperModal() { document.getElementById('modalShipper').classList.add('hidden'); }
-    function openUserManagerModal() { renderTeamUsersList(); document.getElementById('modalUserManager').classList.remove('hidden'); }
-    function closeUserManagerModal() { document.getElementById('modalUserManager').classList.add('hidden'); }
-    function openShareModal() { renderUniqueInviteLinks(); document.getElementById('modalShare').classList.remove('hidden'); }
-    function closeShareModal() { document.getElementById('modalShare').classList.add('hidden'); }
     function editRecord(id) {
       const rec = appData.records.find(r => r.id === id); if (!rec) return;
       if (appData.currentUser.role === 'MEMBER') {
-        document.getElementById('entryRecordId').value = rec.id;
-        pickerDate.setDate(rec.date); selectShift(rec.shift); document.getElementById('selectShipper').value = rec.shipper;
+        document.getElementById('entryRecordId').value = rec.id; pickerDate.setDate(rec.date); selectShift(rec.shift); document.getElementById('selectShipper').value = rec.shipper;
         selectHatch(rec.hatch); document.getElementById('selectUnit').value = rec.unit; updateUnitLogic();
         if(rec.unit==='Bags') document.getElementById('selectWeightOpt').value = rec.weightOpt; updateWeightLogic();
-        document.getElementById('inputDTotal').value = rec.dTotal; document.getElementById('inputCommencedTime').value = rec.commencedTime||'';
-        document.getElementById('inputCompletedTime').value = rec.completedTime||'';
+        document.getElementById('inputDTotal').value = rec.dTotal; document.getElementById('inputCommencedTime').value = rec.commencedTime||''; document.getElementById('inputCompletedTime').value = rec.completedTime||'';
         renderStoppagesList('memberStoppagesList', Array.isArray(rec.stoppages)?rec.stoppages:[]);
-        document.getElementById('editingIndicator').classList.remove('hidden'); document.getElementById('btnCancelEdit').classList.remove('hidden');
-        switchTab('tabEntry'); window.scrollTo({ top: 0, behavior: 'smooth' });
+        document.getElementById('editingIndicator').classList.remove('hidden'); document.getElementById('btnCancelEdit').classList.remove('hidden'); switchTab('tabEntry'); window.scrollTo({ top: 0, behavior: 'smooth' });
       } else {
-        document.getElementById('adminEditRecId').value = rec.id; pickerAdminEdit.setDate(rec.date);
-        document.getElementById('adminEditShift').value = rec.shift; document.getElementById('adminEditHatch').value = rec.hatch;
-        document.getElementById('adminEditDTotal').value = rec.dTotal; document.getElementById('adminEditUnit').value = rec.unit;
-        document.getElementById('adminEditCommenced').value = rec.commencedTime||''; document.getElementById('adminEditCompleted').value = rec.completedTime||'';
+        document.getElementById('adminEditRecId').value = rec.id; pickerAdminEdit.setDate(rec.date); document.getElementById('adminEditShift').value = rec.shift; document.getElementById('adminEditHatch').value = rec.hatch;
+        document.getElementById('adminEditDTotal').value = rec.dTotal; document.getElementById('adminEditUnit').value = rec.unit; document.getElementById('adminEditCommenced').value = rec.commencedTime||''; document.getElementById('adminEditCompleted').value = rec.completedTime||'';
         renderStoppagesList('adminStoppagesList', Array.isArray(rec.stoppages)?rec.stoppages:[]);
         const s = document.getElementById('adminEditShipper'); s.innerHTML=''; appData.shippers.forEach(x=>{ const o=document.createElement('option'); o.value=x; o.textContent=x; if(x===rec.shipper) o.selected=true; s.appendChild(o); });
         document.getElementById('modalAdminEdit').classList.remove('hidden');
       }
     }
-    function cancelEditing() {
-      document.getElementById('entryRecordId').value=''; document.getElementById('inputDTotal').value='';
-      document.getElementById('inputCommencedTime').value=''; document.getElementById('inputCompletedTime').value='';
-      renderStoppagesList('memberStoppagesList', []);
-      document.getElementById('editingIndicator').classList.add('hidden'); document.getElementById('btnCancelEdit').classList.add('hidden');
+    function cancelEditing() { document.getElementById('entryRecordId').value=''; document.getElementById('inputDTotal').value=''; document.getElementById('inputCommencedTime').value=''; document.getElementById('inputCompletedTime').value=''; renderStoppagesList('memberStoppagesList', []); document.getElementById('editingIndicator').classList.add('hidden'); document.getElementById('btnCancelEdit').classList.add('hidden'); }
+    function deleteRecord(id) {
+      if(confirm('Delete Record?')) { appData.records = appData.records.filter(r => r.id !== id); pushSystemNotification(`${appData.currentUser.name} deleted a record.`); saveData(); renderAll(); showToast('Deleted'); }
     }
-    function renderAll() { checkOrgGate(); applyRolePermissions(); updateCloudBadgeUI(!!appData.cloudUrl); renderActiveBoatUI(); renderStats(); renderMyEntries(); renderShippersDropdown(); renderUserBadge(); }
-    
-    // (Other specific logic mapping included inline above and in previous functions)
-    // Invoked directly from DOM elements
+
   </script>
 </body>
 </html>
