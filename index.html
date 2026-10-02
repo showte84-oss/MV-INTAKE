@@ -32,7 +32,7 @@
       <span id="badgeOrgCode" class="text-[9px] font-mono font-bold uppercase px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">SECURE</span>
     </div>
 
-    <!-- Row 2: Menu & Left-Aligned Icons -->
+    <!-- Row 2: Menu & Action Icons (Team Icon Always Visible) -->
     <div class="max-w-7xl mx-auto px-2 sm:px-4 h-12 flex items-center justify-between gap-1">
       <div class="flex items-center space-x-1 sm:space-x-1.5 shrink-0">
         <!-- Menu -->
@@ -58,8 +58,8 @@
           <span id="dotCloud" class="w-1.5 h-1.5 rounded-full bg-amber-400 absolute top-1 right-1 animate-pulse"></span>
         </button>
 
-        <!-- Team Manager -->
-        <button id="btnHeaderUsers" onclick="openUserManagerModal()" class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-emerald-600 active:bg-emerald-700 text-white flex items-center justify-center shadow-xs shrink-0 hidden sm:flex" title="Team Manager">
+        <!-- Team Manager (ALWAYS VISIBLE ON ALL SCREENS) -->
+        <button id="btnHeaderUsers" onclick="openUserManagerModal()" class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-emerald-600 active:bg-emerald-700 text-white flex items-center justify-center shadow-xs shrink-0" title="Manage Members">
           <i class="fa-solid fa-users-gear text-xs"></i>
         </button>
 
@@ -71,10 +71,10 @@
 
       <!-- User Badge -->
       <div class="shrink-0">
-        <button onclick="handleUserBadgeClick()" id="userBadge" class="h-8 sm:h-9 flex items-center space-x-1 px-2 rounded-xl bg-slate-800 border border-slate-700 text-xs max-w-[110px] sm:max-w-[160px]">
+        <button onclick="handleUserBadgeClick()" id="userBadge" class="h-8 sm:h-9 flex items-center space-x-1 px-1.5 sm:px-2 rounded-xl bg-slate-800 border border-slate-700 text-xs max-w-[100px] sm:max-w-[150px]">
           <span class="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-emerald-400 shrink-0"></span>
           <span id="userBadgeName" class="font-bold text-slate-200 truncate text-[10px] sm:text-xs">Super Admin (Owner)</span>
-          <i id="userBadgeIcon" class="fa-solid fa-chevron-down text-[8px] text-slate-400 shrink-0"></i>
+          <i id="userBadgeIcon" class="fa-solid fa-chevron-down text-[7px] text-slate-400 shrink-0"></i>
         </button>
       </div>
     </div>
@@ -418,8 +418,7 @@
           </div>
           <div class="flex items-center space-x-2">
             <button onclick="forceCloudPull()" class="text-[11px] text-cyan-600 font-bold hover:underline flex items-center space-x-1">
-              <i class="fa-solid fa-arrows-rotate"></i>
-              <span>Sync</span>
+              <i class="fa-solid fa-arrows-rotate"></i><span>Sync</span>
             </button>
             <span id="badgeEntryCount" class="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-cyan-50 text-cyan-700 border border-cyan-200">0 records</span>
           </div>
@@ -448,8 +447,7 @@
     <section id="tabPicker" class="hidden space-y-3">
       <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-xs">
         <h2 class="font-bold text-slate-800 text-sm mb-3 flex items-center space-x-2">
-          <i class="fa-solid fa-filter text-indigo-600"></i>
-          <span>Shipper & Date Filter</span>
+          <i class="fa-solid fa-filter text-indigo-600"></i><span>Shipper & Date Filter</span>
         </h2>
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <div>
@@ -471,20 +469,16 @@
 
       <div class="grid grid-cols-2 lg:grid-cols-4 gap-2.5">
         <div class="bg-white border border-slate-200 rounded-2xl p-3 shadow-xs">
-          <div class="text-[10px] font-bold text-slate-400 uppercase">Day Bags</div>
-          <div id="pDayBags" class="text-lg font-black text-amber-600">0</div>
+          <div class="text-[10px] font-bold text-slate-400 uppercase">Day Bags</div><div id="pDayBags" class="text-lg font-black text-amber-600">0</div>
         </div>
         <div class="bg-white border border-slate-200 rounded-2xl p-3 shadow-xs">
-          <div class="text-[10px] font-bold text-slate-400 uppercase">Night Bags</div>
-          <div id="pNightBags" class="text-lg font-black text-indigo-600">0</div>
+          <div class="text-[10px] font-bold text-slate-400 uppercase">Night Bags</div><div id="pNightBags" class="text-lg font-black text-indigo-600">0</div>
         </div>
         <div class="bg-white border border-slate-200 rounded-2xl p-3 shadow-xs">
-          <div class="text-[10px] font-bold text-slate-400 uppercase">Total Bags</div>
-          <div id="pTotBags" class="text-lg font-black text-cyan-600">0</div>
+          <div class="text-[10px] font-bold text-slate-400 uppercase">Total Bags</div><div id="pTotBags" class="text-lg font-black text-cyan-600">0</div>
         </div>
         <div class="bg-white border border-slate-200 rounded-2xl p-3 shadow-xs">
-          <div class="text-[10px] font-bold text-slate-400 uppercase">Metric Tons</div>
-          <div id="pTotTons" class="text-lg font-black text-emerald-600">0.00 MT</div>
+          <div class="text-[10px] font-bold text-slate-400 uppercase">Metric Tons</div><div id="pTotTons" class="text-lg font-black text-emerald-600">0.00 MT</div>
         </div>
       </div>
 
@@ -492,13 +486,8 @@
         <table class="w-full text-left text-xs">
           <thead>
             <tr class="bg-slate-100 text-slate-600 uppercase text-[10px] tracking-wider border-b border-slate-200">
-              <th class="py-2.5 px-2.5">Date</th>
-              <th class="py-2.5 px-2.5">Shift</th>
-              <th class="py-2.5 px-2.5">Boat No</th>
-              <th class="py-2.5 px-2.5">Shipper</th>
-              <th class="py-2.5 px-2.5">Hatch</th>
-              <th class="py-2.5 px-2.5 text-right">D Total</th>
-              <th class="py-2.5 px-2.5 text-right">TONS</th>
+              <th class="py-2.5 px-2.5">Date</th><th class="py-2.5 px-2.5">Shift</th><th class="py-2.5 px-2.5">Boat No</th>
+              <th class="py-2.5 px-2.5">Shipper</th><th class="py-2.5 px-2.5">Hatch</th><th class="py-2.5 px-2.5 text-right">D Total</th><th class="py-2.5 px-2.5 text-right">TONS</th>
             </tr>
           </thead>
           <tbody id="tblPickerBody" class="divide-y divide-slate-100"></tbody>
@@ -511,14 +500,12 @@
       <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-xs flex flex-wrap items-center justify-between gap-3">
         <div>
           <h2 class="font-bold text-slate-800 text-sm flex items-center space-x-2">
-            <i class="fa-solid fa-table text-cyan-600"></i>
-            <span>MV INTAKE Master Template</span>
+            <i class="fa-solid fa-table text-cyan-600"></i><span>MV INTAKE Master Template</span>
           </h2>
           <p class="text-[11px] text-slate-500">BOAT NO Column တွင် Shipper အမည်များကို အစမှအဆုံး အစီအစဉ်လိုက် ဖော်ပြထားပါသည်</p>
         </div>
         <button onclick="downloadExcel()" class="h-10 px-4 bg-emerald-600 active:bg-emerald-700 text-white rounded-xl text-xs font-bold shadow-xs flex items-center space-x-2">
-          <i class="fa-solid fa-file-excel"></i>
-          <span>Download Excel (.xlsx)</span>
+          <i class="fa-solid fa-file-excel"></i><span>Download Excel (.xlsx)</span>
         </button>
       </div>
 
@@ -563,15 +550,9 @@
         <table class="w-full text-left text-xs min-w-[650px]">
           <thead>
             <tr class="bg-slate-100 text-slate-600 uppercase text-[10px] tracking-wider border-b border-slate-200">
-              <th class="py-2.5 px-2.5">Date</th>
-              <th class="py-2.5 px-2.5">Shift</th>
-              <th class="py-2.5 px-2.5">Boat No</th>
-              <th class="py-2.5 px-2.5">Hatch</th>
-              <th class="py-2.5 px-2.5">Shipper</th>
-              <th class="py-2.5 px-2.5 text-slate-500">Tally/Sample</th>
-              <th class="py-2.5 px-2.5 text-right">D Total</th>
-              <th class="py-2.5 px-2.5 text-right">TONS</th>
-              <th class="py-2.5 px-2.5 text-center">Action</th>
+              <th class="py-2.5 px-2.5">Date</th><th class="py-2.5 px-2.5">Shift</th><th class="py-2.5 px-2.5">Boat No</th>
+              <th class="py-2.5 px-2.5">Hatch</th><th class="py-2.5 px-2.5">Shipper</th><th class="py-2.5 px-2.5 text-slate-500">Tally/Sample</th>
+              <th class="py-2.5 px-2.5 text-right">D Total</th><th class="py-2.5 px-2.5 text-right">TONS</th><th class="py-2.5 px-2.5 text-center">Action</th>
             </tr>
           </thead>
           <tbody id="tblAllRecordsBody" class="divide-y divide-slate-100"></tbody>
@@ -584,8 +565,7 @@
       <div class="bg-white rounded-2xl border border-slate-200 p-3.5 sm:p-5 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
           <h2 class="font-extrabold text-slate-800 text-sm sm:text-base flex items-center space-x-2">
-            <i class="fa-solid fa-clipboard-user text-indigo-600 text-base"></i>
-            <span>Cargo Operation Timeline</span>
+            <i class="fa-solid fa-clipboard-user text-indigo-600 text-base"></i><span>Cargo Operation Timeline</span>
           </h2>
           <p class="text-[11px] text-slate-500">Hatch အလိုက် ၂၄ နာရီ စတင်ချိန်၊ ရပ်နားခဲ့သည့် အချိန်နှင့် စုစုပေါင်း ရပ်နားချိန်</p>
         </div>
@@ -597,15 +577,9 @@
         <table class="w-full text-left text-xs min-w-[880px]">
           <thead>
             <tr class="bg-slate-100 text-slate-700 uppercase text-[10px] tracking-wider border-b border-slate-200 font-bold">
-              <th class="py-3 px-3">Date</th>
-              <th class="py-3 px-3">Shift</th>
-              <th class="py-3 px-3">Tally/Sample</th>
-              <th class="py-3 px-3">Hatch</th>
-              <th class="py-3 px-3">Operation Time (24h)</th>
-              <th class="py-3 px-3">Stoppages / Delays Log</th>
-              <th class="py-3 px-3 text-right">Intake</th>
-              <th class="py-3 px-3 text-right">TONS</th>
-              <th class="py-3 px-3">Audit</th>
+              <th class="py-3 px-3">Date</th><th class="py-3 px-3">Shift</th><th class="py-3 px-3">Tally/Sample</th>
+              <th class="py-3 px-3">Hatch</th><th class="py-3 px-3">Operation Time (24h)</th><th class="py-3 px-3">Stoppages / Delays Log</th>
+              <th class="py-3 px-3 text-right">Intake</th><th class="py-3 px-3 text-right">TONS</th><th class="py-3 px-3">Audit</th>
             </tr>
           </thead>
           <tbody id="tblAttendanceBody" class="divide-y divide-slate-100"></tbody>
@@ -822,7 +796,7 @@
             <select id="inputBoatWeight" class="w-full h-11 bg-white border border-slate-300 rounded-xl px-2.5 font-bold"><option value="50 Kg">50 Kg</option><option value="25 Kg">25 Kg</option><option value="Other">Other</option></select>
           </div>
           <div class="flex space-x-2">
-            <button onclick="saveBoatAccount()" class="flex-1 h-11 bg-cyan-600 text-white rounded-xl text-xs font-extrabold">Save</button>
+            <button onclick="saveBoatAccount()" id="btnSaveBoat" class="flex-1 h-11 bg-cyan-600 text-white rounded-xl text-xs font-extrabold">Save</button>
             <button onclick="cancelBoatEdit()" id="btnCancelBoat" class="hidden h-11 px-4 bg-slate-200 text-slate-700 rounded-xl text-xs font-bold">Cancel</button>
           </div>
         </div>
@@ -852,6 +826,41 @@
     </div>
   </div>
 
+  <!-- MODAL: UNIQUE INVITE LINKS PER ACCOUNT -->
+  <div id="modalShare" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-end sm:items-center justify-center p-0 sm:p-4" onclick="closeShareModal()">
+    <div class="bg-white rounded-t-3xl sm:rounded-2xl max-w-lg w-full max-h-[92vh] flex flex-col shadow-2xl overflow-hidden" onclick="event.stopPropagation()">
+      <div class="p-4 bg-indigo-950 text-white flex items-center justify-between">
+        <div>
+          <span class="font-bold text-sm text-amber-400">Role-Locked Invite Links</span>
+          <div class="text-[10px] text-indigo-300">Vessel Account အလိုက် ခွဲထုတ်ထားသော သီးသန့်လင့်ခ်များ</div>
+        </div>
+        <button onclick="closeShareModal()" class="w-8 h-8 rounded-lg bg-indigo-900 text-indigo-200 flex items-center justify-center"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="p-4 overflow-y-auto space-y-4 custom-scroll text-xs">
+        <div class="bg-amber-50 border border-amber-200 rounded-2xl p-3 space-y-1.5">
+          <div class="font-bold text-amber-900 text-xs">Super Admin Master Link</div>
+          <input type="text" id="linkSuperAdmin" readonly class="w-full h-9 bg-white border border-amber-300 rounded-xl px-2.5 font-mono text-[10px] text-slate-700 truncate mb-1">
+          <button onclick="copyDirectLink(document.getElementById('linkSuperAdmin').value)" class="w-full h-9 bg-amber-600 active:bg-amber-700 text-white rounded-xl font-bold">Copy Master Link</button>
+        </div>
+        
+        <div class="space-y-1">
+          <label class="block text-[11px] font-extrabold text-slate-700 uppercase">Target Vessel Account ရွေးချယ်ပါ -</label>
+          <select id="shareModalBoatSelect" onchange="renderUniqueInviteLinks()" class="w-full h-11 bg-slate-50 border border-slate-300 rounded-xl px-3 font-extrabold text-slate-800"></select>
+        </div>
+
+        <div>
+          <span class="font-bold text-indigo-900 block mb-1.5 uppercase text-[10px]">Admin Links (Supervisor)</span>
+          <div id="listUniqueAdminLinks" class="space-y-2"></div>
+        </div>
+
+        <div>
+          <span class="font-bold text-cyan-900 block mb-1.5 uppercase text-[10px]">Member Links (Hatch Checker / Tally)</span>
+          <div id="listUniqueMemberLinks" class="space-y-2"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div id="modalProfile" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-end sm:items-center justify-center p-0 sm:p-4">
     <div class="bg-white rounded-t-3xl sm:rounded-2xl max-w-md w-full max-h-[85vh] flex flex-col shadow-2xl overflow-hidden">
       <div class="p-4 bg-slate-900 text-white flex items-center justify-between">
@@ -860,24 +869,6 @@
       </div>
       <div class="p-4 overflow-y-auto space-y-2.5 custom-scroll">
         <div id="listProfiles" class="space-y-2"></div>
-      </div>
-    </div>
-  </div>
-
-  <div id="modalShare" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-end sm:items-center justify-center p-0 sm:p-4">
-    <div class="bg-white rounded-t-3xl sm:rounded-2xl max-w-lg w-full max-h-[92vh] flex flex-col shadow-2xl overflow-hidden">
-      <div class="p-4 bg-indigo-950 text-white flex items-center justify-between">
-        <span class="font-bold text-sm text-amber-400">Invite Links</span>
-        <button onclick="closeShareModal()" class="w-8 h-8 rounded-lg bg-indigo-900 text-indigo-200 flex items-center justify-center"><i class="fa-solid fa-xmark"></i></button>
-      </div>
-      <div class="p-4 overflow-y-auto space-y-4 custom-scroll text-xs">
-        <div class="bg-amber-50 border border-amber-200 rounded-2xl p-3 space-y-1.5">
-          <input type="text" id="linkSuperAdmin" readonly class="w-full h-9 bg-white border border-amber-300 rounded-xl px-2.5 font-mono text-[10px] text-slate-700 truncate mb-1">
-          <button onclick="copyDirectLink(document.getElementById('linkSuperAdmin').value)" class="w-full h-9 bg-amber-600 text-white rounded-xl font-bold">Copy Master Link</button>
-        </div>
-        <select id="shareModalBoatSelect" onchange="renderUniqueInviteLinks()" class="w-full h-11 bg-white border border-slate-300 rounded-xl px-3 font-extrabold"></select>
-        <div id="listUniqueAdminLinks" class="space-y-2"></div>
-        <div id="listUniqueMemberLinks" class="space-y-2"></div>
       </div>
     </div>
   </div>
@@ -1207,11 +1198,11 @@
       });
     }
 
-    // Cloud Sync (DIRECT CONNECTION FIX)
+    // Cloud Sync (DIRECT CONNECTION VERIFIED)
     function openCloudModal() { document.getElementById('inputCloudUrl').value = appData.cloudUrl; document.getElementById('modalCloud').classList.remove('hidden'); }
     function closeCloudModal() { document.getElementById('modalCloud').classList.add('hidden'); }
     function handleCloudClick() { (!appData.sessionLocked && appData.currentUser.role === 'SUPER_ADMIN') ? openCloudModal() : forceCloudPull(); }
-    function disconnectCloud() { appData.cloudUrl = ''; saveData(true); updateCloudBadgeUI(false); closeCloudModal(); }
+    function disconnectCloud() { appData.cloudUrl = ''; saveData(true); updateCloudBadgeUI(false); closeCloudModal(); showToast('Disconnected'); }
     
     async function saveCloudConfig() {
       let val = document.getElementById('inputCloudUrl').value.trim();
@@ -1285,7 +1276,7 @@
             }
             if (Array.isArray(remote.users) && JSON.stringify(remote.users) !== JSON.stringify(appData.users)) {
               appData.users = remote.users;
-              // Preserve active logged-in user state, never overwrite to User
+              // Preserve active logged-in user state
               const savedUserId = localStorage.getItem(ACTIVE_USER_ID_KEY);
               if (savedUserId && appData.users.some(x => x.id === savedUserId)) {
                 appData.currentUser = appData.users.find(x => x.id === savedUserId);
@@ -1637,25 +1628,127 @@
     function cancelUserEdit() { document.getElementById('editUserId').value=''; document.getElementById('inputUserName').value=''; document.getElementById('btnCancelUserEdit').classList.add('hidden'); }
     function deleteUserRecord(id) { if(confirm('Delete user?')) { appData.users=appData.users.filter(u=>u.id!==id); saveData(); renderTeamUsersList(); renderAll(); } }
 
+    // ROLE-LOCKED INVITE LINKS PER ACCOUNT
     function openShareModal() {
       document.getElementById('linkSuperAdmin').value = `${window.location.origin}${window.location.pathname}#master=unlock&org=${currentOrgCode}`;
-      const selBoat = document.getElementById('shareModalBoatSelect'); selBoat.innerHTML='';
-      appData.boats.forEach(b=>{ const opt=document.createElement('option'); opt.value=b.id; opt.textContent=b.name; selBoat.appendChild(opt); });
-      renderUniqueInviteLinks(); document.getElementById('modalShare').classList.remove('hidden');
+      const selBoat = document.getElementById('shareModalBoatSelect'); 
+      selBoat.innerHTML='';
+      appData.boats.forEach(b=>{ 
+        const opt=document.createElement('option'); 
+        opt.value=b.id; 
+        opt.textContent=b.name; 
+        if(b.id === appData.activeBoatId) opt.selected = true;
+        selBoat.appendChild(opt); 
+      });
+      renderUniqueInviteLinks(); 
+      document.getElementById('modalShare').classList.remove('hidden');
     }
     function closeShareModal() { document.getElementById('modalShare').classList.add('hidden'); }
     function renderUniqueInviteLinks() {
-      const tb = appData.boats.find(b=>b.id===document.getElementById('shareModalBoatSelect').value) || appData.boats[0];
-      const ac = document.getElementById('listUniqueAdminLinks'); ac.innerHTML=''; const mc = document.getElementById('listUniqueMemberLinks'); mc.innerHTML='';
-      if(!tb) return;
-      appData.users.filter(u=>u.role==='ADMIN').forEach(u=>{
-        const d = document.createElement('div'); d.className='flex justify-between items-center p-2 bg-white border rounded';
-        d.innerHTML=`<span class="text-[10px] font-bold">${u.name}</span><button onclick="copyDirectLink('${buildPersonalInviteLink(u,tb)}')" class="bg-indigo-600 text-white px-2 py-1 rounded text-[10px]">Copy</button>`; ac.appendChild(d);
+      const selectedBoatId = document.getElementById('shareModalBoatSelect').value;
+      const tb = appData.boats.find(b=>b.id===selectedBoatId) || appData.boats[0];
+      const ac = document.getElementById('listUniqueAdminLinks'); ac.innerHTML=''; 
+      const mc = document.getElementById('listUniqueMemberLinks'); mc.innerHTML='';
+      if(!tb) {
+        ac.innerHTML = '<div class="text-slate-400 text-[11px] italic">No Vessel Account created yet.</div>';
+        mc.innerHTML = '<div class="text-slate-400 text-[11px] italic">No Vessel Account created yet.</div>';
+        return;
+      }
+      
+      const admins = appData.users.filter(u=>u.role==='ADMIN');
+      if (admins.length === 0) {
+        ac.innerHTML = '<div class="text-slate-400 text-[11px] italic">No Admins registered.</div>';
+      } else {
+        admins.forEach(u=>{
+          const link = buildPersonalInviteLink(u,tb);
+          const d = document.createElement('div'); d.className='flex justify-between items-center p-2.5 bg-white border border-indigo-200 rounded-xl shadow-2xs';
+          d.innerHTML=`<div><span class="text-xs font-bold text-slate-800 block">${u.name}</span><span class="text-[10px] text-indigo-600 font-mono">Boat: ${tb.name}</span></div><button onclick="copyDirectLink('${link}')" class="bg-indigo-600 active:bg-indigo-700 text-white px-3 py-1.5 rounded-lg text-[10px] font-bold"><i class="fa-solid fa-copy mr-1"></i>Copy</button>`; 
+          ac.appendChild(d);
+        });
+      }
+
+      const members = appData.users.filter(u=>u.role==='MEMBER');
+      if (members.length === 0) {
+        mc.innerHTML = '<div class="text-slate-400 text-[11px] italic">No Members registered.</div>';
+      } else {
+        members.forEach(u=>{
+          const link = buildPersonalInviteLink(u,tb);
+          const d = document.createElement('div'); d.className='flex justify-between items-center p-2.5 bg-white border border-cyan-200 rounded-xl shadow-2xs';
+          d.innerHTML=`<div><span class="text-xs font-bold text-slate-800 block">${u.name}</span><span class="text-[10px] text-cyan-700 font-mono">Locked: ${tb.name}</span></div><button onclick="copyDirectLink('${link}')" class="bg-cyan-600 active:bg-cyan-700 text-white px-3 py-1.5 rounded-lg text-[10px] font-bold"><i class="fa-solid fa-copy mr-1"></i>Copy</button>`; 
+          mc.appendChild(d);
+        });
+      }
+    }
+    function buildPersonalInviteLink(user, boat) {
+      const params = new URLSearchParams({ 
+        org: currentOrgCode, 
+        uid: user.id, 
+        key: user.accessKey, 
+        uname: user.name, 
+        urole: user.role, 
+        boat: boat.id, 
+        bname: boat.name, 
+        bunit: boat.unit, 
+        bweight: boat.weight, 
+        cloud: appData.cloudUrl?btoa(unescape(encodeURIComponent(appData.cloudUrl))):'' 
       });
-      appData.users.filter(u=>u.role==='MEMBER').forEach(u=>{
-        const d = document.createElement('div'); d.className='flex justify-between items-center p-2 bg-white border rounded';
-        d.innerHTML=`<span class="text-[10px] font-bold">${u.name}</span><button onclick="copyDirectLink('${buildPersonalInviteLink(u,tb)}')" class="bg-cyan-600 text-white px-2 py-1 rounded text-[10px]">Copy</button>`; mc.appendChild(d);
-      });
+      return `${window.location.origin}${window.location.pathname}#${params.toString()}`;
+    }
+    function copyDirectLink(link) { navigator.clipboard.writeText(link); showToast('Link Copied'); }
+
+    // Routing for Personal Invite Links
+    function handleRouting() {
+      const hash = window.location.hash.replace(/^#/, '');
+      if(!hash) return;
+      const params = new URLSearchParams(hash);
+      const orgInUrl = params.get('org');
+      const uid = params.get('uid');
+      const key = params.get('key');
+      const uname = params.get('uname');
+      const urole = params.get('urole');
+      const boat = params.get('boat');
+      const bname = params.get('bname');
+      const bunit = params.get('bunit');
+      const bweight = params.get('bweight');
+      const cloud = params.get('cloud');
+      const master = params.get('master');
+
+      if(orgInUrl) {
+        currentOrgCode = orgInUrl.toUpperCase();
+        localStorage.setItem(ORG_STORAGE_KEY, currentOrgCode);
+      }
+
+      if(master === 'unlock') {
+        appData.sessionLocked = false;
+        appData.lockedBoatId = null;
+        appData.currentUser = appData.users.find(u => u.role === 'SUPER_ADMIN') || appData.users[0];
+        localStorage.setItem(ACTIVE_USER_ID_KEY, appData.currentUser.id);
+        saveData(true);
+        return;
+      }
+
+      if(uid && key) {
+        if(cloud) {
+          try { appData.cloudUrl = decodeURIComponent(escape(atob(cloud))); } catch(e){}
+        }
+        if(boat && bname) {
+          const exBoat = appData.boats.find(b=>b.id===boat);
+          if(!exBoat) appData.boats.push({ id:boat, name:bname, unit:bunit||'Bags', weight:bweight||'50 Kg' });
+          appData.activeBoatId = boat;
+        }
+        let targetUser = appData.users.find(u=>u.id===uid && u.accessKey===key);
+        if(!targetUser && uname) {
+          targetUser = { id:uid, name:uname, role:urole||'MEMBER', accessKey:key };
+          appData.users.push(targetUser);
+        }
+        if(targetUser) {
+          appData.currentUser = targetUser;
+          appData.sessionLocked = true;
+          appData.lockedBoatId = (targetUser.role === 'MEMBER' && boat) ? boat : null;
+          localStorage.setItem(ACTIVE_USER_ID_KEY, targetUser.id);
+          saveData(true);
+        }
+      }
     }
 
     // Render Engines
@@ -1682,10 +1775,10 @@
     
     function renderMyEntries() {
       const active = getActiveBoat(); const tbody = document.getElementById('tblMyEntriesBody'); tbody.innerHTML = '';
-      if (!active) { document.getElementById('badgeEntryCount').textContent = '0'; return; }
+      if (!active) { document.getElementById('badgeEntryCount').textContent = '0 records'; return; }
       const isPriv = appData.currentUser.role !== 'MEMBER';
       const myLogs = appData.records.filter(r => r.boatId === active.id && (isPriv || r.checkerId === appData.currentUser.id));
-      document.getElementById('badgeEntryCount').textContent = myLogs.length;
+      document.getElementById('badgeEntryCount').textContent = `${myLogs.length} records`;
       myLogs.forEach(r => {
         const tr = document.createElement('tr'); tr.className = 'border-b hover:bg-slate-50';
         tr.innerHTML = `<td class="p-2 font-bold">${r.date} <span class="text-[9px] bg-slate-200 px-1 rounded">${r.shift}</span></td><td class="p-2 text-cyan-700 font-bold">H-${r.hatch}</td><td class="p-2">${r.shipper}</td><td class="p-2 text-right font-bold">${r.dTotal}</td><td class="p-2 text-right text-emerald-600">${r.totalTons.toFixed(2)}</td><td class="p-2 text-center"><button onclick="editRecord('${r.id}')" class="text-cyan-600 mr-2"><i class="fa-solid fa-pen"></i></button><button onclick="deleteRecord('${r.id}')" class="text-rose-500"><i class="fa-solid fa-trash"></i></button></td>`;
@@ -1714,7 +1807,7 @@
           const tr = document.createElement('tr'); tr.className='border-b text-[11px] hover:bg-slate-50';
           tr.innerHTML = `<td class="py-2 px-2 border-r font-semibold">${dObj.date}</td><td class="py-2 px-2 border-r font-bold ${e.shift==='Day'?'text-amber-600':'text-indigo-600'}">${e.shift}</td><td class="py-2 px-2 border-r text-left font-bold text-slate-800">${e.shipper}</td>
             <td class="py-2 px-2 border-r text-right">${e.h[1]||'-'}</td><td class="py-2 px-2 border-r text-right">${e.h[2]||'-'}</td><td class="py-2 px-2 border-r text-right">${e.h[3]||'-'}</td><td class="py-2 px-2 border-r text-right">${e.h[4]||'-'}</td><td class="py-2 px-2 border-r text-right">${e.h[5]||'-'}</td>
-            <td class="py-2 px-2 border-r text-right font-bold text-slate-900">${e.kgs.toLocaleString()}</td><td class="py-2 px-2 border-r text-right font-bold text-emerald-600">${e.tons.toFixed(3)}</td><td class="py-2 px-2 text-left">${e.rmks.join(', ')}</td>`;
+            <td class="py-2 px-2 border-r text-right font-bold">${e.kgs.toLocaleString()}</td><td class="py-2 px-2 border-r text-right font-bold text-emerald-600">${e.tons.toFixed(3)}</td><td class="py-2 px-2 text-left">${e.rmks.join(', ')}</td>`;
           tbody.appendChild(tr);
         });
         gK+=dK; gT+=dT; for(let i=1;i<=5;i++) gH[i]+=dH[i];
@@ -1750,7 +1843,7 @@
       if (filtered.length === 0) { tbody.innerHTML = '<tr><td colspan="9" class="text-center py-6 text-slate-400">No records found.</td></tr>'; return; }
       filtered.forEach(r => {
         const tr = document.createElement('tr'); tr.className = 'hover:bg-slate-50 text-xs border-b';
-        tr.innerHTML = `<td class="py-2 px-2.5">${r.date}</td><td class="py-2 px-2.5">${r.shift}</td><td class="py-2 px-2.5">${r.boatName}</td><td class="py-2 px-2.5 font-bold text-cyan-700">H-${r.hatch}</td><td class="py-2 px-2.5">${r.shipper}</td><td class="py-2 px-2.5 text-slate-500">${r.checkerName}</td><td class="py-2 px-2.5 text-right font-bold">${r.dTotal} ${r.unit}</td><td class="py-2 px-2.5 text-right font-bold text-emerald-600">${r.totalTons.toFixed(3)}</td><td class="py-2 px-2.5 text-center"><button onclick="editRecord('${r.id}')" class="w-7 h-7 rounded bg-cyan-50 text-cyan-600 mr-1"><i class="fa-solid fa-pen"></i></button><button onclick="deleteRecord('${r.id}')" class="w-7 h-7 rounded bg-rose-50 text-rose-500"><i class="fa-solid fa-trash"></i></button></td>`;
+        tr.innerHTML = `<td class="py-2 px-2.5">${r.date}</td><td class="py-2 px-2.5">${r.shift}</td><td class="py-2 px-2.5">${r.boatName}</td><td class="py-2 px-2.5 font-bold text-cyan-700">H-${r.hatch}</td><td class="py-2 px-2.5">${r.shipper}</td><td class="py-2 px-2.5 text-slate-500">${r.checkerName}</td><td class="py-2 px-2.5 text-right font-bold">${r.dTotal} ${r.unit}</td><td class="py-2.5 px-2.5 text-right font-bold text-emerald-600">${r.totalTons.toFixed(3)}</td><td class="py-2.5 px-2.5 text-center"><button onclick="editRecord('${r.id}')" class="w-7 h-7 rounded bg-cyan-50 text-cyan-600 mr-1"><i class="fa-solid fa-pen"></i></button><button onclick="deleteRecord('${r.id}')" class="w-7 h-7 rounded bg-rose-50 text-rose-500"><i class="fa-solid fa-trash"></i></button></td>`;
         tbody.appendChild(tr);
       });
     }
