@@ -73,36 +73,47 @@
       <div class="shrink-0">
         <button onclick="handleUserBadgeClick()" id="userBadge" class="h-8 sm:h-9 flex items-center space-x-1 px-1.5 sm:px-2 rounded-xl bg-slate-800 border border-slate-700 text-xs max-w-[100px] sm:max-w-[150px]">
           <span class="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-emerald-400 shrink-0"></span>
-          <span id="userBadgeName" class="font-bold text-slate-200 truncate text-[10px] sm:text-xs">Super Admin (Owner)</span>
+          <span id="userBadgeName" class="font-bold text-slate-200 truncate text-[10px] sm:text-xs">Owner</span>
           <i id="userBadgeIcon" class="fa-solid fa-chevron-down text-[7px] text-slate-400 shrink-0"></i>
         </button>
       </div>
     </div>
   </header>
 
-  <!-- MODAL: SECURE ORG CODE ACCESS GATE -->
-  <div id="modalOrgGate" class="hidden fixed inset-0 z-50 bg-slate-950/95 backdrop-blur-md flex items-center justify-center p-4">
-    <div class="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl text-center space-y-4">
-      <div class="w-14 h-14 rounded-2xl bg-cyan-100 text-cyan-600 flex items-center justify-center mx-auto text-2xl font-bold">
-        <i class="fa-solid fa-shield-halved"></i>
+  <!-- MODAL: FIRST-RUN SETUP (each team owns its workspace) -->
+  <div id="modalSetup" class="hidden fixed inset-0 z-50 bg-slate-950/95 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl space-y-4 my-4">
+      <div class="text-center">
+        <div class="w-14 h-14 rounded-2xl bg-cyan-100 text-cyan-600 flex items-center justify-center mx-auto text-2xl font-bold"><i class="fa-solid fa-ship"></i></div>
+        <h2 class="text-base font-extrabold text-slate-900 mt-3">Welcome to Vessel Detail</h2>
+        <p class="text-xs text-slate-500 mt-1">သင့်အဖွဲ့အတွက် Workspace အသစ် စတင်ပါ။ Data အားလုံးက သင့်ကိုယ်ပိုင်ပဲ ဖြစ်ပြီး တခြားသူ မမြင်ရပါ။</p>
       </div>
       <div>
-        <h2 class="text-base font-extrabold text-slate-900">Organization Access Gate</h2>
-        <p class="text-xs text-slate-500 mt-1">Master Owner ခွင့်ပြုပေးထားသော တရားဝင် Code ကို ရိုက်ထည့်ပါ -</p>
+        <label class="block text-[11px] font-bold text-slate-600 uppercase mb-1">Owner နာမည်</label>
+        <input type="text" id="inputSetupName" placeholder="ဥပမာ - Mg Mg" class="w-full h-11 bg-slate-50 border-2 border-slate-300 focus:border-cyan-500 rounded-xl px-3 font-bold text-slate-800 outline-none">
       </div>
       <div>
-        <input type="password" id="inputOrgGateCode" placeholder="••••••••••••" class="w-full h-12 bg-slate-50 border-2 border-slate-300 focus:border-cyan-500 rounded-xl px-3 font-mono text-center font-bold text-slate-800 uppercase tracking-widest outline-none">
-        <div class="flex items-center justify-end mt-1 px-1">
-          <button type="button" onclick="toggleGatePasswordVisibility()" class="text-[11px] text-slate-400 hover:text-slate-600 font-semibold flex items-center space-x-1">
-            <i id="iconToggleGateEye" class="fa-solid fa-eye text-xs"></i>
-            <span id="lblToggleGateEye">Show Code</span>
-          </button>
-        </div>
-        <p id="txtOrgGateError" class="hidden text-rose-500 text-[11px] font-bold mt-2"></p>
+        <label class="block text-[11px] font-bold text-slate-600 uppercase mb-1">Firebase URL <span class="text-slate-400 normal-case font-semibold">(မထည့်သေးလည်းရ၊ နောက်မှထည့်နိုင်)</span></label>
+        <input type="url" id="inputSetupCloud" placeholder="https://your-project-default-rtdb.firebaseio.com" class="w-full h-11 bg-slate-50 border border-slate-300 rounded-xl px-3 font-mono text-xs outline-none focus:border-cyan-500">
+        <details class="mt-2 text-[11px] text-slate-600">
+          <summary class="cursor-pointer font-bold text-cyan-700">Firebase URL ဘယ်လိုရမလဲ?</summary>
+          <ol class="list-decimal ml-4 mt-1.5 space-y-1">
+            <li>console.firebase.google.com မှာ ကိုယ့် Google account နဲ့ ဝင်ပြီး <b>Add project</b> လုပ်ပါ</li>
+            <li><b>Build &rarr; Realtime Database &rarr; Create database</b> ကိုနှိပ်ပါ</li>
+            <li><b>Rules</b> tab မှာ အောက်ပါအတိုင်း ပြောင်းပြီး Publish လုပ်ပါ -
+              <code class="block bg-slate-100 rounded p-1.5 mt-1 break-all">{"rules":{"workspace":{".read":true,".write":true}}}</code></li>
+            <li><b>Data</b> tab ထိပ်က URL ကို ကူးထည့်ပါ</li>
+          </ol>
+        </details>
       </div>
-      <button id="btnOrgGateSubmit" onclick="submitOrgGate()" class="w-full h-12 bg-cyan-600 hover:bg-cyan-700 text-white rounded-xl font-extrabold text-sm shadow-md active:scale-95 transition-all flex items-center justify-center space-x-1.5">
-        <span>Verify & Enter System</span>
-      </button>
+      <p id="txtSetupError" class="hidden text-rose-500 text-[11px] font-bold"></p>
+      <button onclick="submitSetup()" class="w-full h-12 bg-cyan-600 hover:bg-cyan-700 text-white rounded-xl font-extrabold text-sm shadow-md active:scale-95 transition-all">Create Workspace</button>
+      <div class="text-center pt-1">
+        <label class="text-[11px] text-slate-500 font-semibold cursor-pointer hover:text-cyan-700 underline">
+          ရှိပြီးသား Backup (.json) ကို ပြန်သွင်းမယ်
+          <input type="file" id="inputSetupRestore" accept=".json,application/json" class="hidden" onchange="restoreSystemData(event)">
+        </label>
+      </div>
     </div>
   </div>
 
@@ -137,10 +148,6 @@
         </div>
 
         <div class="space-y-1 text-xs font-bold">
-          <button id="menuBtnOrgLicenses" onclick="openOrgLicensesModal(); closeMenu()" class="w-full flex items-center space-x-3 px-3 py-3 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-950 font-bold border border-amber-200">
-            <i class="fa-solid fa-key w-5 text-amber-600 text-sm"></i>
-            <span>Authorize Org Codes</span>
-          </button>
           <button id="menuBtnCloud" onclick="openCloudModal(); closeMenu()" class="w-full flex items-center space-x-3 px-3 py-3 rounded-xl bg-cyan-50 hover:bg-cyan-100 text-cyan-900">
             <i class="fa-solid fa-cloud-arrow-up w-5 text-cyan-600 text-sm"></i>
             <span>Cloud Live Sync Setup</span>
@@ -191,7 +198,7 @@
 
       <div class="pt-3 border-t border-slate-100 text-[11px] text-slate-400 flex items-center justify-between">
         <span>VESSEL DETAIL System</span>
-        <button id="menuBtnReset" onclick="resetData(); closeMenu()" class="text-rose-500 font-semibold hover:underline">Change Code</button>
+        <button id="menuBtnReset" onclick="resetData(); closeMenu()" class="text-rose-500 font-semibold hover:underline">Reset Device</button>
       </div>
     </div>
   </div>
@@ -598,40 +605,6 @@
 
   <!-- MODALS -->
 
-  <!-- MODAL: MASTER OWNER - ORG LICENSES MANAGER (AUTHORIZED CODES) -->
-  <div id="modalOrgLicenses" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-end sm:items-center justify-center p-0 sm:p-4" onclick="closeOrgLicensesModal()">
-    <div class="bg-white rounded-t-3xl sm:rounded-2xl max-w-md w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden" onclick="event.stopPropagation()">
-      <div class="p-4 bg-amber-950 text-white flex items-center justify-between">
-        <div class="flex items-center space-x-2">
-          <i class="fa-solid fa-key text-amber-400"></i>
-          <div>
-            <span class="font-bold text-sm">Authorized Org Codes (Master Owner)</span>
-            <div class="text-[10px] text-amber-300">တခြားအဖွဲ့များ သုံးခွင့်ပြုမည့် တရားဝင် ကုဒ်များ သတ်မှတ်ရန်</div>
-          </div>
-        </div>
-        <button onclick="closeOrgLicensesModal()" class="w-8 h-8 rounded-lg bg-amber-900 text-amber-200 flex items-center justify-center"><i class="fa-solid fa-xmark"></i></button>
-      </div>
-
-      <div class="p-4 overflow-y-auto space-y-3.5 custom-scroll text-xs">
-        <div class="bg-amber-50 border border-amber-200 p-3 rounded-2xl space-y-2">
-          <label class="block text-[11px] font-bold text-amber-900 uppercase">Authorize New Organization Code</label>
-          <div class="flex items-center space-x-1.5">
-            <input type="text" id="inputNewAllowedOrg" placeholder="Enter New Org Code..." class="flex-1 h-11 bg-white border border-amber-300 rounded-xl px-3 font-mono font-bold uppercase text-slate-800">
-            <button onclick="addAllowedOrgCode()" class="h-11 px-4 bg-amber-600 active:bg-amber-700 text-white rounded-xl font-bold shrink-0">
-              Authorize
-            </button>
-          </div>
-          <p class="text-[10px] text-amber-800">ဤနေရာတွင် ထည့်သွင်းထားသော Code များမှလွဲ၍ တခြားမည်သူမျှ စနစ်ထဲ ဝင်ခွင့်မရှိပါ</p>
-        </div>
-
-        <div>
-          <h4 class="font-bold text-slate-700 uppercase text-[10px] mb-2">Active Authorized Codes (hidden for security)</h4>
-          <div id="listAllowedOrgs" class="space-y-1.5"></div>
-        </div>
-      </div>
-    </div>
-  </div>
-
   <!-- NOTIFICATION HISTORY MODAL -->
   <div id="modalNoti" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex justify-end" onclick="closeNotiModal()">
     <div class="w-80 max-w-[85vw] bg-white h-full shadow-2xl flex flex-col" onclick="event.stopPropagation()">
@@ -976,111 +949,93 @@
     }
 
     // Init App Data
-    const ORG_STORAGE_KEY = 'MV_INTAKE_ACTIVE_ORG';
-    const ALLOWED_ORGS_KEY = 'MV_INTAKE_ALLOWED_ORGS_CACHE';
+    const DATA_KEY = 'VD_APP_DATA';
     const ACTIVE_USER_ID_KEY = 'MV_INTAKE_ACTIVE_USER_ID';
-    // ===== ORG CODE SECURITY: codes are only ever stored/shipped as SHA-256 hashes =====
-    function sha256Hex(str) {
-      const K = [0x428a2f98,0x71374491,0xb5c0fbcf,0xe9b5dba5,0x3956c25b,0x59f111f1,0x923f82a4,0xab1c5ed5,0xd807aa98,0x12835b01,0x243185be,0x550c7dc3,0x72be5d74,0x80deb1fe,0x9bdc06a7,0xc19bf174,0xe49b69c1,0xefbe4786,0x0fc19dc6,0x240ca1cc,0x2de92c6f,0x4a7484aa,0x5cb0a9dc,0x76f988da,0x983e5152,0xa831c66d,0xb00327c8,0xbf597fc7,0xc6e00bf3,0xd5a79147,0x06ca6351,0x14292967,0x27b70a85,0x2e1b2138,0x4d2c6dfc,0x53380d13,0x650a7354,0x766a0abb,0x81c2c92e,0x92722c85,0xa2bfe8a1,0xa81a664b,0xc24b8b70,0xc76c51a3,0xd192e819,0xd6990624,0xf40e3585,0x106aa070,0x19a4c116,0x1e376c08,0x2748774c,0x34b0bcb5,0x391c0cb3,0x4ed8aa4a,0x5b9cca4f,0x682e6ff3,0x748f82ee,0x78a5636f,0x84c87814,0x8cc70208,0x90befffa,0xa4506ceb,0xbef9a3f7,0xc67178f2];
-      const bytes = new TextEncoder().encode(str), l = bytes.length;
-      const buf = new Uint8Array(((l + 9 + 63) >> 6) << 6); buf.set(bytes); buf[l] = 0x80;
-      const dv = new DataView(buf.buffer);
-      dv.setUint32(buf.length - 4, (l * 8) >>> 0); dv.setUint32(buf.length - 8, Math.floor(l * 8 / 4294967296));
-      let h = [0x6a09e667,0xbb67ae85,0x3c6ef372,0xa54ff53a,0x510e527f,0x9b05688c,0x1f83d9ab,0x5be0cd19];
-      const w = new Uint32Array(64);
-      for (let o = 0; o < buf.length; o += 64) {
-        for (let i = 0; i < 16; i++) w[i] = dv.getUint32(o + i * 4);
-        for (let i = 16; i < 64; i++) {
-          const a = w[i-15], b = w[i-2];
-          const s0 = ((a>>>7)|(a<<25)) ^ ((a>>>18)|(a<<14)) ^ (a>>>3);
-          const s1 = ((b>>>17)|(b<<15)) ^ ((b>>>19)|(b<<13)) ^ (b>>>10);
-          w[i] = (w[i-16] + s0 + w[i-7] + s1) | 0;
-        }
-        let [a,b,c,d,e,f,g,hh] = h;
-        for (let i = 0; i < 64; i++) {
-          const S1 = ((e>>>6)|(e<<26)) ^ ((e>>>11)|(e<<21)) ^ ((e>>>25)|(e<<7));
-          const t1 = (hh + S1 + ((e&f) ^ (~e&g)) + K[i] + w[i]) | 0;
-          const S0 = ((a>>>2)|(a<<30)) ^ ((a>>>13)|(a<<19)) ^ ((a>>>22)|(a<<10));
-          const t2 = (S0 + ((a&b) ^ (a&c) ^ (b&c))) | 0;
-          hh = g; g = f; f = e; e = (d + t1) | 0; d = c; c = b; b = a; a = (t1 + t2) | 0;
-        }
-        h = [h[0]+a|0, h[1]+b|0, h[2]+c|0, h[3]+d|0, h[4]+e|0, h[5]+f|0, h[6]+g|0, h[7]+hh|0];
-      }
-      return h.map(x => (x >>> 0).toString(16).padStart(8, '0')).join('');
-    }
-    const MASTER_HASH = 'c8dfe6e210a523a6bf878207718257bd97be2178b207dec6c26b72c88f1297bc';
-    function normCode(v) { return String(v || '').trim().toUpperCase().replace(/[^A-Z0-9_-]/g, ''); }
-    function hashCode(v) { return sha256Hex(normCode(v)); }
-    function maskHint(c) { return c.slice(0, 2) + '\u2022'.repeat(Math.max(3, c.length - 2)); }
+    const LSN_KEY = 'VD_LAST_SEEN_NOTI', LSC_KEY = 'VD_LAST_SEEN_CHAT';
+    // keys written by the previous multi-organisation version: read once for migration, never written again
+    const LEGACY_ORG_KEY = 'MV_INTAKE_ACTIVE_ORG';
+    const LEGACY_DATA_PREFIX = 'MV_INTAKE_DATA_ORG_';
+    const LEGACY_ALLOWED_KEY = 'MV_INTAKE_ALLOWED_ORGS_CACHE';
+
     function secureKey() {
       const a = new Uint8Array(8); (window.crypto || window.msCrypto).getRandomValues(a);
       return Array.from(a, b => b.toString(16).padStart(2, '0')).join('').toUpperCase();
     }
-    // accepts legacy plain-text entries as well as {h, hint}
-    function normalizeAllowedList(list) {
-      const arr = Array.isArray(list) ? list : Object.values(list || {});
-      const out = [], seen = new Set();
-      arr.forEach(x => {
-        let h, hint;
-        if (typeof x === 'string') { const c = normCode(x); if (!c) return; h = sha256Hex(c); hint = maskHint(c); }
-        else if (x && typeof x.h === 'string' && /^[0-9a-f]{64}$/.test(x.h)) { h = x.h; hint = String(x.hint || '\u2022\u2022\u2022\u2022').slice(0, 16); }
-        else return;
-        if (seen.has(h)) return; seen.add(h); out.push({ h, hint });
-      });
-      if (!seen.has(MASTER_HASH)) out.unshift({ h: MASTER_HASH, hint: 'Master' });
-      return out;
+    function isStrongKey(k) { return /^KEY-[0-9A-F]{16}$/.test(String(k || '')); }
+    function appBaseUrl() { return window.location.href.split('#')[0]; }
+
+    // ===== LEGACY MIGRATION START =====
+    // Finds data saved by the old per-organisation version in this browser. Returns {data, legacyOrg} or null.
+    function migrateLegacyStorage(store) {
+      if (store.getItem(DATA_KEY)) return null;
+      let org = String(store.getItem(LEGACY_ORG_KEY) || '').trim();
+      let raw = org ? store.getItem(LEGACY_DATA_PREFIX + org.toUpperCase().replace(/[^A-Z0-9_-]/g, '')) : null;
+      if (!raw) {
+        for (let i = 0; i < store.length; i++) {
+          const k = store.key(i);
+          if (k && k.indexOf(LEGACY_DATA_PREFIX) === 0 && store.getItem(k)) { raw = store.getItem(k); org = k.slice(LEGACY_DATA_PREFIX.length); break; }
+        }
+      }
+      if (!raw) return null;
+      try {
+        const data = JSON.parse(raw);
+        if (!data || typeof data !== 'object' || !Array.isArray(data.users)) return null;
+        return { data, legacyOrg: org };
+      } catch (e) { return null; }
     }
-    let allowedOrgs = [{ h: MASTER_HASH, hint: 'Master' }];
-    let currentOrgCode = localStorage.getItem(ORG_STORAGE_KEY) || '';
+    // ===== LEGACY MIGRATION END =====
+
     let isSyncingCloud = false;
-    try {
-      const cachedAllowed = localStorage.getItem(ALLOWED_ORGS_KEY);
-      if (cachedAllowed) allowedOrgs = normalizeAllowedList(JSON.parse(cachedAllowed));
-      localStorage.setItem(ALLOWED_ORGS_KEY, JSON.stringify(allowedOrgs));   // rewrites any legacy plain-text cache as hashes
-    } catch (e) {}
 
     let appData = {
-      cloudUrl: '', activeBoatId: null, lockedBoatId: null, sessionLocked: false,
-      currentUser: { id: 'U-001', name: 'Super Admin (Owner)', role: 'SUPER_ADMIN', accessKey: 'KEY-SUPER01' },
-      boats: [], shippers: [], users: [{ id: 'U-001', name: 'Super Admin (Owner)', role: 'SUPER_ADMIN', accessKey: 'KEY-SUPER01' }],
+      cloudUrl: '', legacyOrg: '', setupDone: false, activeBoatId: null, lockedBoatId: null, sessionLocked: false,
+      currentUser: { id: '', name: '', role: 'SUPER_ADMIN', accessKey: '' },
+      boats: [], shippers: [], users: [],
       records: [], shipperTargets: {}, deleted: {}, notifications: [], chatMessages: [], lastUpdated: 0
     };
 
-    function getStorageKeyForOrg(code) { return `MV_INTAKE_DATA_ORG_${code.toUpperCase().replace(/[^A-Z0-9_-]/g, '')}`; }
-    
     function loadData() {
-      if (!currentOrgCode) return;
-      const stored = localStorage.getItem(getStorageKeyForOrg(currentOrgCode));
-      if (stored) { 
-        try { 
-          const parsed = JSON.parse(stored);
-          appData = { ...appData, ...parsed }; 
-        } catch (e) {} 
+      const stored = localStorage.getItem(DATA_KEY);
+      if (stored) {
+        try { appData = { ...appData, ...JSON.parse(stored) }; } catch (e) {}
+      } else {
+        const mig = migrateLegacyStorage(localStorage);
+        if (mig) {
+          appData = { ...appData, ...mig.data, setupDone: true, legacyOrg: mig.legacyOrg };
+          // a weak / default Super Admin key from the old version must not survive the move
+          appData.users = (appData.users || []).map(u => (u.role === 'SUPER_ADMIN' && !isStrongKey(u.accessKey)) ? { ...u, accessKey: 'KEY-' + secureKey(), updatedAt: Date.now() } : u);
+          const cu = appData.users.find(u => u.id === (appData.currentUser && appData.currentUser.id));
+          if (cu) appData.currentUser = cu;
+          try { localStorage.setItem(DATA_KEY, JSON.stringify(appData)); } catch (e) {}
+        }
       }
       if(!appData.shipperTargets || typeof appData.shipperTargets !== 'object') appData.shipperTargets = {};
       if(!appData.deleted || typeof appData.deleted !== 'object') appData.deleted = {};
       if(!appData.notifications) appData.notifications = [];
       if(!appData.chatMessages) appData.chatMessages = [];
-      if(!Array.isArray(appData.users) || appData.users.length === 0) {
-        appData.users = [{ id: 'U-001', name: 'Super Admin (Owner)', role: 'SUPER_ADMIN', accessKey: 'KEY-SUPER01' }];
-      }
+      if(!Array.isArray(appData.users)) appData.users = [];
+      if(appData.users.length === 0) appData.setupDone = false;
+      // first run on this device: do not treat existing history as "unread"
+      [LSN_KEY, LSC_KEY].forEach(k => { try { if (localStorage.getItem(k) === null) localStorage.setItem(k, String(Date.now())); } catch (e) {} });
 
       // Restore active user mode across page refreshes
-      const savedUserId = localStorage.getItem(ACTIVE_USER_ID_KEY);
-      if (savedUserId && appData.users.some(x => x.id === savedUserId)) {
-        appData.currentUser = appData.users.find(x => x.id === savedUserId);
-      } else if (!appData.currentUser || !appData.currentUser.name) {
-        appData.currentUser = appData.users[0];
-      } else {
-        const u = appData.users.find(x => x.id === appData.currentUser.id);
-        if (u) appData.currentUser = u;
+      if (appData.users.length > 0) {
+        const savedUserId = localStorage.getItem(ACTIVE_USER_ID_KEY);
+        if (savedUserId && appData.users.some(x => x.id === savedUserId)) {
+          appData.currentUser = appData.users.find(x => x.id === savedUserId);
+        } else if (!appData.currentUser || !appData.currentUser.name) {
+          appData.currentUser = appData.users[0];
+        } else {
+          const u = appData.users.find(x => x.id === appData.currentUser.id);
+          if (u) appData.currentUser = u;
+        }
       }
     }
 
     function saveData(skipCloudPush = false) {
-      if (!currentOrgCode) return;
+      if (!appData.setupDone) return;
       appData.lastUpdated = Date.now();
-      try { localStorage.setItem(getStorageKeyForOrg(currentOrgCode), JSON.stringify(appData)); } catch (e) { showToast('Storage full - please back up data'); }
+      try { localStorage.setItem(DATA_KEY, JSON.stringify(appData)); } catch (e) { showToast('Storage full - please back up data'); }
       if (appData.currentUser) {
         localStorage.setItem(ACTIVE_USER_ID_KEY, appData.currentUser.id);
       }
@@ -1111,9 +1066,6 @@
       document.getElementById('memberEntryFormWrapper').style.display = isMember ? 'block' : 'none';
       document.getElementById('btnDirectShipper').style.display = isMember ? 'none' : '';
       
-      // Super Admin can always access Authorized Org Codes
-      document.getElementById('menuBtnOrgLicenses').style.display = canManageOrgCodes() ? '' : 'none';
-
       ['btnHeaderCloud', 'menuBtnCloud', 'btnHeaderUsers', 'menuBtnUsers', 'menuBtnReset'].forEach(id => {
         document.getElementById(id).style.display = isSuperAdmin ? '' : 'none';
       });
@@ -1124,127 +1076,38 @@
       if (isMember) switchTab('tabEntry');
     }
 
-    // AUTHORIZED ORG CODES (Master Owner only)
-    function isMasterOrg() { return !!currentOrgCode && hashCode(currentOrgCode) === MASTER_HASH; }
-    function canManageOrgCodes() { return isMasterOrg() && !!appData.currentUser && appData.currentUser.role === 'SUPER_ADMIN'; }
-    function isAuthorizedHash(h) { return allowedOrgs.some(o => o.h === h); }
-    function saveAllowedOrgs() { try { localStorage.setItem(ALLOWED_ORGS_KEY, JSON.stringify(allowedOrgs)); } catch (e) {} }
-
-    function openOrgLicensesModal() {
-      if (!canManageOrgCodes()) { showToast('Only the Master Owner can manage org codes'); return; }
-      renderAllowedOrgsList();
-      document.getElementById('modalOrgLicenses').classList.remove('hidden');
+    // FIRST-RUN SETUP: every team creates and owns its own workspace (and its own Firebase)
+    function checkSetup() {
+      const m = document.getElementById('modalSetup');
+      if (!m) return;
+      if (appData.setupDone) m.classList.add('hidden'); else m.classList.remove('hidden');
     }
-    function closeOrgLicensesModal() {
-      document.getElementById('modalOrgLicenses').classList.add('hidden');
-    }
-    function renderAllowedOrgsList() {
-      const container = document.getElementById('listAllowedOrgs');
-      if (!container) return;
-      container.innerHTML = '';
-      if (!canManageOrgCodes()) return;
-      allowedOrgs.forEach(o => {
-        const isMaster = (o.h === MASTER_HASH);
-        const div = document.createElement('div');
-        div.className = 'flex items-center justify-between p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-xs font-bold';
-        div.innerHTML = `
-          <div class="flex items-center space-x-2">
-            <i class="fa-solid fa-building-circle-check text-emerald-600"></i>
-            <span class="font-mono text-slate-800">${isMaster ? '\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022' : esc(o.hint)}</span>
-            ${isMaster ? '<span class="text-[9px] px-1.5 py-0.2 rounded bg-amber-100 text-amber-800 font-bold">Master</span>' : ''}
-          </div>
-          ${!isMaster ? `
-            <button onclick="removeAllowedOrg('${o.h}')" class="w-7 h-7 rounded-lg bg-rose-50 text-rose-500 hover:bg-rose-100 flex items-center justify-center">
-              <i class="fa-solid fa-trash text-[10px]"></i>
-            </button>
-          ` : ''}
-        `;
-        container.appendChild(div);
-      });
-    }
-    async function addAllowedOrgCode() {
-      if (!canManageOrgCodes()) { showToast('Permission denied'); return; }
-      const input = document.getElementById('inputNewAllowedOrg');
-      const val = normCode(input.value);
-      if (!val) { showToast('Please enter an Org Code'); return; }
-      const h = sha256Hex(val);
-      if (isAuthorizedHash(h)) { showToast('Code already authorized'); return; }
-      allowedOrgs.push({ h, hint: maskHint(val) });
-      saveAllowedOrgs();
-      input.value = '';
-      renderAllowedOrgsList();
-      pushAllowedOrgsToCloud();
-      showToast(`Authorized Code: ${val}`);
-    }
-    async function removeAllowedOrg(h) {
-      if (!canManageOrgCodes() || h === MASTER_HASH) return;
-      const o = allowedOrgs.find(x => x.h === h); if (!o) return;
-      if (confirm(`Revoke access for Organization Code "${o.hint}"?`)) {
-        allowedOrgs = allowedOrgs.filter(x => x.h !== h);
-        saveAllowedOrgs();
-        renderAllowedOrgsList();
-        pushAllowedOrgsToCloud();
-        showToast('Code revoked');
+    async function submitSetup() {
+      const errEl = document.getElementById('txtSetupError');
+      const showErr = msg => { errEl.textContent = msg; errEl.classList.remove('hidden'); };
+      errEl.classList.add('hidden');
+      const name = document.getElementById('inputSetupName').value.trim();
+      if (!name) { showErr('Owner နာမည် ထည့်ပါ'); return; }
+      const rawUrl = document.getElementById('inputSetupCloud').value.trim();
+      const url = rawUrl ? normalizeCloudUrl(rawUrl) : '';
+      if (url) {
+        try {
+          const r = await fetch(`${url}/workspace.json?t=${Date.now()}`);
+          if (!r.ok) throw new Error('bad status');
+          const d = await r.json();
+          if (d && (toList(d.users).length || toList(d.records).length)) {
+            showErr('ဒီ Firebase ထဲမှာ data ရှိပြီးသားပါ။ ပိုင်ရှင်ပေးထားတဲ့ link ကိုသုံးပါ၊ မဟုတ်ရင် Firebase အသစ်သုံးပါ');
+            return;
+          }
+        } catch (e) { showErr('Firebase URL ကို ချိတ်လို့မရပါ။ URL နဲ့ Rules ကို စစ်ပါ'); return; }
       }
-    }
-    async function fetchAuthorizedFromCloud(base) {
-      try {
-        const res = await fetch(`${normalizeCloudUrl(base)}/authorized_orgs.json?t=${Date.now()}`);
-        if (!res.ok) return null;
-        const data = await res.json();
-        const arr = Array.isArray(data) ? data : Object.values(data || {});
-        if (arr.length === 0) return null;
-        return { list: normalizeAllowedList(arr), legacy: arr.some(x => typeof x === 'string') };
-      } catch (e) { return null; }
-    }
-    async function syncAllowedOrgsFromCloud() {
-      if (!appData.cloudUrl) return;
-      const r = await fetchAuthorizedFromCloud(appData.cloudUrl);
-      if (!r) return;
-      allowedOrgs = r.list;
-      saveAllowedOrgs();
-      renderAllowedOrgsList();
-      if (r.legacy && canManageOrgCodes()) pushAllowedOrgsToCloud();   // upgrade plain-text cloud list to hashes
-    }
-    async function pushAllowedOrgsToCloud() {
-      if (!appData.cloudUrl || !canManageOrgCodes()) return;   // other organisations must never overwrite this list
-      try {
-        await fetch(`${normalizeCloudUrl(appData.cloudUrl)}/authorized_orgs.json`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(allowedOrgs)
-        });
-      } catch (e) {}
-    }
-
-    function checkOrgGate() {
-      if (!currentOrgCode) document.getElementById('modalOrgGate').classList.remove('hidden');
-      else document.getElementById('modalOrgGate').classList.add('hidden');
-    }
-    function toggleGatePasswordVisibility() {
-      const inp = document.getElementById('inputOrgGateCode'); const icon = document.getElementById('iconToggleGateEye');
-      if (inp.type === 'password') { inp.type = 'text'; icon.className = 'fa-solid fa-eye-slash text-xs'; }
-      else { inp.type = 'password'; icon.className = 'fa-solid fa-eye text-xs'; }
-    }
-    let gateFails = 0, gateLockUntil = 0;
-    async function submitOrgGate() {
-      const errEl = document.getElementById('txtOrgGateError');
-      const showErr = m => { errEl.textContent = m; errEl.classList.remove('hidden'); };
-      if (Date.now() < gateLockUntil) { showErr(`Too many attempts. Wait ${Math.ceil((gateLockUntil - Date.now()) / 1000)}s.`); return; }
-      const code = normCode(document.getElementById('inputOrgGateCode').value);
-      if (!code) return;
-      const h = sha256Hex(code);
-      if (!isAuthorizedHash(h) && appData.cloudUrl) await syncAllowedOrgsFromCloud();
-      if (!isAuthorizedHash(h)) {
-        gateFails++;
-        if (gateFails >= 5) { gateFails = 0; gateLockUntil = Date.now() + 30000; showErr('Too many attempts. Wait 30s.'); }
-        else showErr('Invalid Code!');
-        return;
-      }
-      gateFails = 0; errEl.classList.add('hidden');
-      currentOrgCode = code; localStorage.setItem(ORG_STORAGE_KEY, code);
-      document.getElementById('modalOrgGate').classList.add('hidden');
-      loadData(); renderAll(); if (appData.cloudUrl) pullFromCloud(false); showToast('Access Granted');
+      const now = Date.now();
+      const owner = { id: 'U-' + now, name, role: 'SUPER_ADMIN', accessKey: 'KEY-' + secureKey(), updatedAt: now };
+      appData.users = [owner]; appData.currentUser = owner;
+      appData.cloudUrl = url; appData.setupDone = true; appData.sessionLocked = false; appData.lockedBoatId = null;
+      saveData();
+      renderAll();
+      showToast('Workspace created');
     }
 
     function handleUserBadgeClick() { if (!appData.sessionLocked) openProfileModal(); else showToast(`Locked to ${appData.currentUser.name}`); }
@@ -1287,12 +1150,20 @@
         return;
       }
       val = normalizeCloudUrl(val);
+      try {
+        const r = await fetch(`${val}/workspace.json?t=${Date.now()}`);
+        if (r.ok) {
+          const d = await r.json();
+          const hasData = d && (toList(d.users).length || toList(d.records).length);
+          const mine = d && toList(d.users).some(u => u.id === (appData.currentUser && appData.currentUser.id));
+          if (hasData && !mine && !appData.legacyOrg && !confirm('ဒီ Firebase ထဲမှာ တခြား data ရှိပြီးသားပါ။ ပေါင်းစပ်ပြီး ချိတ်မလား?')) return;
+        }
+      } catch (e) {}
       appData.cloudUrl = val;
       saveData(true);
       closeCloudModal();
       showToast('Connecting...');
       
-      pushAllowedOrgsToCloud();
       await pushToCloud();
       await pullFromCloud(true);
     }
@@ -1406,11 +1277,11 @@
     let pushTimer = null, pendingSync = false, useEtag = true;
 
     async function syncCloud(showNotification = false) {
-      if (!appData.cloudUrl || !currentOrgCode) return;
+      if (!appData.cloudUrl || !appData.setupDone) return;
       if (isSyncingCloud) { pendingSync = true; return; }
       isSyncingCloud = true;
-      const orgPath = currentOrgCode.toUpperCase().replace(/[^A-Z0-9_-]/g, '_');
-      const endpoint = `${normalizeCloudUrl(appData.cloudUrl)}/organizations/${orgPath}.json`;
+      const cloudBase = normalizeCloudUrl(appData.cloudUrl);
+      const endpoint = `${cloudBase}/workspace.json`;
       try {
         let res, etag = null;
         if (useEtag) {
@@ -1419,9 +1290,20 @@
         }
         if (!res) res = await fetch(endpoint + '?t=' + Date.now());
         if (!res.ok) throw new Error('pull failed');
-        const remote = await res.json();
+        let remote = await res.json();
+
+        // one-time move of data stored by the old version under organizations/<CODE>
+        let migrated = false;
+        if (remote === null && appData.legacyOrg) {
+          const lp = String(appData.legacyOrg).toUpperCase().replace(/[^A-Z0-9_-]/g, '_');
+          const lr = await fetch(`${cloudBase}/organizations/${lp}.json?t=${Date.now()}`);
+          if (!lr.ok) throw new Error('legacy read failed');   // retry next cycle rather than lose that data
+          const ld = await lr.json();
+          if (ld) { remote = ld; migrated = true; } else { appData.legacyOrg = ''; saveData(true); }
+        }
 
         const m = mergeRemoteIntoLocal(remote);
+        if (migrated) m.needsPush = true;
         const n = m.next;
         appData.boats = n.boats; appData.users = n.users; appData.records = n.records;
         appData.notifications = n.notifications; appData.chatMessages = n.chatMessages;
@@ -1432,6 +1314,7 @@
 
         if (m.changedLocal) {
           saveData(true);
+          try {
           renderAll();
           if (!document.getElementById('modalChat').classList.contains('hidden')) {
             renderChatMessages();
@@ -1441,6 +1324,7 @@
           if (!document.getElementById('tabRecords').classList.contains('hidden')) renderAllRecordsTable();
           if (!document.getElementById('tabPicker').classList.contains('hidden')) runShipperFilter();
           if (!document.getElementById('tabAttendance').classList.contains('hidden')) renderAttendanceTable();
+          } catch (uiErr) { /* a display error must never block syncing */ }
         }
 
         if (m.needsPush) {
@@ -1455,6 +1339,7 @@
           if (put) {
             if (put.status === 412) pendingSync = true;          // remote changed while merging - redo
             else if (!put.ok) throw new Error('push failed');
+            else if (migrated) { appData.legacyOrg = ''; saveData(true); showToast('Cloud data moved to the new format'); }
           }
         }
         updateCloudBadgeUI(true);
@@ -1490,9 +1375,9 @@
     }
 
     setInterval(() => {
-      if (!document.hidden && appData.cloudUrl && currentOrgCode) pullFromCloud(false);
+      if (!document.hidden && appData.cloudUrl && appData.setupDone) pullFromCloud(false);
     }, 5000);
-    document.addEventListener('visibilitychange', () => { if (!document.hidden && appData.cloudUrl && currentOrgCode) pullFromCloud(false); });
+    document.addEventListener('visibilitychange', () => { if (!document.hidden && appData.cloudUrl && appData.setupDone) pullFromCloud(false); });
 
     // Interactive Clock Picker
     let clock24TargetInputId = null; let clock24TargetCallback = null; let clock24SelectedHour = 8; let clock24SelectedMinute = 0;
@@ -1624,7 +1509,7 @@
     function openNotiModal() {
       document.getElementById('modalNoti').classList.remove('hidden');
       document.getElementById('badgeNotiUnread').classList.add('hidden');
-      if(currentOrgCode) localStorage.setItem(`LSN_${currentOrgCode}`, Date.now());
+      localStorage.setItem(LSN_KEY, Date.now());
       renderNotifications();
     }
     function closeNotiModal() { document.getElementById('modalNoti').classList.add('hidden'); }
@@ -1638,8 +1523,8 @@
       });
     }
     function checkUnreadNotifications() {
-      if(!currentOrgCode || appData.notifications.length===0) return;
-      const ls = parseInt(localStorage.getItem(`LSN_${currentOrgCode}`)||'0');
+      if(!appData.setupDone || appData.notifications.length===0) return;
+      const ls = parseInt(localStorage.getItem(LSN_KEY)||'0');
       if(new Date(appData.notifications[0].timestamp).getTime() > ls) {
         document.getElementById('badgeNotiUnread').classList.remove('hidden'); playBeepSound();
       }
@@ -1647,7 +1532,7 @@
     function openChatModal() {
       document.getElementById('modalChat').classList.remove('hidden');
       document.getElementById('badgeChatUnread').classList.add('hidden');
-      if(currentOrgCode) localStorage.setItem(`LSC_${currentOrgCode}`, Date.now());
+      localStorage.setItem(LSC_KEY, Date.now());
       renderChatMessages(); setTimeout(()=>document.getElementById('listChatMessages').scrollTop=9999,50);
     }
     function closeChatModal() { document.getElementById('modalChat').classList.add('hidden'); }
@@ -1673,8 +1558,8 @@
       });
     }
     function checkUnreadChat() {
-      if(!currentOrgCode || appData.chatMessages.length===0) return;
-      const ls = parseInt(localStorage.getItem(`LSC_${currentOrgCode}`)||'0');
+      if(!appData.setupDone || appData.chatMessages.length===0) return;
+      const ls = parseInt(localStorage.getItem(LSC_KEY)||'0');
       const lastM = appData.chatMessages[appData.chatMessages.length-1];
       if(new Date(lastM.timestamp).getTime() > ls && lastM.senderId !== appData.currentUser.id) {
         document.getElementById('badgeChatUnread').classList.remove('hidden'); playBeepSound();
@@ -1829,13 +1714,8 @@
       document.getElementById('boxMasterLink').style.display = meSA ? '' : 'none';
       document.getElementById('linkSuperAdmin').value = '';
       if (meSA) {
-        const si = appData.users.findIndex(x => x.id === appData.currentUser.id);
-        if (si !== -1 && appData.users[si].accessKey === 'KEY-SUPER01') {   // legacy hard-coded key -> random secret
-          appData.users[si] = { ...appData.users[si], accessKey: 'KEY-' + secureKey(), updatedAt: Date.now() };
-          appData.currentUser = appData.users[si]; saveData();
-        }
-        const mp = new URLSearchParams({ master: 'unlock', org: currentOrgCode, uid: appData.currentUser.id, key: appData.currentUser.accessKey, cloud: appData.cloudUrl ? btoa(unescape(encodeURIComponent(appData.cloudUrl))) : '' });
-        document.getElementById('linkSuperAdmin').value = `${window.location.origin}${window.location.pathname}#${mp.toString()}`;
+        const mp = new URLSearchParams({ master: 'unlock', uid: appData.currentUser.id, key: appData.currentUser.accessKey, cloud: appData.cloudUrl ? btoa(unescape(encodeURIComponent(appData.cloudUrl))) : '' });
+        document.getElementById('linkSuperAdmin').value = `${appBaseUrl()}#${mp.toString()}`;
       }
       const selBoat = document.getElementById('shareModalBoatSelect'); 
       selBoat.innerHTML='';
@@ -1887,7 +1767,6 @@
     }
     function buildPersonalInviteLink(user, boat) {
       const params = new URLSearchParams({ 
-        org: currentOrgCode, 
         uid: user.id, 
         key: user.accessKey, 
         boat: boat.id, 
@@ -1896,46 +1775,40 @@
         bweight: boat.weight, 
         cloud: appData.cloudUrl?btoa(unescape(encodeURIComponent(appData.cloudUrl))):'' 
       });
-      return `${window.location.origin}${window.location.pathname}#${params.toString()}`;
+      return `${appBaseUrl()}#${params.toString()}`;
     }
     async function handleRouting() {
       const hash = window.location.hash.replace(/^#/, '');
       if (!hash) return;
       const params = new URLSearchParams(hash);
-      const orgInUrl = params.get('org'), uid = params.get('uid'), key = params.get('key');
+      const uid = params.get('uid'), key = params.get('key');
       const boat = params.get('boat'), bname = params.get('bname'), bunit = params.get('bunit'), bweight = params.get('bweight');
-      const cloud = params.get('cloud'), master = params.get('master');
+      const cloud = params.get('cloud'), master = params.get('master'), oldOrg = params.get('org');   // org: only in links made by the old version
       const clearHash = () => { try { history.replaceState(null, '', window.location.pathname + window.location.search); } catch (e) {} };
       let linkCloud = '';
       if (cloud) { try { linkCloud = decodeURIComponent(escape(atob(cloud))); } catch (e) {} }
+      const base = linkCloud || appData.cloudUrl;
 
-      // 1) the organisation in the link must be authorised by the Master Owner
-      if (orgInUrl) {
-        const code = normCode(orgInUrl), h = sha256Hex(code);
-        let ok = isAuthorizedHash(h);
-        if (!ok && linkCloud) { const r = await fetchAuthorizedFromCloud(linkCloud); ok = !!(r && r.list.some(o => o.h === h)); }
-        if (!ok) { clearHash(); showToast('Invalid or unauthorized organization link'); return; }
-        currentOrgCode = code; localStorage.setItem(ORG_STORAGE_KEY, code);
-        loadData();   // load this org's stored data first so it is not overwritten by defaults
-      } else if (!currentOrgCode) { clearHash(); return; }
-
-      // 2) the user must already exist (locally or in the org's cloud data) with the same secret key
+      // The user must already exist (on this device or in the workspace's cloud data) with the same secret key.
+      // Nothing about the user (name / role) is ever taken from the link itself.
       const verifyUser = async () => {
         if (!uid || !key) return null;
         const local = appData.users.find(x => x.id === uid && x.accessKey === key);
         if (local) return local;
-        const base = linkCloud || appData.cloudUrl;
         if (!base) return null;
+        const find = remote => toList(remote && remote.users).find(x => x.id === uid && x.accessKey === key);
+        const read = async path => { const r = await fetch(`${normalizeCloudUrl(base)}/${path}.json?t=${Date.now()}`); return r.ok ? r.json() : null; };
         try {
-          const orgPath = currentOrgCode.toUpperCase().replace(/[^A-Z0-9_-]/g, '_');
-          const r = await fetch(`${normalizeCloudUrl(base)}/organizations/${orgPath}.json?t=${Date.now()}`);
-          if (!r.ok) return null;
-          const remote = await r.json();
-          const list = Array.isArray(remote && remote.users) ? remote.users : Object.values((remote && remote.users) || {});
-          const ru = list.find(x => x && x.id === uid && x.accessKey === key);
+          let ru = find(await read('workspace')), viaLegacy = '';
+          if (!ru && oldOrg) {   // link created before the move to a single workspace
+            const lp = String(oldOrg).toUpperCase().replace(/[^A-Z0-9_-]/g, '_');
+            ru = find(await read('organizations/' + lp));
+            if (ru) viaLegacy = lp;
+          }
           if (!ru) return null;
           const i = appData.users.findIndex(x => x.id === ru.id);
           if (i >= 0) appData.users[i] = { ...ru }; else appData.users.push({ ...ru });
+          if (viaLegacy && !appData.legacyOrg) appData.legacyOrg = viaLegacy;
           return appData.users.find(x => x.id === ru.id);
         } catch (e) { return null; }
       };
@@ -1943,7 +1816,8 @@
       if (master === 'unlock') {
         const u = await verifyUser();
         if (u && u.role === 'SUPER_ADMIN') {
-          appData.sessionLocked = false; appData.lockedBoatId = null; appData.currentUser = u;
+          if (linkCloud) appData.cloudUrl = linkCloud;
+          appData.setupDone = true; appData.sessionLocked = false; appData.lockedBoatId = null; appData.currentUser = u;
           localStorage.setItem(ACTIVE_USER_ID_KEY, u.id); saveData(true);
         } else showToast('Master link is invalid or expired');
         clearHash(); return;
@@ -1957,6 +1831,7 @@
           if (!appData.boats.find(b => b.id === boat)) appData.boats.push({ id: boat, name: bname, unit: bunit || 'Bags', weight: bweight || '50 Kg' });
           appData.activeBoatId = boat;
         }
+        appData.setupDone = true;
         appData.currentUser = targetUser;
         appData.sessionLocked = true;
         appData.lockedBoatId = (targetUser.role === 'MEMBER' && boat) ? boat : null;
@@ -1968,7 +1843,7 @@
 
     // Render Engines
     function renderAll() { 
-      checkOrgGate(); 
+      checkSetup(); 
       applyRolePermissions(); 
       updateCloudBadgeUI(!!appData.cloudUrl); 
       renderActiveBoatUI(); 
@@ -1984,7 +1859,7 @@
       const u = appData.currentUser;
       const el = document.getElementById('userBadgeName');
       if (el) {
-        el.textContent = (u && u.name) ? u.name : 'Super Admin (Owner)';
+        el.textContent = (u && u.name) ? u.name : 'Owner';
       }
     }
     
@@ -2101,9 +1976,10 @@
     }
 
     function resetData() {
-      if (confirm('Switch/Reset Organization Code on this device?')) {
-        localStorage.removeItem(ORG_STORAGE_KEY);
-        currentOrgCode = '';
+      if (confirm('ဒီ device ထဲက data အားလုံးကို ဖျက်ပြီး အစကပြန်စမလား?\n(Cloud ထဲက data ကို မထိခိုက်ပါ။ အရင် Backup ယူထားပါ)')) {
+        const drop = [DATA_KEY, ACTIVE_USER_ID_KEY, LSN_KEY, LSC_KEY, LEGACY_ORG_KEY, LEGACY_ALLOWED_KEY];
+        for (let i = 0; i < localStorage.length; i++) { const k = localStorage.key(i); if (k && k.indexOf(LEGACY_DATA_PREFIX) === 0) drop.push(k); }
+        drop.forEach(k => localStorage.removeItem(k));
         window.location.hash = '';
         location.reload();
       }
@@ -2322,16 +2198,17 @@
       const workbook = XLSX.utils.book_new();
       const sheet = XLSX.utils.json_to_sheet(rows.length ? rows : [{ Message: 'No records found' }]);
       XLSX.utils.book_append_sheet(workbook, sheet, 'Intake Records');
-      XLSX.writeFile(workbook, `vessel-detail-${currentOrgCode || 'data'}-${new Date().toISOString().slice(0, 10)}.xlsx`);
+      XLSX.writeFile(workbook, `vessel-detail-${new Date().toISOString().slice(0, 10)}.xlsx`);
       showToast('Excel downloaded');
     }
 
     function backupSystemData() {
-      const payload = { version: 1, exportedAt: new Date().toISOString(), orgCode: currentOrgCode, data: appData };
+      const { legacyOrg, ...exportable } = appData;
+      const payload = { version: 2, exportedAt: new Date().toISOString(), data: exportable };
       const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
-      a.href = url; a.download = `vessel-detail-backup-${currentOrgCode || 'data'}.json`;
+      a.href = url; a.download = `vessel-detail-backup-${new Date().toISOString().slice(0, 10)}.json`;
       document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
       showToast('Backup downloaded');
     }
@@ -2347,8 +2224,7 @@
           if (!restored || !Array.isArray(restored.records) || !Array.isArray(restored.boats) || !Array.isArray(restored.users)) {
             throw new Error('Invalid backup');
           }
-          if (!currentOrgCode) throw new Error('Organization access required');
-          appData = { ...appData, ...restored, currentUser: restored.currentUser || appData.currentUser };
+          appData = { ...appData, ...restored, currentUser: restored.currentUser || appData.currentUser, setupDone: true, legacyOrg: '' };
           const now = Date.now();
           ['records','boats','users'].forEach(k => (appData[k] || []).forEach(x => { x.updatedAt = now; }));
           appData.shipperTargets = appData.shipperTargets || {};
@@ -2383,21 +2259,17 @@
     });
     document.addEventListener('keydown', e => {
       if (e.key !== 'Escape') return;
-      ['modalChat','modalNoti','modalShare','modalOrgLicenses','modalProfile','modalCloud','modalUserManager','modalAccount','modalShipper','systemMenuDropdown','modal24HrClockPicker']
+      ['modalChat','modalNoti','modalShare','modalProfile','modalCloud','modalUserManager','modalAccount','modalShipper','systemMenuDropdown','modal24HrClockPicker']
         .forEach(id => { const el = document.getElementById(id); if (el) el.classList.add('hidden'); });
     });
 
     // Document Init
     window.addEventListener('DOMContentLoaded', async () => {
-      try { await handleRouting(); } catch (e) {}
-      checkOrgGate();
       loadData();
+      try { await handleRouting(); } catch (e) {}
       initDatepickers();
       renderAll();
-      if (appData.cloudUrl) {
-        syncAllowedOrgsFromCloud();
-        if (currentOrgCode) pullFromCloud(false);
-      }
+      if (appData.setupDone && appData.cloudUrl) pullFromCloud(false);
     });
   </script>
 </body>
