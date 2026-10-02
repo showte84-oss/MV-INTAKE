@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>VESSEL DETAIL - Multi-Org System</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -625,7 +625,7 @@
         </div>
 
         <div>
-          <h4 class="font-bold text-slate-700 uppercase text-[10px] mb-2">Active Authorized Codes List</h4>
+          <h4 class="font-bold text-slate-700 uppercase text-[10px] mb-2">Active Authorized Codes (hidden for security)</h4>
           <div id="listAllowedOrgs" class="space-y-1.5"></div>
         </div>
       </div>
@@ -853,7 +853,7 @@
         <button onclick="closeShareModal()" class="w-8 h-8 rounded-lg bg-indigo-900 text-indigo-200 flex items-center justify-center"><i class="fa-solid fa-xmark"></i></button>
       </div>
       <div class="p-4 overflow-y-auto space-y-4 custom-scroll text-xs">
-        <div class="bg-amber-50 border border-amber-200 rounded-2xl p-3 space-y-1.5">
+        <div id="boxMasterLink" class="bg-amber-50 border border-amber-200 rounded-2xl p-3 space-y-1.5">
           <div class="font-bold text-amber-900 text-xs">Super Admin Master Link</div>
           <input type="text" id="linkSuperAdmin" readonly class="w-full h-9 bg-white border border-amber-300 rounded-xl px-2.5 font-mono text-[10px] text-slate-700 truncate mb-1">
           <button onclick="copyDirectLink(document.getElementById('linkSuperAdmin').value)" class="w-full h-9 bg-amber-600 active:bg-amber-700 text-white rounded-xl font-bold">Copy Master Link</button>
@@ -923,9 +923,17 @@
     }
     document.body.addEventListener('click', () => { if (!audioCtx) { try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch(e){} } }, { once: true });
     
+    function esc(v) {
+      return String(v ?? '').replace(/[&<>"']/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]));
+    }
+    function matchesSearch(r, q, extra) {
+      if (!q) return true;
+      return [r.date, r.shift, r.boatName, r.shipper, r.checkerName, 'H-' + r.hatch, r.remarks, extra].join(' ').toLowerCase().includes(q.trim().toLowerCase());
+    }
+    let toastTimer = null;
     function showToast(msg) {
       const t = document.getElementById('toast'); document.getElementById('toastMsg').textContent = msg;
-      t.classList.remove('hidden'); setTimeout(() => t.classList.add('hidden'), 2600);
+      t.classList.remove('hidden'); clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.add('hidden'), 2600);
     }
     function toggleMenu() { document.getElementById('systemMenuDropdown').classList.toggle('hidden'); }
     function closeMenu() { document.getElementById('systemMenuDropdown').classList.add('hidden'); }
@@ -971,27 +979,71 @@
     const ORG_STORAGE_KEY = 'MV_INTAKE_ACTIVE_ORG';
     const ALLOWED_ORGS_KEY = 'MV_INTAKE_ALLOWED_ORGS_CACHE';
     const ACTIVE_USER_ID_KEY = 'MV_INTAKE_ACTIVE_USER_ID';
-    let allowedOrgCodes = ['KNA-001'];
+    // ===== ORG CODE SECURITY: codes are only ever stored/shipped as SHA-256 hashes =====
+    function sha256Hex(str) {
+      const K = [0x428a2f98,0x71374491,0xb5c0fbcf,0xe9b5dba5,0x3956c25b,0x59f111f1,0x923f82a4,0xab1c5ed5,0xd807aa98,0x12835b01,0x243185be,0x550c7dc3,0x72be5d74,0x80deb1fe,0x9bdc06a7,0xc19bf174,0xe49b69c1,0xefbe4786,0x0fc19dc6,0x240ca1cc,0x2de92c6f,0x4a7484aa,0x5cb0a9dc,0x76f988da,0x983e5152,0xa831c66d,0xb00327c8,0xbf597fc7,0xc6e00bf3,0xd5a79147,0x06ca6351,0x14292967,0x27b70a85,0x2e1b2138,0x4d2c6dfc,0x53380d13,0x650a7354,0x766a0abb,0x81c2c92e,0x92722c85,0xa2bfe8a1,0xa81a664b,0xc24b8b70,0xc76c51a3,0xd192e819,0xd6990624,0xf40e3585,0x106aa070,0x19a4c116,0x1e376c08,0x2748774c,0x34b0bcb5,0x391c0cb3,0x4ed8aa4a,0x5b9cca4f,0x682e6ff3,0x748f82ee,0x78a5636f,0x84c87814,0x8cc70208,0x90befffa,0xa4506ceb,0xbef9a3f7,0xc67178f2];
+      const bytes = new TextEncoder().encode(str), l = bytes.length;
+      const buf = new Uint8Array(((l + 9 + 63) >> 6) << 6); buf.set(bytes); buf[l] = 0x80;
+      const dv = new DataView(buf.buffer);
+      dv.setUint32(buf.length - 4, (l * 8) >>> 0); dv.setUint32(buf.length - 8, Math.floor(l * 8 / 4294967296));
+      let h = [0x6a09e667,0xbb67ae85,0x3c6ef372,0xa54ff53a,0x510e527f,0x9b05688c,0x1f83d9ab,0x5be0cd19];
+      const w = new Uint32Array(64);
+      for (let o = 0; o < buf.length; o += 64) {
+        for (let i = 0; i < 16; i++) w[i] = dv.getUint32(o + i * 4);
+        for (let i = 16; i < 64; i++) {
+          const a = w[i-15], b = w[i-2];
+          const s0 = ((a>>>7)|(a<<25)) ^ ((a>>>18)|(a<<14)) ^ (a>>>3);
+          const s1 = ((b>>>17)|(b<<15)) ^ ((b>>>19)|(b<<13)) ^ (b>>>10);
+          w[i] = (w[i-16] + s0 + w[i-7] + s1) | 0;
+        }
+        let [a,b,c,d,e,f,g,hh] = h;
+        for (let i = 0; i < 64; i++) {
+          const S1 = ((e>>>6)|(e<<26)) ^ ((e>>>11)|(e<<21)) ^ ((e>>>25)|(e<<7));
+          const t1 = (hh + S1 + ((e&f) ^ (~e&g)) + K[i] + w[i]) | 0;
+          const S0 = ((a>>>2)|(a<<30)) ^ ((a>>>13)|(a<<19)) ^ ((a>>>22)|(a<<10));
+          const t2 = (S0 + ((a&b) ^ (a&c) ^ (b&c))) | 0;
+          hh = g; g = f; f = e; e = (d + t1) | 0; d = c; c = b; b = a; a = (t1 + t2) | 0;
+        }
+        h = [h[0]+a|0, h[1]+b|0, h[2]+c|0, h[3]+d|0, h[4]+e|0, h[5]+f|0, h[6]+g|0, h[7]+hh|0];
+      }
+      return h.map(x => (x >>> 0).toString(16).padStart(8, '0')).join('');
+    }
+    const MASTER_HASH = 'c8dfe6e210a523a6bf878207718257bd97be2178b207dec6c26b72c88f1297bc';
+    function normCode(v) { return String(v || '').trim().toUpperCase().replace(/[^A-Z0-9_-]/g, ''); }
+    function hashCode(v) { return sha256Hex(normCode(v)); }
+    function maskHint(c) { return c.slice(0, 2) + '\u2022'.repeat(Math.max(3, c.length - 2)); }
+    function secureKey() {
+      const a = new Uint8Array(8); (window.crypto || window.msCrypto).getRandomValues(a);
+      return Array.from(a, b => b.toString(16).padStart(2, '0')).join('').toUpperCase();
+    }
+    // accepts legacy plain-text entries as well as {h, hint}
+    function normalizeAllowedList(list) {
+      const arr = Array.isArray(list) ? list : Object.values(list || {});
+      const out = [], seen = new Set();
+      arr.forEach(x => {
+        let h, hint;
+        if (typeof x === 'string') { const c = normCode(x); if (!c) return; h = sha256Hex(c); hint = maskHint(c); }
+        else if (x && typeof x.h === 'string' && /^[0-9a-f]{64}$/.test(x.h)) { h = x.h; hint = String(x.hint || '\u2022\u2022\u2022\u2022').slice(0, 16); }
+        else return;
+        if (seen.has(h)) return; seen.add(h); out.push({ h, hint });
+      });
+      if (!seen.has(MASTER_HASH)) out.unshift({ h: MASTER_HASH, hint: 'Master' });
+      return out;
+    }
+    let allowedOrgs = [{ h: MASTER_HASH, hint: 'Master' }];
     let currentOrgCode = localStorage.getItem(ORG_STORAGE_KEY) || '';
     let isSyncingCloud = false;
-
-    // Load Allowed Orgs Cache Immediately
-    const cachedAllowed = localStorage.getItem(ALLOWED_ORGS_KEY);
-    if (cachedAllowed) {
-      try {
-        const arr = JSON.parse(cachedAllowed);
-        if (Array.isArray(arr) && arr.length > 0) allowedOrgCodes = arr;
-      } catch (e) {}
-    }
-    if (!allowedOrgCodes.includes('KNA-001')) {
-      allowedOrgCodes.unshift('KNA-001');
-    }
+    try {
+      const cachedAllowed = localStorage.getItem(ALLOWED_ORGS_KEY);
+      if (cachedAllowed) allowedOrgs = normalizeAllowedList(JSON.parse(cachedAllowed));
+      localStorage.setItem(ALLOWED_ORGS_KEY, JSON.stringify(allowedOrgs));   // rewrites any legacy plain-text cache as hashes
+    } catch (e) {}
 
     let appData = {
       cloudUrl: '', activeBoatId: null, lockedBoatId: null, sessionLocked: false,
       currentUser: { id: 'U-001', name: 'Super Admin (Owner)', role: 'SUPER_ADMIN', accessKey: 'KEY-SUPER01' },
       boats: [], shippers: [], users: [{ id: 'U-001', name: 'Super Admin (Owner)', role: 'SUPER_ADMIN', accessKey: 'KEY-SUPER01' }],
-      records: [], shipperTargets: {}, notifications: [], chatMessages: [], lastUpdated: 0
+      records: [], shipperTargets: {}, deleted: {}, notifications: [], chatMessages: [], lastUpdated: 0
     };
 
     function getStorageKeyForOrg(code) { return `MV_INTAKE_DATA_ORG_${code.toUpperCase().replace(/[^A-Z0-9_-]/g, '')}`; }
@@ -1006,6 +1058,7 @@
         } catch (e) {} 
       }
       if(!appData.shipperTargets || typeof appData.shipperTargets !== 'object') appData.shipperTargets = {};
+      if(!appData.deleted || typeof appData.deleted !== 'object') appData.deleted = {};
       if(!appData.notifications) appData.notifications = [];
       if(!appData.chatMessages) appData.chatMessages = [];
       if(!Array.isArray(appData.users) || appData.users.length === 0) {
@@ -1027,7 +1080,7 @@
     function saveData(skipCloudPush = false) {
       if (!currentOrgCode) return;
       appData.lastUpdated = Date.now();
-      localStorage.setItem(getStorageKeyForOrg(currentOrgCode), JSON.stringify(appData));
+      try { localStorage.setItem(getStorageKeyForOrg(currentOrgCode), JSON.stringify(appData)); } catch (e) { showToast('Storage full - please back up data'); }
       if (appData.currentUser) {
         localStorage.setItem(ACTIVE_USER_ID_KEY, appData.currentUser.id);
       }
@@ -1059,7 +1112,7 @@
       document.getElementById('btnDirectShipper').style.display = isMember ? 'none' : '';
       
       // Super Admin can always access Authorized Org Codes
-      document.getElementById('menuBtnOrgLicenses').style.display = isSuperAdmin ? '' : 'none';
+      document.getElementById('menuBtnOrgLicenses').style.display = canManageOrgCodes() ? '' : 'none';
 
       ['btnHeaderCloud', 'menuBtnCloud', 'btnHeaderUsers', 'menuBtnUsers', 'menuBtnReset'].forEach(id => {
         document.getElementById(id).style.display = isSuperAdmin ? '' : 'none';
@@ -1071,8 +1124,14 @@
       if (isMember) switchTab('tabEntry');
     }
 
-    // AUTHORIZED ORG LICENSES MANAGEMENT FUNCTIONS
+    // AUTHORIZED ORG CODES (Master Owner only)
+    function isMasterOrg() { return !!currentOrgCode && hashCode(currentOrgCode) === MASTER_HASH; }
+    function canManageOrgCodes() { return isMasterOrg() && !!appData.currentUser && appData.currentUser.role === 'SUPER_ADMIN'; }
+    function isAuthorizedHash(h) { return allowedOrgs.some(o => o.h === h); }
+    function saveAllowedOrgs() { try { localStorage.setItem(ALLOWED_ORGS_KEY, JSON.stringify(allowedOrgs)); } catch (e) {} }
+
     function openOrgLicensesModal() {
+      if (!canManageOrgCodes()) { showToast('Only the Master Owner can manage org codes'); return; }
       renderAllowedOrgsList();
       document.getElementById('modalOrgLicenses').classList.remove('hidden');
     }
@@ -1083,19 +1142,19 @@
       const container = document.getElementById('listAllowedOrgs');
       if (!container) return;
       container.innerHTML = '';
-
-      allowedOrgCodes.forEach(code => {
-        const isMaster = (code === 'KNA-001');
+      if (!canManageOrgCodes()) return;
+      allowedOrgs.forEach(o => {
+        const isMaster = (o.h === MASTER_HASH);
         const div = document.createElement('div');
         div.className = 'flex items-center justify-between p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-xs font-bold';
         div.innerHTML = `
           <div class="flex items-center space-x-2">
             <i class="fa-solid fa-building-circle-check text-emerald-600"></i>
-            <span class="font-mono text-slate-800">${code}</span>
+            <span class="font-mono text-slate-800">${isMaster ? '\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022' : esc(o.hint)}</span>
             ${isMaster ? '<span class="text-[9px] px-1.5 py-0.2 rounded bg-amber-100 text-amber-800 font-bold">Master</span>' : ''}
           </div>
           ${!isMaster ? `
-            <button onclick="removeAllowedOrgCode('${code}')" class="w-7 h-7 rounded-lg bg-rose-50 text-rose-500 hover:bg-rose-100 flex items-center justify-center">
+            <button onclick="removeAllowedOrg('${o.h}')" class="w-7 h-7 rounded-lg bg-rose-50 text-rose-500 hover:bg-rose-100 flex items-center justify-center">
               <i class="fa-solid fa-trash text-[10px]"></i>
             </button>
           ` : ''}
@@ -1104,58 +1163,56 @@
       });
     }
     async function addAllowedOrgCode() {
+      if (!canManageOrgCodes()) { showToast('Permission denied'); return; }
       const input = document.getElementById('inputNewAllowedOrg');
-      const val = input.value.trim().toUpperCase().replace(/[^A-Z0-9_-]/g, '');
-      if (!val) {
-        showToast('Please enter an Org Code');
-        return;
-      }
-      if (allowedOrgCodes.includes(val)) {
-        showToast('Code already authorized');
-        return;
-      }
-
-      allowedOrgCodes.push(val);
-      localStorage.setItem(ALLOWED_ORGS_KEY, JSON.stringify(allowedOrgCodes));
+      const val = normCode(input.value);
+      if (!val) { showToast('Please enter an Org Code'); return; }
+      const h = sha256Hex(val);
+      if (isAuthorizedHash(h)) { showToast('Code already authorized'); return; }
+      allowedOrgs.push({ h, hint: maskHint(val) });
+      saveAllowedOrgs();
       input.value = '';
       renderAllowedOrgsList();
       pushAllowedOrgsToCloud();
       showToast(`Authorized Code: ${val}`);
     }
-    async function removeAllowedOrgCode(code) {
-      if (code === 'KNA-001') return;
-      if (confirm(`Revoke access for Organization Code "${code}"?`)) {
-        allowedOrgCodes = allowedOrgCodes.filter(c => c !== code);
-        localStorage.setItem(ALLOWED_ORGS_KEY, JSON.stringify(allowedOrgCodes));
+    async function removeAllowedOrg(h) {
+      if (!canManageOrgCodes() || h === MASTER_HASH) return;
+      const o = allowedOrgs.find(x => x.h === h); if (!o) return;
+      if (confirm(`Revoke access for Organization Code "${o.hint}"?`)) {
+        allowedOrgs = allowedOrgs.filter(x => x.h !== h);
+        saveAllowedOrgs();
         renderAllowedOrgsList();
         pushAllowedOrgsToCloud();
-        showToast(`Revoked Code: ${code}`);
+        showToast('Code revoked');
       }
+    }
+    async function fetchAuthorizedFromCloud(base) {
+      try {
+        const res = await fetch(`${normalizeCloudUrl(base)}/authorized_orgs.json?t=${Date.now()}`);
+        if (!res.ok) return null;
+        const data = await res.json();
+        const arr = Array.isArray(data) ? data : Object.values(data || {});
+        if (arr.length === 0) return null;
+        return { list: normalizeAllowedList(arr), legacy: arr.some(x => typeof x === 'string') };
+      } catch (e) { return null; }
     }
     async function syncAllowedOrgsFromCloud() {
       if (!appData.cloudUrl) return;
-      try {
-        const endpoint = `${normalizeCloudUrl(appData.cloudUrl)}/authorized_orgs.json`;
-        const res = await fetch(endpoint + '?t=' + Date.now());
-        if (res.ok) {
-          const cloudList = await res.json();
-          if (Array.isArray(cloudList) && cloudList.length > 0) {
-            allowedOrgCodes = cloudList;
-            if (!allowedOrgCodes.includes('KNA-001')) allowedOrgCodes.unshift('KNA-001');
-            localStorage.setItem(ALLOWED_ORGS_KEY, JSON.stringify(allowedOrgCodes));
-            renderAllowedOrgsList();
-          }
-        }
-      } catch (e) {}
+      const r = await fetchAuthorizedFromCloud(appData.cloudUrl);
+      if (!r) return;
+      allowedOrgs = r.list;
+      saveAllowedOrgs();
+      renderAllowedOrgsList();
+      if (r.legacy && canManageOrgCodes()) pushAllowedOrgsToCloud();   // upgrade plain-text cloud list to hashes
     }
     async function pushAllowedOrgsToCloud() {
-      if (!appData.cloudUrl) return;
+      if (!appData.cloudUrl || !canManageOrgCodes()) return;   // other organisations must never overwrite this list
       try {
-        const endpoint = `${normalizeCloudUrl(appData.cloudUrl)}/authorized_orgs.json`;
-        await fetch(endpoint, {
+        await fetch(`${normalizeCloudUrl(appData.cloudUrl)}/authorized_orgs.json`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(allowedOrgCodes)
+          body: JSON.stringify(allowedOrgs)
         });
       } catch (e) {}
     }
@@ -1166,23 +1223,25 @@
     }
     function toggleGatePasswordVisibility() {
       const inp = document.getElementById('inputOrgGateCode'); const icon = document.getElementById('iconToggleGateEye');
-      if (inp.type === 'password') { inp.type = 'text'; icon.className = 'fa-solid fa-eye-slash text-xs'; } 
+      if (inp.type === 'password') { inp.type = 'text'; icon.className = 'fa-solid fa-eye-slash text-xs'; }
       else { inp.type = 'password'; icon.className = 'fa-solid fa-eye text-xs'; }
     }
+    let gateFails = 0, gateLockUntil = 0;
     async function submitOrgGate() {
-      const code = document.getElementById('inputOrgGateCode').value.trim().toUpperCase();
+      const errEl = document.getElementById('txtOrgGateError');
+      const showErr = m => { errEl.textContent = m; errEl.classList.remove('hidden'); };
+      if (Date.now() < gateLockUntil) { showErr(`Too many attempts. Wait ${Math.ceil((gateLockUntil - Date.now()) / 1000)}s.`); return; }
+      const code = normCode(document.getElementById('inputOrgGateCode').value);
       if (!code) return;
-      
-      // Check local cache immediately for instant access
-      if (!allowedOrgCodes.includes(code)) {
-        if (appData.cloudUrl) await syncAllowedOrgsFromCloud();
-      }
-      
-      if (!allowedOrgCodes.includes(code)) {
-        document.getElementById('txtOrgGateError').textContent = 'Invalid Code!';
-        document.getElementById('txtOrgGateError').classList.remove('hidden');
+      const h = sha256Hex(code);
+      if (!isAuthorizedHash(h) && appData.cloudUrl) await syncAllowedOrgsFromCloud();
+      if (!isAuthorizedHash(h)) {
+        gateFails++;
+        if (gateFails >= 5) { gateFails = 0; gateLockUntil = Date.now() + 30000; showErr('Too many attempts. Wait 30s.'); }
+        else showErr('Invalid Code!');
         return;
       }
+      gateFails = 0; errEl.classList.add('hidden');
       currentOrgCode = code; localStorage.setItem(ORG_STORAGE_KEY, code);
       document.getElementById('modalOrgGate').classList.add('hidden');
       loadData(); renderAll(); if (appData.cloudUrl) pullFromCloud(false); showToast('Access Granted');
@@ -1211,7 +1270,7 @@
           closeProfileModal(); 
         };
         btn.className = `w-full text-left p-3.5 rounded-2xl border flex items-center justify-between text-xs font-bold ${isActive ? 'bg-cyan-50 border-cyan-500' : 'bg-slate-50 border-slate-200 hover:bg-slate-100'}`;
-        btn.innerHTML = `<div><div class="font-extrabold text-sm">${u.name}</div><div class="text-[10px] text-slate-400 mt-0.5">${u.role}</div></div>`; c.appendChild(btn);
+        btn.innerHTML = `<div><div class="font-extrabold text-sm">${esc(u.name)}</div><div class="text-[10px] text-slate-400 mt-0.5">${u.role}</div></div>`; c.appendChild(btn);
       });
     }
 
@@ -1245,100 +1304,174 @@
       return clean;
     }
 
-    async function pushToCloud() {
-      if (!appData.cloudUrl || !currentOrgCode) return;
-      const orgPath = currentOrgCode.toUpperCase().replace(/[^A-Z0-9_-]/g, '_');
-      const endpoint = `${normalizeCloudUrl(appData.cloudUrl)}/organizations/${orgPath}.json`;
-      const payload = {
-        boats: appData.boats || [],
-        shippers: appData.shippers || [],
-        users: appData.users || [],
-        records: appData.records || [],
-        notifications: appData.notifications || [],
-        chatMessages: appData.chatMessages || [],
-        lastUpdated: appData.lastUpdated || Date.now()
-      };
-      try {
-        await fetch(endpoint, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
-        updateCloudBadgeUI(true);
-      } catch (err) {
-        updateCloudBadgeUI(false);
-      }
+    // ===== CLOUD MERGE START =====
+    const TOMBSTONE_TTL = 30 * 24 * 60 * 60 * 1000;
+    function tsOf(x) { return Number(x && x.updatedAt) || 0; }
+    function toList(v) { return Array.isArray(v) ? v.filter(Boolean) : (v && typeof v === 'object' ? Object.values(v) : []); }
+    function markDeleted(key) {
+      if (!appData.deleted || typeof appData.deleted !== 'object') appData.deleted = {};
+      appData.deleted[key] = Date.now();
     }
+    // Firebase drops null / empty arrays / empty objects and sorts keys, so compare in a normalised form
+    function stable(v) {
+      if (Array.isArray(v)) { const a = v.map(stable).filter(x => x !== undefined); return a.length ? a : undefined; }
+      if (v && typeof v === 'object') {
+        const o = {}; Object.keys(v).sort().forEach(k => { const x = stable(v[k]); if (x !== undefined) o[k] = x; });
+        return Object.keys(o).length ? o : undefined;
+      }
+      return (v === null || v === undefined) ? undefined : v;
+    }
+    function canonPayload(p) {
+      const byId = arr => toList(arr).slice().sort((a, b) => String(a.id).localeCompare(String(b.id)));
+      return JSON.stringify(stable({
+        boats: byId(p.boats), users: byId(p.users), records: byId(p.records),
+        notifications: byId(p.notifications), chatMessages: byId(p.chatMessages),
+        shippers: toList(p.shippers).slice().sort(),
+        shipperTargets: toList(p.shipperTargets).slice().sort((a, b) => String(a.name).localeCompare(String(b.name))),
+        deleted: toList(p.deleted).slice().sort((a, b) => String(a.k).localeCompare(String(b.k)))
+      }) || '{}');
+    }
+    function localPayload() {
+      return {
+        boats: appData.boats || [], shippers: appData.shippers || [], users: appData.users || [],
+        records: appData.records || [], notifications: appData.notifications || [], chatMessages: appData.chatMessages || [],
+        // Firebase keys cannot contain . $ # [ ] / so names are sent as list items, not keys
+        shipperTargets: Object.entries(appData.shipperTargets || {}).map(([name, t]) => ({
+          name, quantity: Number(t && t.quantity) || 0, unit: (t && t.unit === 'Bags') ? 'Bags' : 'MT', updatedAt: tsOf(t)
+        })),
+        deleted: Object.entries(appData.deleted || {}).map(([k, t]) => ({ k, t }))
+      };
+    }
+    function mergeCollection(prefix, localArr, remoteArr, tomb) {
+      const map = new Map();
+      toList(localArr).forEach(item => { if (item.id != null) map.set(item.id, item); });
+      toList(remoteArr).forEach(item => {
+        if (item.id == null) return;
+        const cur = map.get(item.id);
+        if (!cur || tsOf(item) > tsOf(cur)) map.set(item.id, item);   // ties keep the local copy
+      });
+      return [...map.values()].filter(item => { const t = tomb[prefix + item.id]; return !(t && t >= tsOf(item)); });
+    }
+    function mergeRemoteIntoLocal(remote) {
+      remote = remote || {};
+      const tomb = { ...(appData.deleted || {}) };
+      toList(remote.deleted).forEach(d => { if (d.k) tomb[d.k] = Math.max(tomb[d.k] || 0, Number(d.t) || 0); });
+      const cutoff = Date.now() - TOMBSTONE_TTL;
+      Object.keys(tomb).forEach(k => { if (tomb[k] < cutoff) delete tomb[k]; });
 
-    async function pullFromCloud(showNotification = false) {
-      if (!appData.cloudUrl || !currentOrgCode || isSyncingCloud) return;
+      const targets = {};
+      Object.entries(appData.shipperTargets || {}).forEach(([n, t]) => { targets[n] = { ...t }; });
+      toList(remote.shipperTargets).forEach(t => {
+        if (!t.name) return;
+        const cur = targets[t.name];
+        if (!cur || tsOf(t) > tsOf(cur)) targets[t.name] = { quantity: Number(t.quantity) || 0, unit: t.unit === 'Bags' ? 'Bags' : 'MT', updatedAt: tsOf(t) };
+      });
+      Object.keys(targets).forEach(n => { const d = tomb['S:' + n]; if (d && d >= tsOf(targets[n])) delete targets[n]; });
+
+      const shippers = [];
+      toList(appData.shippers).concat(toList(remote.shippers)).forEach(sName => {
+        if (typeof sName !== 'string' || !sName || shippers.includes(sName)) return;
+        const d = tomb['S:' + sName];
+        if (d && d >= tsOf(targets[sName])) return;
+        shippers.push(sName);
+      });
+
+      const ts = x => new Date(x.timestamp).getTime() || 0;
+      const idNum = x => parseInt(String(x.id).replace(/\D/g, ''), 10) || 0;
+      const next = {
+        boats: mergeCollection('B:', appData.boats, remote.boats, tomb),
+        users: mergeCollection('U:', appData.users, remote.users, tomb),
+        records: mergeCollection('R:', appData.records, remote.records, tomb).sort((a, b) => idNum(b) - idNum(a)),
+        notifications: mergeCollection('N:', appData.notifications, remote.notifications, {}).sort((a, b) => ts(b) - ts(a)).slice(0, 50),
+        chatMessages: mergeCollection('M:', appData.chatMessages, remote.chatMessages, {}).sort((a, b) => ts(a) - ts(b)).slice(-200)
+      };
+      if (next.users.length === 0) next.users = toList(appData.users);
+      next.shippers = shippers; next.shipperTargets = targets; next.deleted = tomb;
+
+      const asPayload = n => ({
+        ...n,
+        shipperTargets: Object.entries(n.shipperTargets).map(([name, t]) => ({ name, quantity: t.quantity, unit: t.unit, updatedAt: tsOf(t) })),
+        deleted: Object.entries(n.deleted).map(([k, t]) => ({ k, t }))
+      });
+      const mergedCanon = canonPayload(asPayload(next));
+      return {
+        next,
+        payload: asPayload(next),
+        changedLocal: canonPayload(localPayload()) !== mergedCanon,
+        needsPush: canonPayload(remote) !== mergedCanon
+      };
+    }
+    // ===== CLOUD MERGE END =====
+
+    let pushTimer = null, pendingSync = false, useEtag = true;
+
+    async function syncCloud(showNotification = false) {
+      if (!appData.cloudUrl || !currentOrgCode) return;
+      if (isSyncingCloud) { pendingSync = true; return; }
       isSyncingCloud = true;
       const orgPath = currentOrgCode.toUpperCase().replace(/[^A-Z0-9_-]/g, '_');
       const endpoint = `${normalizeCloudUrl(appData.cloudUrl)}/organizations/${orgPath}.json`;
       try {
-        const res = await fetch(endpoint + '?t=' + Date.now());
-        if (res.ok) {
-          const remote = await res.json();
-          if (remote) {
-            let changed = false;
-
-            if (Array.isArray(remote.boats) && JSON.stringify(remote.boats) !== JSON.stringify(appData.boats)) {
-              appData.boats = remote.boats;
-              if (!appData.activeBoatId && appData.boats.length > 0) appData.activeBoatId = appData.boats[0].id;
-              changed = true;
-            }
-            if (Array.isArray(remote.shippers) && JSON.stringify(remote.shippers) !== JSON.stringify(appData.shippers)) {
-              appData.shippers = remote.shippers;
-              changed = true;
-            }
-            if (Array.isArray(remote.users) && JSON.stringify(remote.users) !== JSON.stringify(appData.users)) {
-              appData.users = remote.users;
-              // Preserve active logged-in user state
-              const savedUserId = localStorage.getItem(ACTIVE_USER_ID_KEY);
-              if (savedUserId && appData.users.some(x => x.id === savedUserId)) {
-                appData.currentUser = appData.users.find(x => x.id === savedUserId);
-              }
-              changed = true;
-            }
-            if (Array.isArray(remote.records) && JSON.stringify(remote.records) !== JSON.stringify(appData.records)) {
-              appData.records = remote.records;
-              changed = true;
-            }
-            if (Array.isArray(remote.notifications) && JSON.stringify(remote.notifications) !== JSON.stringify(appData.notifications)) {
-              appData.notifications = remote.notifications;
-              changed = true;
-              checkUnreadNotifications();
-            }
-            if (Array.isArray(remote.chatMessages) && JSON.stringify(remote.chatMessages) !== JSON.stringify(appData.chatMessages)) {
-              appData.chatMessages = remote.chatMessages;
-              changed = true;
-              checkUnreadChat();
-              if(!document.getElementById('modalChat').classList.contains('hidden')) {
-                renderChatMessages();
-                const box = document.getElementById('listChatMessages');
-                box.scrollTop = box.scrollHeight;
-              }
-            }
-
-            if (changed) {
-              const key = getStorageKeyForOrg(currentOrgCode);
-              localStorage.setItem(key, JSON.stringify(appData));
-              renderAll();
-              if (!document.getElementById('tabTemplate').classList.contains('hidden')) renderTemplateTable();
-              if (!document.getElementById('tabRecords').classList.contains('hidden')) renderAllRecordsTable();
-              if (!document.getElementById('tabPicker').classList.contains('hidden')) runShipperFilter();
-              if (!document.getElementById('tabAttendance').classList.contains('hidden')) renderAttendanceTable();
-            }
-          }
-          updateCloudBadgeUI(true);
-          if (showNotification) showToast('Live data synced from Cloud');
+        let res, etag = null;
+        if (useEtag) {
+          try { res = await fetch(endpoint + '?t=' + Date.now(), { headers: { 'X-Firebase-ETag': 'true' } }); etag = res.headers.get('ETag'); }
+          catch (e) { useEtag = false; }
         }
-      } catch (e) {
+        if (!res) res = await fetch(endpoint + '?t=' + Date.now());
+        if (!res.ok) throw new Error('pull failed');
+        const remote = await res.json();
+
+        const m = mergeRemoteIntoLocal(remote);
+        const n = m.next;
+        appData.boats = n.boats; appData.users = n.users; appData.records = n.records;
+        appData.notifications = n.notifications; appData.chatMessages = n.chatMessages;
+        appData.shippers = n.shippers; appData.shipperTargets = n.shipperTargets; appData.deleted = n.deleted;
+        if (!appData.activeBoatId && appData.boats.length > 0) appData.activeBoatId = appData.boats[0].id;
+        const cu = appData.users.find(x => x.id === (appData.currentUser && appData.currentUser.id));
+        if (cu) appData.currentUser = cu;
+
+        if (m.changedLocal) {
+          saveData(true);
+          renderAll();
+          if (!document.getElementById('modalChat').classList.contains('hidden')) {
+            renderChatMessages();
+            const box = document.getElementById('listChatMessages'); box.scrollTop = box.scrollHeight;
+          }
+          if (!document.getElementById('tabTemplate').classList.contains('hidden')) renderTemplateTable();
+          if (!document.getElementById('tabRecords').classList.contains('hidden')) renderAllRecordsTable();
+          if (!document.getElementById('tabPicker').classList.contains('hidden')) runShipperFilter();
+          if (!document.getElementById('tabAttendance').classList.contains('hidden')) renderAttendanceTable();
+        }
+
+        if (m.needsPush) {
+          const headers = { 'Content-Type': 'application/json' };
+          if (useEtag && etag) headers['if-match'] = etag;   // refuse to overwrite if someone wrote in between
+          let put;
+          try {
+            put = await fetch(endpoint, { method: 'PUT', headers, body: JSON.stringify({ ...m.payload, lastUpdated: Date.now() }) });
+          } catch (e) {
+            if (headers['if-match']) { useEtag = false; pendingSync = true; put = null; } else throw e;
+          }
+          if (put) {
+            if (put.status === 412) pendingSync = true;          // remote changed while merging - redo
+            else if (!put.ok) throw new Error('push failed');
+          }
+        }
+        updateCloudBadgeUI(true);
+        if (showNotification) showToast('Live data synced from Cloud');
+      } catch (err) {
         updateCloudBadgeUI(false);
       } finally {
         isSyncingCloud = false;
+        if (pendingSync) { pendingSync = false; setTimeout(() => syncCloud(false), 250); }
       }
     }
+    // Every save and every poll now goes through the same pull -> merge -> push cycle
+    function pushToCloud() {
+      clearTimeout(pushTimer);
+      return new Promise(resolve => { pushTimer = setTimeout(() => syncCloud(false).then(resolve, resolve), 300); });
+    }
+    function pullFromCloud(showNotification = false) { return syncCloud(showNotification); }
 
     function forceCloudPull() {
       if (appData.cloudUrl) {
@@ -1357,8 +1490,9 @@
     }
 
     setInterval(() => {
-      if (appData.cloudUrl && currentOrgCode) pullFromCloud(false);
-    }, 3000);
+      if (!document.hidden && appData.cloudUrl && currentOrgCode) pullFromCloud(false);
+    }, 5000);
+    document.addEventListener('visibilitychange', () => { if (!document.hidden && appData.cloudUrl && currentOrgCode) pullFromCloud(false); });
 
     // Interactive Clock Picker
     let clock24TargetInputId = null; let clock24TargetCallback = null; let clock24SelectedHour = 8; let clock24SelectedMinute = 0;
@@ -1454,14 +1588,14 @@
           <div class="grid grid-cols-2 gap-2 mb-2">
             <div>
               <span class="text-[9px] text-slate-500 font-bold block mb-1">From</span>
-              <input type="text" id="${rowId}_f" readonly value="${s.from||''}" placeholder="00:00" onclick="open24HrClockModal('${rowId}_f','From',()=>updStop('${cid}',${i}))" class="w-full h-8 bg-slate-50 border border-slate-300 rounded-lg px-2 text-xs font-mono font-bold cursor-pointer">
+              <input type="text" id="${rowId}_f" readonly value="${esc(s.from)}" placeholder="00:00" onclick="open24HrClockModal('${rowId}_f','From',()=>updStop('${cid}',${i}))" class="w-full h-8 bg-slate-50 border border-slate-300 rounded-lg px-2 text-xs font-mono font-bold cursor-pointer">
             </div>
             <div>
               <span class="text-[9px] text-slate-500 font-bold block mb-1">To</span>
-              <input type="text" id="${rowId}_t" readonly value="${s.to||''}" placeholder="00:00" onclick="open24HrClockModal('${rowId}_t','To',()=>updStop('${cid}',${i}))" class="w-full h-8 bg-slate-50 border border-slate-300 rounded-lg px-2 text-xs font-mono font-bold cursor-pointer">
+              <input type="text" id="${rowId}_t" readonly value="${esc(s.to)}" placeholder="00:00" onclick="open24HrClockModal('${rowId}_t','To',()=>updStop('${cid}',${i}))" class="w-full h-8 bg-slate-50 border border-slate-300 rounded-lg px-2 text-xs font-mono font-bold cursor-pointer">
             </div>
           </div>
-          <input type="text" value="${s.reason||''}" placeholder="Reason..." class="w-full h-8 bg-slate-50 border border-slate-300 rounded-lg px-2.5 text-xs font-medium" onchange="updStopReason('${cid}',${i},this.value)">
+          <input type="text" value="${esc(s.reason)}" placeholder="Reason..." class="w-full h-8 bg-slate-50 border border-slate-300 rounded-lg px-2.5 text-xs font-medium" onchange="updStopReason('${cid}',${i},this.value)">
         `;
         c.appendChild(div);
       });
@@ -1499,7 +1633,7 @@
       if(appData.notifications.length===0){ c.innerHTML='<div class="text-center text-slate-400 py-4 text-[11px]">No notifications</div>'; return; }
       appData.notifications.forEach(n=>{
         const div = document.createElement('div'); div.className='p-3 bg-white rounded-xl shadow-xs border border-slate-200 text-xs';
-        div.innerHTML=`<p class="font-bold text-slate-800">${n.text}</p><div class="text-[9px] text-slate-400 mt-1"><i class="fa-regular fa-clock mr-1"></i>${new Date(n.timestamp).toLocaleString()}</div>`;
+        div.innerHTML=`<p class="font-bold text-slate-800">${esc(n.text)}</p><div class="text-[9px] text-slate-400 mt-1"><i class="fa-regular fa-clock mr-1"></i>${new Date(n.timestamp).toLocaleString()}</div>`;
         c.appendChild(div);
       });
     }
@@ -1531,8 +1665,8 @@
         const isMe = m.senderId === appData.currentUser.id;
         const div=document.createElement('div'); div.className=`flex flex-col max-w-[85%] ${isMe?'self-end items-end':'self-start items-start'}`;
         div.innerHTML = `
-          ${!isMe ? `<div class="text-[9px] text-slate-500 font-bold ml-1 mb-0.5">${m.senderName}</div>` : ''}
-          <div class="px-3 py-2 text-[11px] shadow-xs ${isMe?'bg-cyan-600 text-white rounded-tl-2xl rounded-tr-2xl rounded-bl-2xl rounded-br-sm':'bg-white border border-slate-200 text-slate-800 rounded-tl-2xl rounded-tr-2xl rounded-br-2xl rounded-bl-sm'} leading-relaxed break-words">${m.text}</div>
+          ${!isMe ? `<div class="text-[9px] text-slate-500 font-bold ml-1 mb-0.5">${esc(m.senderName)}</div>` : ''}
+          <div class="px-3 py-2 text-[11px] shadow-xs ${isMe?'bg-cyan-600 text-white rounded-tl-2xl rounded-tr-2xl rounded-bl-2xl rounded-br-sm':'bg-white border border-slate-200 text-slate-800 rounded-tl-2xl rounded-tr-2xl rounded-br-2xl rounded-bl-sm'} leading-relaxed break-words whitespace-pre-wrap">${esc(m.text)}</div>
           <span class="text-[8px] text-slate-400 font-mono mt-0.5 ${isMe?'mr-1':'ml-1'}">${new Date(m.timestamp).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}</span>
         `;
         c.appendChild(div);
@@ -1555,13 +1689,14 @@
       const recId = document.getElementById('entryRecordId').value;
       const dTotal = parseFloat(document.getElementById('inputDTotal').value)||0; const unit = document.getElementById('selectUnit').value;
       const effKg = unit === 'KG' ? 1 : (document.getElementById('selectWeightOpt').value === 'Other' ? (parseFloat(document.getElementById('inputOtherKg').value)||50) : parseInt(document.getElementById('selectWeightOpt').value)||50);
+      if (dTotal <= 0) { showToast('Enter an amount greater than 0'); return; }
       const totalKgs = dTotal * effKg;
 
       const rec = {
         id: recId || 'R-'+Date.now(), boatId: b.id, boatName: b.name, date: document.getElementById('inputDate').value, shift: document.getElementById('inputShift').value, shipper: s,
         hatch: parseInt(document.getElementById('inputHatch').value), unit: unit, weightOpt: document.getElementById('selectWeightOpt').value, otherKg: parseFloat(document.getElementById('inputOtherKg').value)||50,
         dTotal: dTotal, totalKgs: totalKgs, totalTons: totalKgs/1000, remarks: document.getElementById('inputRemarks').value,
-        commencedTime: document.getElementById('inputCommencedTime').value, completedTime: document.getElementById('inputCompletedTime').value, stoppages: getStops('memberStoppagesList')
+        commencedTime: document.getElementById('inputCommencedTime').value, completedTime: document.getElementById('inputCompletedTime').value, stoppages: getStops('memberStoppagesList'), updatedAt: Date.now()
       };
 
       if(recId) {
@@ -1578,11 +1713,11 @@
     function saveAdminDirectEdit(e) {
       e.preventDefault();
       if (!appData.currentUser || !['ADMIN', 'SUPER_ADMIN'].includes(appData.currentUser.role)) { showToast('Permission denied'); return; } const recId = document.getElementById('adminEditRecId').value; const idx = appData.records.findIndex(r => r.id === recId); if(idx===-1) return;
-      const dTotal = parseFloat(document.getElementById('adminEditDTotal').value)||0; const unit = document.getElementById('adminEditUnit').value; const oldWeight = Number(appData.records[idx].totalKgs || 0) / Number(appData.records[idx].dTotal || 1); const totalKgs = unit==='KG' ? dTotal : dTotal * (Number.isFinite(oldWeight) && oldWeight > 0 ? oldWeight : 50);
+      const dTotal = parseFloat(document.getElementById('adminEditDTotal').value)||0; const unit = document.getElementById('adminEditUnit').value; const oldRec = appData.records[idx]; const oldWeight = oldRec.unit === 'Bags' ? Number(oldRec.totalKgs || 0) / Number(oldRec.dTotal || 1) : getBoatBagWeightKg(appData.boats.find(b => b.id === oldRec.boatId)); const totalKgs = unit==='KG' ? dTotal : dTotal * (Number.isFinite(oldWeight) && oldWeight > 0 ? oldWeight : 50);
       appData.records[idx] = {
         ...appData.records[idx], date: document.getElementById('adminEditDate').value, shift: document.getElementById('adminEditShift').value, hatch: parseInt(document.getElementById('adminEditHatch').value),
         shipper: document.getElementById('adminEditShipper').value, dTotal: dTotal, unit: unit, totalKgs: totalKgs, totalTons: totalKgs/1000, remarks: document.getElementById('adminEditRemarks').value,
-        commencedTime: document.getElementById('adminEditCommenced').value, completedTime: document.getElementById('adminEditCompleted').value, stoppages: getStops('adminStoppagesList'), lastModifiedBy: appData.currentUser.name
+        commencedTime: document.getElementById('adminEditCommenced').value, completedTime: document.getElementById('adminEditCompleted').value, stoppages: getStops('adminStoppagesList'), lastModifiedBy: appData.currentUser.name, updatedAt: Date.now()
       };
       saveData(); closeAdminEditModal(); renderAll(); showToast('Updated');
     }
@@ -1594,19 +1729,19 @@
       const c = document.getElementById('listVessels'); c.innerHTML='';
       appData.boats.forEach(b=>{
         const d = document.createElement('div'); d.className='flex justify-between p-3 bg-white border rounded-xl text-xs';
-        d.innerHTML=`<div><div class="font-bold">${b.name}</div><div class="text-[10px] text-slate-400">${b.unit}</div></div><div class="flex space-x-1"><button onclick="editBoatAccount('${b.id}')" class="w-8 h-8 rounded bg-slate-50 text-cyan-600"><i class="fa-solid fa-pen"></i></button><button onclick="deleteBoatAccount('${b.id}')" class="w-8 h-8 rounded bg-rose-50 text-rose-500"><i class="fa-solid fa-trash"></i></button></div>`; c.appendChild(d);
+        d.innerHTML=`<div><div class="font-bold">${esc(b.name)}</div><div class="text-[10px] text-slate-400">${b.unit}</div></div><div class="flex space-x-1"><button onclick="editBoatAccount('${b.id}')" class="w-8 h-8 rounded bg-slate-50 text-cyan-600"><i class="fa-solid fa-pen"></i></button><button onclick="deleteBoatAccount('${b.id}')" class="w-8 h-8 rounded bg-rose-50 text-rose-500"><i class="fa-solid fa-trash"></i></button></div>`; c.appendChild(d);
       });
     }
     function saveBoatAccount() {
       const name = document.getElementById('inputBoatName').value.trim(); const unit = document.getElementById('inputBoatUnit').value; const weight = document.getElementById('inputBoatWeight').value; const editId = document.getElementById('editBoatId').value;
       if(!name) return;
-      if(editId) { const idx = appData.boats.findIndex(b=>b.id===editId); if(idx!==-1) { appData.boats[idx]={...appData.boats[idx], name, unit, weight}; appData.records.forEach(r=>{if(r.boatId===editId) r.boatName=name;}); } } 
-      else { const b = { id: 'B-'+Date.now(), name, unit, weight }; appData.boats.push(b); appData.activeBoatId = b.id; }
+      if(editId) { const idx = appData.boats.findIndex(b=>b.id===editId); if(idx!==-1) { appData.boats[idx]={...appData.boats[idx], name, unit, weight, updatedAt: Date.now()}; appData.records.forEach(r=>{if(r.boatId===editId && r.boatName!==name){ r.boatName=name; r.updatedAt=Date.now(); }}); } } 
+      else { const b = { id: 'B-'+Date.now(), name, unit, weight, updatedAt: Date.now() }; appData.boats.push(b); appData.activeBoatId = b.id; }
       saveData(); cancelBoatEdit(); renderVesselList(); renderAll();
     }
     function editBoatAccount(id) { const b=appData.boats.find(x=>x.id===id); if(!b) return; document.getElementById('editBoatId').value=b.id; document.getElementById('inputBoatName').value=b.name; document.getElementById('inputBoatUnit').value=b.unit; document.getElementById('inputBoatWeight').value=b.weight; document.getElementById('btnCancelBoat').classList.remove('hidden'); }
     function cancelBoatEdit() { document.getElementById('editBoatId').value=''; document.getElementById('inputBoatName').value=''; document.getElementById('btnCancelBoat').classList.add('hidden'); }
-    function deleteBoatAccount(id) { if(confirm('Delete?')) { appData.boats=appData.boats.filter(b=>b.id!==id); appData.records=appData.records.filter(r=>r.boatId!==id); if (appData.activeBoatId === id) appData.activeBoatId = appData.boats[0]?.id || null; saveData(); renderVesselList(); renderAll(); } }
+    function deleteBoatAccount(id) { if(confirm('Delete this vessel and ALL of its records?')) { markDeleted('B:'+id); appData.records.filter(r=>r.boatId===id).forEach(r=>markDeleted('R:'+r.id)); appData.boats=appData.boats.filter(b=>b.id!==id); appData.records=appData.records.filter(r=>r.boatId!==id); if (appData.activeBoatId === id) appData.activeBoatId = appData.boats[0]?.id || null; saveData(); renderVesselList(); renderAll(); } }
 
     function openShipperModal() { renderShipperList(); document.getElementById('modalShipper').classList.remove('hidden'); }
     function closeShipperModal() { document.getElementById('modalShipper').classList.add('hidden'); cancelShipperEdit(); }
@@ -1652,7 +1787,7 @@
       appData.shippers.forEach((s,i)=>{
         const q = getShipperTarget(s);
         const d = document.createElement('div'); d.className='flex justify-between items-center p-3 bg-white border rounded-xl text-xs';
-        d.innerHTML=`<div><div class="font-bold">${s}</div><div class="text-[10px] text-indigo-600 font-semibold">Target: ${q.quantity ? formatShipperQuantity(q.quantity, q.unit) : 'Not set'}</div></div><div class="flex space-x-1"><button onclick="startEditShipper(${i})" class="w-8 h-8 rounded bg-slate-50 text-cyan-600"><i class="fa-solid fa-pen"></i></button><button onclick="deleteShipper(${i})" class="w-8 h-8 rounded bg-rose-50 text-rose-500"><i class="fa-solid fa-trash"></i></button></div>`; c.appendChild(d);
+        d.innerHTML=`<div><div class="font-bold">${esc(s)}</div><div class="text-[10px] text-indigo-600 font-semibold">Target: ${q.quantity ? formatShipperQuantity(q.quantity, q.unit) : 'Not set'}</div></div><div class="flex space-x-1"><button onclick="startEditShipper(${i})" class="w-8 h-8 rounded bg-slate-50 text-cyan-600"><i class="fa-solid fa-pen"></i></button><button onclick="deleteShipper(${i})" class="w-8 h-8 rounded bg-rose-50 text-rose-500"><i class="fa-solid fa-trash"></i></button></div>`; c.appendChild(d);
       });
     }
     function saveShipperItem() {
@@ -1660,14 +1795,14 @@
       const quantity = Math.max(0, Number(document.getElementById('inputShipperTarget').value) || 0); const unit = document.getElementById('inputShipperTargetUnit').value === 'Bags' ? 'Bags' : 'MT';
       if(!name) return;
       if(!appData.shipperTargets) appData.shipperTargets = {};
-      if(editIdx!=='') { const idx = parseInt(editIdx); const old = appData.shippers[idx]; appData.shippers[idx]=name; appData.records.forEach(r=>{if(r.shipper===old) r.shipper=name;}); if (old !== name && appData.shipperTargets[old]) delete appData.shipperTargets[old]; }
+      if(editIdx!=='') { const idx = parseInt(editIdx); const old = appData.shippers[idx]; appData.shippers[idx]=name; appData.records.forEach(r=>{if(r.shipper===old && old!==name){ r.shipper=name; r.updatedAt=Date.now(); }}); if (old !== name) { markDeleted('S:'+old); delete appData.shipperTargets[old]; } }
       else { if(!appData.shippers.includes(name)) appData.shippers.push(name); }
-      appData.shipperTargets[name] = { quantity, unit };
+      appData.shipperTargets[name] = { quantity, unit, updatedAt: Date.now() };
       saveData(); cancelShipperEdit(); renderShipperList(); renderAll();
     }
     function startEditShipper(i) { const name=appData.shippers[i]; const q=getShipperTarget(name); document.getElementById('editShipperIndex').value=i; document.getElementById('inputNewShipper').value=name; document.getElementById('inputShipperTarget').value=q.quantity || ''; document.getElementById('inputShipperTargetUnit').value=q.unit; document.getElementById('btnCancelShipper').classList.remove('hidden'); }
     function cancelShipperEdit() { document.getElementById('editShipperIndex').value=''; document.getElementById('inputNewShipper').value=''; document.getElementById('inputShipperTarget').value=''; document.getElementById('inputShipperTargetUnit').value='MT'; document.getElementById('btnCancelShipper').classList.add('hidden'); }
-    function deleteShipper(i) { if(confirm('Delete?')) { const name=appData.shippers[i]; appData.shippers.splice(i,1); if(appData.shipperTargets) delete appData.shipperTargets[name]; saveData(); renderShipperList(); renderAll(); } }
+    function deleteShipper(i) { if(confirm('Delete?')) { const name=appData.shippers[i]; markDeleted('S:'+name); appData.shippers.splice(i,1); if(appData.shipperTargets) delete appData.shipperTargets[name]; saveData(); renderShipperList(); renderAll(); } }
 
     function openUserManagerModal() { renderTeamUsersList(); document.getElementById('modalUserManager').classList.remove('hidden'); }
     function closeUserManagerModal() { document.getElementById('modalUserManager').classList.add('hidden'); cancelUserEdit(); }
@@ -1675,22 +1810,33 @@
       const c = document.getElementById('listTeamUsers'); c.innerHTML='';
       appData.users.forEach(u=>{
         const d = document.createElement('div'); d.className='flex justify-between p-3 bg-white border rounded-xl text-xs';
-        d.innerHTML=`<div><div class="font-bold">${u.name}</div><div class="text-[10px] text-slate-400">${u.role}</div></div><div class="flex space-x-1"><button onclick="startEditUser('${u.id}')" class="w-8 h-8 rounded bg-slate-50 text-cyan-600"><i class="fa-solid fa-pen"></i></button><button onclick="deleteUserRecord('${u.id}')" class="w-8 h-8 rounded bg-rose-50 text-rose-500"><i class="fa-solid fa-trash"></i></button></div>`; c.appendChild(d);
+        d.innerHTML=`<div><div class="font-bold">${esc(u.name)}</div><div class="text-[10px] text-slate-400">${u.role}</div></div><div class="flex space-x-1"><button onclick="startEditUser('${u.id}')" class="w-8 h-8 rounded bg-slate-50 text-cyan-600"><i class="fa-solid fa-pen"></i></button><button onclick="deleteUserRecord('${u.id}')" class="w-8 h-8 rounded bg-rose-50 text-rose-500"><i class="fa-solid fa-trash"></i></button></div>`; c.appendChild(d);
       });
     }
     function saveUserRecord() {
       const name = document.getElementById('inputUserName').value.trim(); const role = document.getElementById('inputUserRole').value; const editId = document.getElementById('editUserId').value; if(!name) return;
-      if(editId) { const idx = appData.users.findIndex(u=>u.id===editId); if(idx!==-1) { appData.users[idx]={...appData.users[idx], name, role}; if(appData.currentUser.id===editId) appData.currentUser={...appData.users[idx]}; } } 
-      else { appData.users.push({ id: 'U-'+Date.now(), name, role, accessKey: 'KEY-'+Math.random().toString(36).substring(2,8).toUpperCase() }); }
+      if(editId) { const idx = appData.users.findIndex(u=>u.id===editId); if(idx!==-1) { appData.users[idx]={...appData.users[idx], name, role, updatedAt: Date.now()}; if(appData.currentUser.id===editId) appData.currentUser={...appData.users[idx]}; } } 
+      else { appData.users.push({ id: 'U-'+Date.now(), name, role, accessKey: 'KEY-'+secureKey(), updatedAt: Date.now() }); }
       saveData(); cancelUserEdit(); renderTeamUsersList(); renderAll();
     }
     function startEditUser(id) { const u=appData.users.find(x=>x.id===id); if(u){ document.getElementById('editUserId').value=u.id; document.getElementById('inputUserName').value=u.name; document.getElementById('inputUserRole').value=u.role; document.getElementById('btnCancelUserEdit').classList.remove('hidden'); } }
     function cancelUserEdit() { document.getElementById('editUserId').value=''; document.getElementById('inputUserName').value=''; document.getElementById('btnCancelUserEdit').classList.add('hidden'); }
-    function deleteUserRecord(id) { if(confirm('Delete user?')) { appData.users=appData.users.filter(u=>u.id!==id); saveData(); renderTeamUsersList(); renderAll(); } }
+    function deleteUserRecord(id) { const du=appData.users.find(x=>x.id===id); if(!du) return; if(du.id===appData.currentUser.id){showToast('Cannot delete the active user');return;} if(du.role==='SUPER_ADMIN' && appData.users.filter(x=>x.role==='SUPER_ADMIN').length<=1){showToast('Keep at least one Super Admin');return;} if(confirm('Delete user?')) { markDeleted('U:'+id); appData.users=appData.users.filter(u=>u.id!==id); saveData(); renderTeamUsersList(); renderAll(); } }
 
     // ROLE-LOCKED INVITE LINKS PER ACCOUNT
     function openShareModal() {
-      document.getElementById('linkSuperAdmin').value = `${window.location.origin}${window.location.pathname}#master=unlock&org=${currentOrgCode}`;
+      const meSA = appData.currentUser && appData.currentUser.role === 'SUPER_ADMIN';
+      document.getElementById('boxMasterLink').style.display = meSA ? '' : 'none';
+      document.getElementById('linkSuperAdmin').value = '';
+      if (meSA) {
+        const si = appData.users.findIndex(x => x.id === appData.currentUser.id);
+        if (si !== -1 && appData.users[si].accessKey === 'KEY-SUPER01') {   // legacy hard-coded key -> random secret
+          appData.users[si] = { ...appData.users[si], accessKey: 'KEY-' + secureKey(), updatedAt: Date.now() };
+          appData.currentUser = appData.users[si]; saveData();
+        }
+        const mp = new URLSearchParams({ master: 'unlock', org: currentOrgCode, uid: appData.currentUser.id, key: appData.currentUser.accessKey, cloud: appData.cloudUrl ? btoa(unescape(encodeURIComponent(appData.cloudUrl))) : '' });
+        document.getElementById('linkSuperAdmin').value = `${window.location.origin}${window.location.pathname}#${mp.toString()}`;
+      }
       const selBoat = document.getElementById('shareModalBoatSelect'); 
       selBoat.innerHTML='';
       appData.boats.forEach(b=>{ 
@@ -1722,7 +1868,7 @@
         admins.forEach(u=>{
           const link = buildPersonalInviteLink(u,tb);
           const d = document.createElement('div'); d.className='flex justify-between items-center p-2.5 bg-white border border-indigo-200 rounded-xl shadow-2xs';
-          d.innerHTML=`<div><span class="text-xs font-bold text-slate-800 block">${u.name}</span><span class="text-[10px] text-indigo-600 font-mono">Boat: ${tb.name}</span></div><button onclick="copyDirectLink('${link}')" class="bg-indigo-600 active:bg-indigo-700 text-white px-3 py-1.5 rounded-lg text-[10px] font-bold"><i class="fa-solid fa-copy mr-1"></i>Copy</button>`; 
+          d.innerHTML=`<div><span class="text-xs font-bold text-slate-800 block">${esc(u.name)}</span><span class="text-[10px] text-indigo-600 font-mono">Boat: ${esc(tb.name)}</span></div><button onclick="copyDirectLink('${link}')" class="bg-indigo-600 active:bg-indigo-700 text-white px-3 py-1.5 rounded-lg text-[10px] font-bold"><i class="fa-solid fa-copy mr-1"></i>Copy</button>`; 
           ac.appendChild(d);
         });
       }
@@ -1734,7 +1880,7 @@
         members.forEach(u=>{
           const link = buildPersonalInviteLink(u,tb);
           const d = document.createElement('div'); d.className='flex justify-between items-center p-2.5 bg-white border border-cyan-200 rounded-xl shadow-2xs';
-          d.innerHTML=`<div><span class="text-xs font-bold text-slate-800 block">${u.name}</span><span class="text-[10px] text-cyan-700 font-mono">Locked: ${tb.name}</span></div><button onclick="copyDirectLink('${link}')" class="bg-cyan-600 active:bg-cyan-700 text-white px-3 py-1.5 rounded-lg text-[10px] font-bold"><i class="fa-solid fa-copy mr-1"></i>Copy</button>`; 
+          d.innerHTML=`<div><span class="text-xs font-bold text-slate-800 block">${esc(u.name)}</span><span class="text-[10px] text-cyan-700 font-mono">Locked: ${esc(tb.name)}</span></div><button onclick="copyDirectLink('${link}')" class="bg-cyan-600 active:bg-cyan-700 text-white px-3 py-1.5 rounded-lg text-[10px] font-bold"><i class="fa-solid fa-copy mr-1"></i>Copy</button>`; 
           mc.appendChild(d);
         });
       }
@@ -1744,8 +1890,6 @@
         org: currentOrgCode, 
         uid: user.id, 
         key: user.accessKey, 
-        uname: user.name, 
-        urole: user.role, 
         boat: boat.id, 
         bname: boat.name, 
         bunit: boat.unit, 
@@ -1754,59 +1898,72 @@
       });
       return `${window.location.origin}${window.location.pathname}#${params.toString()}`;
     }
-    // Routing for Personal Invite Links
-    function handleRouting() {
+    async function handleRouting() {
       const hash = window.location.hash.replace(/^#/, '');
-      if(!hash) return;
+      if (!hash) return;
       const params = new URLSearchParams(hash);
-      const orgInUrl = params.get('org');
-      const uid = params.get('uid');
-      const key = params.get('key');
-      const uname = params.get('uname');
-      const urole = params.get('urole');
-      const boat = params.get('boat');
-      const bname = params.get('bname');
-      const bunit = params.get('bunit');
-      const bweight = params.get('bweight');
-      const cloud = params.get('cloud');
-      const master = params.get('master');
+      const orgInUrl = params.get('org'), uid = params.get('uid'), key = params.get('key');
+      const boat = params.get('boat'), bname = params.get('bname'), bunit = params.get('bunit'), bweight = params.get('bweight');
+      const cloud = params.get('cloud'), master = params.get('master');
+      const clearHash = () => { try { history.replaceState(null, '', window.location.pathname + window.location.search); } catch (e) {} };
+      let linkCloud = '';
+      if (cloud) { try { linkCloud = decodeURIComponent(escape(atob(cloud))); } catch (e) {} }
 
-      if(orgInUrl) {
-        currentOrgCode = orgInUrl.toUpperCase();
-        localStorage.setItem(ORG_STORAGE_KEY, currentOrgCode);
+      // 1) the organisation in the link must be authorised by the Master Owner
+      if (orgInUrl) {
+        const code = normCode(orgInUrl), h = sha256Hex(code);
+        let ok = isAuthorizedHash(h);
+        if (!ok && linkCloud) { const r = await fetchAuthorizedFromCloud(linkCloud); ok = !!(r && r.list.some(o => o.h === h)); }
+        if (!ok) { clearHash(); showToast('Invalid or unauthorized organization link'); return; }
+        currentOrgCode = code; localStorage.setItem(ORG_STORAGE_KEY, code);
+        loadData();   // load this org's stored data first so it is not overwritten by defaults
+      } else if (!currentOrgCode) { clearHash(); return; }
+
+      // 2) the user must already exist (locally or in the org's cloud data) with the same secret key
+      const verifyUser = async () => {
+        if (!uid || !key) return null;
+        const local = appData.users.find(x => x.id === uid && x.accessKey === key);
+        if (local) return local;
+        const base = linkCloud || appData.cloudUrl;
+        if (!base) return null;
+        try {
+          const orgPath = currentOrgCode.toUpperCase().replace(/[^A-Z0-9_-]/g, '_');
+          const r = await fetch(`${normalizeCloudUrl(base)}/organizations/${orgPath}.json?t=${Date.now()}`);
+          if (!r.ok) return null;
+          const remote = await r.json();
+          const list = Array.isArray(remote && remote.users) ? remote.users : Object.values((remote && remote.users) || {});
+          const ru = list.find(x => x && x.id === uid && x.accessKey === key);
+          if (!ru) return null;
+          const i = appData.users.findIndex(x => x.id === ru.id);
+          if (i >= 0) appData.users[i] = { ...ru }; else appData.users.push({ ...ru });
+          return appData.users.find(x => x.id === ru.id);
+        } catch (e) { return null; }
+      };
+
+      if (master === 'unlock') {
+        const u = await verifyUser();
+        if (u && u.role === 'SUPER_ADMIN') {
+          appData.sessionLocked = false; appData.lockedBoatId = null; appData.currentUser = u;
+          localStorage.setItem(ACTIVE_USER_ID_KEY, u.id); saveData(true);
+        } else showToast('Master link is invalid or expired');
+        clearHash(); return;
       }
 
-      if(master === 'unlock') {
-        appData.sessionLocked = false;
-        appData.lockedBoatId = null;
-        appData.currentUser = appData.users.find(u => u.role === 'SUPER_ADMIN') || appData.users[0];
-        localStorage.setItem(ACTIVE_USER_ID_KEY, appData.currentUser.id);
-        saveData(true);
-        return;
-      }
-
-      if(uid && key) {
-        if(cloud) {
-          try { appData.cloudUrl = decodeURIComponent(escape(atob(cloud))); } catch(e){}
-        }
-        if(boat && bname) {
-          const exBoat = appData.boats.find(b=>b.id===boat);
-          if(!exBoat) appData.boats.push({ id:boat, name:bname, unit:bunit||'Bags', weight:bweight||'50 Kg' });
+      if (uid && key) {
+        const targetUser = await verifyUser();
+        if (!targetUser) { clearHash(); showToast('Invite link is invalid or was revoked'); return; }
+        if (linkCloud) appData.cloudUrl = linkCloud;
+        if (boat && bname) {
+          if (!appData.boats.find(b => b.id === boat)) appData.boats.push({ id: boat, name: bname, unit: bunit || 'Bags', weight: bweight || '50 Kg' });
           appData.activeBoatId = boat;
         }
-        let targetUser = appData.users.find(u=>u.id===uid && u.accessKey===key);
-        if(!targetUser && uname) {
-          targetUser = { id:uid, name:uname, role:urole||'MEMBER', accessKey:key };
-          appData.users.push(targetUser);
-        }
-        if(targetUser) {
-          appData.currentUser = targetUser;
-          appData.sessionLocked = true;
-          appData.lockedBoatId = (targetUser.role === 'MEMBER' && boat) ? boat : null;
-          localStorage.setItem(ACTIVE_USER_ID_KEY, targetUser.id);
-          saveData(true);
-        }
+        appData.currentUser = targetUser;
+        appData.sessionLocked = true;
+        appData.lockedBoatId = (targetUser.role === 'MEMBER' && boat) ? boat : null;
+        localStorage.setItem(ACTIVE_USER_ID_KEY, targetUser.id);
+        saveData(true);
       }
+      clearHash();   // keep keys out of the address bar / history
     }
 
     // Render Engines
@@ -1839,7 +1996,7 @@
       document.getElementById('badgeEntryCount').textContent = `${myLogs.length} records`;
       myLogs.forEach(r => {
         const tr = document.createElement('tr'); tr.className = 'border-b hover:bg-slate-50';
-        tr.innerHTML = `<td class="p-2 font-bold">${r.date} <span class="text-[9px] bg-slate-200 px-1 rounded">${r.shift}</span></td><td class="p-2 text-cyan-700 font-bold">H-${r.hatch}</td><td class="p-2">${r.shipper}</td><td class="p-2 text-right font-bold">${r.dTotal}</td><td class="p-2 text-right text-emerald-600">${r.totalTons.toFixed(2)}</td><td class="p-2 text-center"><button onclick="editRecord('${r.id}')" class="text-cyan-600 mr-2"><i class="fa-solid fa-pen"></i></button><button onclick="deleteRecord('${r.id}')" class="text-rose-500"><i class="fa-solid fa-trash"></i></button></td>`;
+        tr.innerHTML = `<td class="p-2 font-bold">${r.date} <span class="text-[9px] bg-slate-200 px-1 rounded">${r.shift}</span></td><td class="p-2 text-cyan-700 font-bold">H-${r.hatch}</td><td class="p-2">${esc(r.shipper)}</td><td class="p-2 text-right font-bold">${r.dTotal}</td><td class="p-2 text-right text-emerald-600">${r.totalTons.toFixed(2)}</td><td class="p-2 text-center"><button onclick="editRecord('${r.id}')" class="text-cyan-600 mr-2"><i class="fa-solid fa-pen"></i></button><button onclick="deleteRecord('${r.id}')" class="text-rose-500"><i class="fa-solid fa-trash"></i></button></td>`;
         tbody.appendChild(tr);
       });
     }
@@ -1863,9 +2020,9 @@
         Object.values(dObj.e).sort((a,b)=>a.shift==='Day'?-1:1).forEach(e => {
           dK+=e.kgs; dT+=e.tons; for(let i=1;i<=5;i++) dH[i]+=e.h[i];
           const tr = document.createElement('tr'); tr.className='border-b text-[11px] hover:bg-slate-50';
-          tr.innerHTML = `<td class="py-2 px-2 border-r font-semibold">${dObj.date}</td><td class="py-2 px-2 border-r font-bold ${e.shift==='Day'?'text-amber-600':'text-indigo-600'}">${e.shift}</td><td class="py-2 px-2 border-r text-left font-bold text-slate-800">${e.shipper}</td>
+          tr.innerHTML = `<td class="py-2 px-2 border-r font-semibold">${dObj.date}</td><td class="py-2 px-2 border-r font-bold ${e.shift==='Day'?'text-amber-600':'text-indigo-600'}">${e.shift}</td><td class="py-2 px-2 border-r text-left font-bold text-slate-800">${esc(e.shipper)}</td>
             <td class="py-2 px-2 border-r text-right">${e.h[1]||'-'}</td><td class="py-2 px-2 border-r text-right">${e.h[2]||'-'}</td><td class="py-2 px-2 border-r text-right">${e.h[3]||'-'}</td><td class="py-2 px-2 border-r text-right">${e.h[4]||'-'}</td><td class="py-2 px-2 border-r text-right">${e.h[5]||'-'}</td>
-            <td class="py-2 px-2 border-r text-right font-bold">${e.kgs.toLocaleString()}</td><td class="py-2 px-2 border-r text-right font-bold text-emerald-600">${e.tons.toFixed(3)}</td><td class="py-2 px-2 text-left">${e.rmks.join(', ')}</td>`;
+            <td class="py-2 px-2 border-r text-right font-bold">${e.kgs.toLocaleString()}</td><td class="py-2 px-2 border-r text-right font-bold text-emerald-600">${e.tons.toFixed(3)}</td><td class="py-2 px-2 text-left">${esc(e.rmks.join(', '))}</td>`;
           tbody.appendChild(tr);
         });
         gK+=dK; gT+=dT; for(let i=1;i<=5;i++) gH[i]+=dH[i];
@@ -1880,28 +2037,30 @@
 
     function renderAttendanceTable() {
       const tbody = document.getElementById('tblAttendanceBody'); if (!tbody) return; tbody.innerHTML = '';
-      const filtered = appData.records;
+      const q = (document.getElementById('searchAttendance') || {}).value || '';
+      const filtered = appData.records.filter(r => matchesSearch(r, q, (Array.isArray(r.stoppages) ? r.stoppages : []).map(x => x.reason).join(' ')));
       if (filtered.length === 0) { tbody.innerHTML = '<tr><td colspan="9" class="text-center py-8 text-slate-400">No records found.</td></tr>'; return; }
 
       filtered.forEach(r => {
         const stList = Array.isArray(r.stoppages) ? r.stoppages : [];
         let stHtml = '<span class="text-slate-400">- Nil -</span>';
         if (stList.length > 0) {
-          stHtml = `<div class="space-y-1"><div class="px-1.5 py-0.5 rounded text-[9px] font-black bg-rose-100 text-rose-900 border border-rose-300 inline-block">Delay: ${fmtMins(calcTotDur(stList))}</div><div class="bg-slate-50 p-2 rounded-xl border">${stList.map(s=>`<div class="py-1 border-b last:border-0"><span class="font-bold text-rose-700">[${s.from}-${s.to}]</span> <span class="text-[11px] text-slate-700">${s.reason}</span></div>`).join('')}</div></div>`;
+          stHtml = `<div class="space-y-1"><div class="px-1.5 py-0.5 rounded text-[9px] font-black bg-rose-100 text-rose-900 border border-rose-300 inline-block">Delay: ${fmtMins(calcTotDur(stList))}</div><div class="bg-slate-50 p-2 rounded-xl border">${stList.map(s=>`<div class="py-1 border-b last:border-0"><span class="font-bold text-rose-700">[${esc(s.from)}-${esc(s.to)}]</span> <span class="text-[11px] text-slate-700">${esc(s.reason)}</span></div>`).join('')}</div></div>`;
         }
         const tr = document.createElement('tr'); tr.className = 'hover:bg-slate-50 border-b';
-        tr.innerHTML = `<td class="py-2.5 px-3 font-bold">${r.date}</td><td class="py-2.5 px-3 font-bold">${r.shift}</td><td class="py-2.5 px-3">${r.checkerName||'Member'}</td><td class="py-2.5 px-3 font-bold text-cyan-700">H-${r.hatch}</td><td class="py-2.5 px-3 text-[11px] font-mono">S: ${r.commencedTime||'-'}<br>E: ${r.completedTime||'-'}</td><td class="py-2.5 px-3">${stHtml}</td><td class="py-2.5 px-3 text-right font-bold">${r.dTotal} ${r.unit}</td><td class="py-2.5 px-3 text-right font-bold text-emerald-600">${r.totalTons.toFixed(2)} MT</td><td class="py-2.5 px-3 text-[9px]">${r.lastModifiedBy?`Edited: ${r.lastModifiedBy}`:'Original'}</td>`;
+        tr.innerHTML = `<td class="py-2.5 px-3 font-bold">${r.date}</td><td class="py-2.5 px-3 font-bold">${r.shift}</td><td class="py-2.5 px-3">${esc(r.checkerName||'Member')}</td><td class="py-2.5 px-3 font-bold text-cyan-700">H-${r.hatch}</td><td class="py-2.5 px-3 text-[11px] font-mono">S: ${r.commencedTime||'-'}<br>E: ${r.completedTime||'-'}</td><td class="py-2.5 px-3">${stHtml}</td><td class="py-2.5 px-3 text-right font-bold">${r.dTotal} ${r.unit}</td><td class="py-2.5 px-3 text-right font-bold text-emerald-600">${r.totalTons.toFixed(2)} MT</td><td class="py-2.5 px-3 text-[9px]">${r.lastModifiedBy?`Edited: ${r.lastModifiedBy}`:'Original'}</td>`;
         tbody.appendChild(tr);
       });
     }
 
     function renderAllRecordsTable() {
       const tbody = document.getElementById('tblAllRecordsBody'); tbody.innerHTML = '';
-      const filtered = appData.records;
+      const q = (document.getElementById('searchAllRecords') || {}).value || '';
+      const filtered = appData.records.filter(r => matchesSearch(r, q));
       if (filtered.length === 0) { tbody.innerHTML = '<tr><td colspan="9" class="text-center py-6 text-slate-400">No records found.</td></tr>'; return; }
       filtered.forEach(r => {
         const tr = document.createElement('tr'); tr.className = 'hover:bg-slate-50 text-xs border-b';
-        tr.innerHTML = `<td class="py-2 px-2.5">${r.date}</td><td class="py-2 px-2.5">${r.shift}</td><td class="py-2 px-2.5">${r.boatName}</td><td class="py-2 px-2.5 font-bold text-cyan-700">H-${r.hatch}</td><td class="py-2 px-2.5">${r.shipper}</td><td class="py-2 px-2.5 text-slate-500">${r.checkerName}</td><td class="py-2 px-2.5 text-right font-bold">${r.dTotal} ${r.unit}</td><td class="py-2.5 px-2.5 text-right font-bold text-emerald-600">${r.totalTons.toFixed(3)}</td><td class="py-2.5 px-2.5 text-center"><button onclick="editRecord('${r.id}')" class="w-7 h-7 rounded bg-cyan-50 text-cyan-600 mr-1"><i class="fa-solid fa-pen"></i></button><button onclick="deleteRecord('${r.id}')" class="w-7 h-7 rounded bg-rose-50 text-rose-500"><i class="fa-solid fa-trash"></i></button></td>`;
+        tr.innerHTML = `<td class="py-2 px-2.5">${r.date}</td><td class="py-2 px-2.5">${r.shift}</td><td class="py-2 px-2.5">${esc(r.boatName)}</td><td class="py-2 px-2.5 font-bold text-cyan-700">H-${r.hatch}</td><td class="py-2 px-2.5">${esc(r.shipper)}</td><td class="py-2 px-2.5 text-slate-500">${esc(r.checkerName)}</td><td class="py-2 px-2.5 text-right font-bold">${r.dTotal} ${r.unit}</td><td class="py-2.5 px-2.5 text-right font-bold text-emerald-600">${r.totalTons.toFixed(3)}</td><td class="py-2.5 px-2.5 text-center"><button onclick="editRecord('${r.id}')" class="w-7 h-7 rounded bg-cyan-50 text-cyan-600 mr-1"><i class="fa-solid fa-pen"></i></button><button onclick="deleteRecord('${r.id}')" class="w-7 h-7 rounded bg-rose-50 text-rose-500"><i class="fa-solid fa-trash"></i></button></td>`;
         tbody.appendChild(tr);
       });
     }
@@ -1913,7 +2072,7 @@
         pickerDate.setDate(rec.date); selectShift(rec.shift); document.getElementById('selectShipper').value = rec.shipper;
         selectHatch(rec.hatch); document.getElementById('selectUnit').value = rec.unit; updateUnitLogic();
         if(rec.unit==='Bags') document.getElementById('selectWeightOpt').value = rec.weightOpt; updateWeightLogic();
-        document.getElementById('inputDTotal').value = rec.dTotal; document.getElementById('inputCommencedTime').value = rec.commencedTime||'';
+        document.getElementById('inputDTotal').value = rec.dTotal; document.getElementById('inputRemarks').value = rec.remarks||''; document.getElementById('inputOtherKg').value = rec.otherKg||''; document.getElementById('inputCommencedTime').value = rec.commencedTime||'';
         document.getElementById('inputCompletedTime').value = rec.completedTime||'';
         renderStoppagesList('memberStoppagesList', Array.isArray(rec.stoppages)?rec.stoppages:[]);
         document.getElementById('editingIndicator').classList.remove('hidden'); document.getElementById('btnCancelEdit').classList.remove('hidden');
@@ -1922,14 +2081,14 @@
         document.getElementById('adminEditRecId').value = rec.id; pickerAdminEdit.setDate(rec.date);
         document.getElementById('adminEditShift').value = rec.shift; document.getElementById('adminEditHatch').value = rec.hatch;
         document.getElementById('adminEditDTotal').value = rec.dTotal; document.getElementById('adminEditUnit').value = rec.unit;
-        document.getElementById('adminEditCommenced').value = rec.commencedTime||''; document.getElementById('adminEditCompleted').value = rec.completedTime||'';
+        document.getElementById('adminEditRemarks').value = rec.remarks||''; document.getElementById('adminEditCommenced').value = rec.commencedTime||''; document.getElementById('adminEditCompleted').value = rec.completedTime||'';
         renderStoppagesList('adminStoppagesList', Array.isArray(rec.stoppages)?rec.stoppages:[]);
         const s = document.getElementById('adminEditShipper'); s.innerHTML=''; appData.shippers.forEach(x=>{ const o=document.createElement('option'); o.value=x; o.textContent=x; if(x===rec.shipper) o.selected=true; s.appendChild(o); });
         document.getElementById('modalAdminEdit').classList.remove('hidden');
       }
     }
     function cancelEditing() {
-      document.getElementById('entryRecordId').value=''; document.getElementById('inputDTotal').value='';
+      document.getElementById('entryRecordId').value=''; document.getElementById('inputDTotal').value=''; document.getElementById('inputRemarks').value='';
       document.getElementById('inputCommencedTime').value=''; document.getElementById('inputCompletedTime').value='';
       renderStoppagesList('memberStoppagesList', []);
       document.getElementById('editingIndicator').classList.add('hidden'); document.getElementById('btnCancelEdit').classList.add('hidden');
@@ -1938,7 +2097,7 @@
       const rec = appData.records.find(r => r.id === id);
       const canDelete = appData.currentUser && ['ADMIN', 'SUPER_ADMIN'].includes(appData.currentUser.role);
       if (!canDelete && (!rec || rec.checkerId !== appData.currentUser.id)) { showToast('Permission denied'); return; }
-      if(confirm('Delete Record?')) { appData.records = appData.records.filter(r => r.id !== id); pushSystemNotification(`${appData.currentUser.name} deleted a record.`); saveData(); renderAll(); showToast('Deleted'); }
+      if(confirm('Delete Record?')) { markDeleted('R:'+id); appData.records = appData.records.filter(r => r.id !== id); pushSystemNotification(`${appData.currentUser.name} deleted a record.`); saveData(); renderAll(); showToast('Deleted'); }
     }
 
     function resetData() {
@@ -2110,7 +2269,7 @@
         const rowTarget = getShipperBalance(r.shipper);
         const rowBalance = rowTarget.balance === null ? '' : (rowTarget.balance < 0 ? `Over ${formatShipperQuantity(Math.abs(rowTarget.balance), rowTarget.unit)}` : formatShipperQuantity(rowTarget.balance, rowTarget.unit));
         const tr = document.createElement('tr');
-        tr.innerHTML = `<td class="py-2 px-2.5">${r.date}</td><td class="py-2 px-2.5">${r.shift}</td><td class="py-2 px-2.5 font-bold">${r.boatName}</td><td class="py-2 px-2.5">${r.shipper}</td><td class="py-2 px-2.5 font-bold text-cyan-700">H-${r.hatch}</td><td class="py-2 px-2.5 text-right font-bold">${r.dTotal}</td><td class="py-2 px-2.5 text-right font-bold text-emerald-600">${r.totalTons.toFixed(3)}</td><td class="py-2 px-2.5 text-right font-bold ${rowTarget.balance !== null && rowTarget.balance < 0 ? 'text-rose-600' : 'text-emerald-700'}">${rowBalance}</td>`;
+        tr.innerHTML = `<td class="py-2 px-2.5">${r.date}</td><td class="py-2 px-2.5">${r.shift}</td><td class="py-2 px-2.5 font-bold">${esc(r.boatName)}</td><td class="py-2 px-2.5">${esc(r.shipper)}</td><td class="py-2 px-2.5 font-bold text-cyan-700">H-${r.hatch}</td><td class="py-2 px-2.5 text-right font-bold">${r.dTotal}</td><td class="py-2 px-2.5 text-right font-bold text-emerald-600">${r.totalTons.toFixed(3)}</td><td class="py-2 px-2.5 text-right font-bold ${rowTarget.balance !== null && rowTarget.balance < 0 ? 'text-rose-600' : 'text-emerald-700'}">${rowBalance}</td>`;
         tbody.appendChild(tr);
       });
     }
@@ -2190,7 +2349,11 @@
           }
           if (!currentOrgCode) throw new Error('Organization access required');
           appData = { ...appData, ...restored, currentUser: restored.currentUser || appData.currentUser };
-          saveData(true); loadData(); renderAll();
+          const now = Date.now();
+          ['records','boats','users'].forEach(k => (appData[k] || []).forEach(x => { x.updatedAt = now; }));
+          appData.shipperTargets = appData.shipperTargets || {};
+          (appData.shippers || []).forEach(sn => { appData.shipperTargets[sn] = { quantity: 0, unit: 'MT', ...appData.shipperTargets[sn], updatedAt: now }; });
+          saveData(); loadData(); renderAll();
           showToast('Data restored successfully');
         } catch (error) {
           showToast('Invalid backup file');
@@ -2215,9 +2378,18 @@
       } else fallback();
     }
 
+    document.getElementById('inputChatMessage').addEventListener('keydown', e => {
+      if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendChatMessage(e); }
+    });
+    document.addEventListener('keydown', e => {
+      if (e.key !== 'Escape') return;
+      ['modalChat','modalNoti','modalShare','modalOrgLicenses','modalProfile','modalCloud','modalUserManager','modalAccount','modalShipper','systemMenuDropdown','modal24HrClockPicker']
+        .forEach(id => { const el = document.getElementById(id); if (el) el.classList.add('hidden'); });
+    });
+
     // Document Init
-    window.addEventListener('DOMContentLoaded', () => {
-      handleRouting();
+    window.addEventListener('DOMContentLoaded', async () => {
+      try { await handleRouting(); } catch (e) {}
       checkOrgGate();
       loadData();
       initDatepickers();
