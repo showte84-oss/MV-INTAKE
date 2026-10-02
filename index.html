@@ -55,11 +55,11 @@
         <!-- Cloud Sync -->
         <button id="btnHeaderCloud" onclick="handleCloudClick()" class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-cyan-900/70 active:bg-cyan-800 text-cyan-300 border border-cyan-700/60 flex items-center justify-center relative shadow-xs shrink-0" title="Cloud Live Sync">
           <i class="fa-solid fa-cloud text-xs"></i>
-          <span id="dotCloud" class="w-1.5 h-1.5 rounded-full bg-emerald-400 absolute top-1 right-1 animate-pulse"></span>
+          <span id="dotCloud" class="w-1.5 h-1.5 rounded-full bg-amber-400 absolute top-1 right-1 animate-pulse"></span>
         </button>
 
         <!-- Team Manager -->
-        <button id="btnHeaderUsers" onclick="openUserManagerModal()" class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-emerald-600 active:bg-emerald-700 text-white flex items-center justify-center shadow-xs shrink-0" title="Team Manager">
+        <button id="btnHeaderUsers" onclick="openUserManagerModal()" class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-emerald-600 active:bg-emerald-700 text-white flex items-center justify-center shadow-xs shrink-0 hidden sm:flex" title="Team Manager">
           <i class="fa-solid fa-users-gear text-xs"></i>
         </button>
 
@@ -73,7 +73,7 @@
       <div class="shrink-0">
         <button onclick="handleUserBadgeClick()" id="userBadge" class="h-8 sm:h-9 flex items-center space-x-1 px-2 rounded-xl bg-slate-800 border border-slate-700 text-xs max-w-[110px] sm:max-w-[160px]">
           <span class="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-emerald-400 shrink-0"></span>
-          <span id="userBadgeName" class="font-bold text-slate-200 truncate text-[10px] sm:text-xs">User</span>
+          <span id="userBadgeName" class="font-bold text-slate-200 truncate text-[10px] sm:text-xs">Super Admin (Owner)</span>
           <i id="userBadgeIcon" class="fa-solid fa-chevron-down text-[8px] text-slate-400 shrink-0"></i>
         </button>
       </div>
@@ -356,6 +356,7 @@
                   <i class="fa-solid fa-plus text-[9px]"></i><span>+ Add Stoppage</span>
                 </button>
               </div>
+
               <div id="memberStoppagesList" class="space-y-2"></div>
             </div>
           </div>
@@ -368,6 +369,7 @@
                 <option value="KG">KG (ကီလိုဂရမ်)</option>
               </select>
             </div>
+
             <div id="wrapperWeightOpt">
               <label class="block text-[11px] font-bold text-slate-600 uppercase mb-1">Bag Weight</label>
               <select id="selectWeightOpt" onchange="updateWeightLogic()" class="w-full h-11 bg-white border border-slate-300 rounded-xl px-3 font-bold text-slate-800">
@@ -376,13 +378,17 @@
                 <option value="Other">Other (Custom)</option>
               </select>
             </div>
+
             <div id="wrapperOtherKg" class="hidden">
               <label class="block text-[11px] font-bold text-slate-600 uppercase mb-1">Custom KG / Bag</label>
               <input type="number" step="any" id="inputOtherKg" placeholder="e.g. 40" class="w-full h-11 bg-white border border-slate-300 rounded-xl px-3 font-bold">
             </div>
+
             <div>
-              <label class="block text-[11px] font-bold text-slate-600 uppercase mb-1">D Total (<span id="lblUnitName" class="text-cyan-600">Bags</span>)</label>
-              <input type="number" step="any" inputmode="decimal" id="inputDTotal" placeholder="Enter amount..." class="w-full h-11 bg-white border-2 border-cyan-500 rounded-xl px-3 font-extrabold text-slate-900 focus:ring-2" required>
+              <label class="block text-[11px] font-bold text-slate-600 uppercase mb-1">
+                D Total (<span id="lblUnitName" class="text-cyan-600">Bags</span>)
+              </label>
+              <input type="number" step="any" inputmode="decimal" id="inputDTotal" placeholder="Enter amount..." class="w-full h-11 bg-white border-2 border-cyan-500 rounded-xl px-3 font-extrabold text-slate-900 focus:ring-2 focus:ring-cyan-500" required>
             </div>
           </div>
 
@@ -393,9 +399,12 @@
 
           <div class="flex items-center space-x-2 pt-1">
             <button type="submit" id="btnSubmitForm" class="flex-1 h-12 bg-cyan-600 active:bg-cyan-700 text-white rounded-xl text-sm font-extrabold shadow-md flex items-center justify-center space-x-2">
-              <i class="fa-solid fa-paper-plane"></i><span id="lblSubmitForm">Submit Hatch Entry</span>
+              <i class="fa-solid fa-paper-plane"></i>
+              <span id="lblSubmitForm">Submit Hatch Entry</span>
             </button>
-            <button type="button" id="btnCancelEdit" onclick="cancelEditing()" class="hidden h-12 px-5 bg-slate-200 active:bg-slate-300 text-slate-700 rounded-xl text-xs font-extrabold">Cancel</button>
+            <button type="button" id="btnCancelEdit" onclick="cancelEditing()" class="hidden h-12 px-5 bg-slate-200 active:bg-slate-300 text-slate-700 rounded-xl text-xs font-extrabold">
+              Cancel
+            </button>
           </div>
         </form>
       </div>
@@ -409,11 +418,13 @@
           </div>
           <div class="flex items-center space-x-2">
             <button onclick="forceCloudPull()" class="text-[11px] text-cyan-600 font-bold hover:underline flex items-center space-x-1">
-              <i class="fa-solid fa-arrows-rotate"></i><span>Sync</span>
+              <i class="fa-solid fa-arrows-rotate"></i>
+              <span>Sync</span>
             </button>
             <span id="badgeEntryCount" class="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-cyan-50 text-cyan-700 border border-cyan-200">0 records</span>
           </div>
         </div>
+
         <div class="overflow-x-auto custom-scroll">
           <table class="w-full text-left text-xs min-w-[550px]">
             <thead>
@@ -426,7 +437,8 @@
                 <th class="py-2.5 px-2.5 text-center">Action</th>
               </tr>
             </thead>
-            <tbody id="tblMyEntriesBody" class="divide-y divide-slate-100"></tbody>
+            <tbody id="tblMyEntriesBody" class="divide-y divide-slate-100">
+            </tbody>
           </table>
         </div>
       </div>
@@ -436,7 +448,8 @@
     <section id="tabPicker" class="hidden space-y-3">
       <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-xs">
         <h2 class="font-bold text-slate-800 text-sm mb-3 flex items-center space-x-2">
-          <i class="fa-solid fa-filter text-indigo-600"></i><span>Shipper & Date Filter</span>
+          <i class="fa-solid fa-filter text-indigo-600"></i>
+          <span>Shipper & Date Filter</span>
         </h2>
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <div>
@@ -455,26 +468,37 @@
           </div>
         </div>
       </div>
+
       <div class="grid grid-cols-2 lg:grid-cols-4 gap-2.5">
         <div class="bg-white border border-slate-200 rounded-2xl p-3 shadow-xs">
-          <div class="text-[10px] font-bold text-slate-400 uppercase">Day Bags</div><div id="pDayBags" class="text-lg font-black text-amber-600">0</div>
+          <div class="text-[10px] font-bold text-slate-400 uppercase">Day Bags</div>
+          <div id="pDayBags" class="text-lg font-black text-amber-600">0</div>
         </div>
         <div class="bg-white border border-slate-200 rounded-2xl p-3 shadow-xs">
-          <div class="text-[10px] font-bold text-slate-400 uppercase">Night Bags</div><div id="pNightBags" class="text-lg font-black text-indigo-600">0</div>
+          <div class="text-[10px] font-bold text-slate-400 uppercase">Night Bags</div>
+          <div id="pNightBags" class="text-lg font-black text-indigo-600">0</div>
         </div>
         <div class="bg-white border border-slate-200 rounded-2xl p-3 shadow-xs">
-          <div class="text-[10px] font-bold text-slate-400 uppercase">Total Bags</div><div id="pTotBags" class="text-lg font-black text-cyan-600">0</div>
+          <div class="text-[10px] font-bold text-slate-400 uppercase">Total Bags</div>
+          <div id="pTotBags" class="text-lg font-black text-cyan-600">0</div>
         </div>
         <div class="bg-white border border-slate-200 rounded-2xl p-3 shadow-xs">
-          <div class="text-[10px] font-bold text-slate-400 uppercase">Metric Tons</div><div id="pTotTons" class="text-lg font-black text-emerald-600">0.00 MT</div>
+          <div class="text-[10px] font-bold text-slate-400 uppercase">Metric Tons</div>
+          <div id="pTotTons" class="text-lg font-black text-emerald-600">0.00 MT</div>
         </div>
       </div>
+
       <div class="bg-white rounded-2xl border border-slate-200 p-3.5 shadow-xs overflow-x-auto custom-scroll">
         <table class="w-full text-left text-xs">
           <thead>
             <tr class="bg-slate-100 text-slate-600 uppercase text-[10px] tracking-wider border-b border-slate-200">
-              <th class="py-2.5 px-2.5">Date</th><th class="py-2.5 px-2.5">Shift</th><th class="py-2.5 px-2.5">Boat No</th>
-              <th class="py-2.5 px-2.5">Shipper</th><th class="py-2.5 px-2.5">Hatch</th><th class="py-2.5 px-2.5 text-right">D Total</th><th class="py-2.5 px-2.5 text-right">TONS</th>
+              <th class="py-2.5 px-2.5">Date</th>
+              <th class="py-2.5 px-2.5">Shift</th>
+              <th class="py-2.5 px-2.5">Boat No</th>
+              <th class="py-2.5 px-2.5">Shipper</th>
+              <th class="py-2.5 px-2.5">Hatch</th>
+              <th class="py-2.5 px-2.5 text-right">D Total</th>
+              <th class="py-2.5 px-2.5 text-right">TONS</th>
             </tr>
           </thead>
           <tbody id="tblPickerBody" class="divide-y divide-slate-100"></tbody>
@@ -487,14 +511,17 @@
       <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-xs flex flex-wrap items-center justify-between gap-3">
         <div>
           <h2 class="font-bold text-slate-800 text-sm flex items-center space-x-2">
-            <i class="fa-solid fa-table text-cyan-600"></i><span>MV INTAKE Master Template</span>
+            <i class="fa-solid fa-table text-cyan-600"></i>
+            <span>MV INTAKE Master Template</span>
           </h2>
           <p class="text-[11px] text-slate-500">BOAT NO Column တွင် Shipper အမည်များကို အစမှအဆုံး အစီအစဉ်လိုက် ဖော်ပြထားပါသည်</p>
         </div>
         <button onclick="downloadExcel()" class="h-10 px-4 bg-emerald-600 active:bg-emerald-700 text-white rounded-xl text-xs font-bold shadow-xs flex items-center space-x-2">
-          <i class="fa-solid fa-file-excel"></i><span>Download Excel (.xlsx)</span>
+          <i class="fa-solid fa-file-excel"></i>
+          <span>Download Excel (.xlsx)</span>
         </button>
       </div>
+
       <div class="bg-white rounded-2xl border border-slate-200 p-3 shadow-xs overflow-x-auto custom-scroll">
         <table class="w-full text-xs text-center border-collapse min-w-[640px]">
           <thead>
@@ -519,7 +546,9 @@
             </tr>
           </thead>
           <tbody id="tblTemplateBody" class="divide-y divide-slate-200"></tbody>
-          <tfoot><tr id="tblTemplateFoot" class="bg-slate-200 font-bold text-slate-800 border-t-2 border-slate-400"></tr></tfoot>
+          <tfoot>
+            <tr id="tblTemplateFoot" class="bg-slate-200 font-bold text-slate-800 border-t-2 border-slate-400"></tr>
+          </tfoot>
         </table>
       </div>
     </section>
@@ -534,9 +563,15 @@
         <table class="w-full text-left text-xs min-w-[650px]">
           <thead>
             <tr class="bg-slate-100 text-slate-600 uppercase text-[10px] tracking-wider border-b border-slate-200">
-              <th class="py-2.5 px-2.5">Date</th><th class="py-2.5 px-2.5">Shift</th><th class="py-2.5 px-2.5">Boat No</th>
-              <th class="py-2.5 px-2.5">Hatch</th><th class="py-2.5 px-2.5">Shipper</th><th class="py-2.5 px-2.5 text-slate-500">Tally/Sample</th>
-              <th class="py-2.5 px-2.5 text-right">D Total</th><th class="py-2.5 px-2.5 text-right">TONS</th><th class="py-2.5 px-2.5 text-center">Action</th>
+              <th class="py-2.5 px-2.5">Date</th>
+              <th class="py-2.5 px-2.5">Shift</th>
+              <th class="py-2.5 px-2.5">Boat No</th>
+              <th class="py-2.5 px-2.5">Hatch</th>
+              <th class="py-2.5 px-2.5">Shipper</th>
+              <th class="py-2.5 px-2.5 text-slate-500">Tally/Sample</th>
+              <th class="py-2.5 px-2.5 text-right">D Total</th>
+              <th class="py-2.5 px-2.5 text-right">TONS</th>
+              <th class="py-2.5 px-2.5 text-center">Action</th>
             </tr>
           </thead>
           <tbody id="tblAllRecordsBody" class="divide-y divide-slate-100"></tbody>
@@ -549,7 +584,8 @@
       <div class="bg-white rounded-2xl border border-slate-200 p-3.5 sm:p-5 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
           <h2 class="font-extrabold text-slate-800 text-sm sm:text-base flex items-center space-x-2">
-            <i class="fa-solid fa-clipboard-user text-indigo-600 text-base"></i><span>Cargo Operation Timeline</span>
+            <i class="fa-solid fa-clipboard-user text-indigo-600 text-base"></i>
+            <span>Cargo Operation Timeline</span>
           </h2>
           <p class="text-[11px] text-slate-500">Hatch အလိုက် ၂၄ နာရီ စတင်ချိန်၊ ရပ်နားခဲ့သည့် အချိန်နှင့် စုစုပေါင်း ရပ်နားချိန်</p>
         </div>
@@ -561,9 +597,15 @@
         <table class="w-full text-left text-xs min-w-[880px]">
           <thead>
             <tr class="bg-slate-100 text-slate-700 uppercase text-[10px] tracking-wider border-b border-slate-200 font-bold">
-              <th class="py-3 px-3">Date</th><th class="py-3 px-3">Shift</th><th class="py-3 px-3">Tally/Sample</th>
-              <th class="py-3 px-3">Hatch</th><th class="py-3 px-3">Operation Time (24h)</th><th class="py-3 px-3">Stoppages / Delays Log</th>
-              <th class="py-3 px-3 text-right">Intake</th><th class="py-3 px-3 text-right">TONS</th><th class="py-3 px-3">Audit</th>
+              <th class="py-3 px-3">Date</th>
+              <th class="py-3 px-3">Shift</th>
+              <th class="py-3 px-3">Tally/Sample</th>
+              <th class="py-3 px-3">Hatch</th>
+              <th class="py-3 px-3">Operation Time (24h)</th>
+              <th class="py-3 px-3">Stoppages / Delays Log</th>
+              <th class="py-3 px-3 text-right">Intake</th>
+              <th class="py-3 px-3 text-right">TONS</th>
+              <th class="py-3 px-3">Audit</th>
             </tr>
           </thead>
           <tbody id="tblAttendanceBody" class="divide-y divide-slate-100"></tbody>
@@ -574,11 +616,48 @@
 
   <!-- MODALS -->
 
+  <!-- MODAL: MASTER OWNER - ORG LICENSES MANAGER (AUTHORIZED CODES) -->
+  <div id="modalOrgLicenses" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-end sm:items-center justify-center p-0 sm:p-4" onclick="closeOrgLicensesModal()">
+    <div class="bg-white rounded-t-3xl sm:rounded-2xl max-w-md w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden" onclick="event.stopPropagation()">
+      <div class="p-4 bg-amber-950 text-white flex items-center justify-between">
+        <div class="flex items-center space-x-2">
+          <i class="fa-solid fa-key text-amber-400"></i>
+          <div>
+            <span class="font-bold text-sm">Authorized Org Codes (Master Owner)</span>
+            <div class="text-[10px] text-amber-300">တခြားအဖွဲ့များ သုံးခွင့်ပြုမည့် တရားဝင် ကုဒ်များ သတ်မှတ်ရန်</div>
+          </div>
+        </div>
+        <button onclick="closeOrgLicensesModal()" class="w-8 h-8 rounded-lg bg-amber-900 text-amber-200 flex items-center justify-center"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <div class="p-4 overflow-y-auto space-y-3.5 custom-scroll text-xs">
+        <div class="bg-amber-50 border border-amber-200 p-3 rounded-2xl space-y-2">
+          <label class="block text-[11px] font-bold text-amber-900 uppercase">Authorize New Organization Code</label>
+          <div class="flex items-center space-x-1.5">
+            <input type="text" id="inputNewAllowedOrg" placeholder="Enter New Org Code..." class="flex-1 h-11 bg-white border border-amber-300 rounded-xl px-3 font-mono font-bold uppercase text-slate-800">
+            <button onclick="addAllowedOrgCode()" class="h-11 px-4 bg-amber-600 active:bg-amber-700 text-white rounded-xl font-bold shrink-0">
+              Authorize
+            </button>
+          </div>
+          <p class="text-[10px] text-amber-800">ဤနေရာတွင် ထည့်သွင်းထားသော Code များမှလွဲ၍ တခြားမည်သူမျှ စနစ်ထဲ ဝင်ခွင့်မရှိပါ</p>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-slate-700 uppercase text-[10px] mb-2">Active Authorized Codes List</h4>
+          <div id="listAllowedOrgs" class="space-y-1.5"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- NOTIFICATION HISTORY MODAL -->
   <div id="modalNoti" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex justify-end" onclick="closeNotiModal()">
     <div class="w-80 max-w-[85vw] bg-white h-full shadow-2xl flex flex-col" onclick="event.stopPropagation()">
       <div class="p-4 bg-slate-900 text-white flex items-center justify-between shrink-0">
-        <div class="flex items-center space-x-2"><i class="fa-solid fa-bell text-indigo-400"></i><span class="font-bold text-sm">Notifications</span></div>
+        <div class="flex items-center space-x-2">
+          <i class="fa-solid fa-bell text-indigo-400"></i>
+          <span class="font-bold text-sm">Notifications</span>
+        </div>
         <button onclick="closeNotiModal()" class="w-8 h-8 rounded-lg bg-slate-800 text-slate-300 flex items-center justify-center"><i class="fa-solid fa-xmark"></i></button>
       </div>
       <div id="listNotifications" class="p-3 overflow-y-auto custom-scroll flex-1 space-y-2 bg-slate-50"></div>
@@ -589,14 +668,19 @@
   <div id="modalChat" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center sm:items-end sm:justify-end justify-center p-0 sm:p-4" onclick="closeChatModal()">
     <div class="bg-white sm:rounded-2xl w-full sm:w-[400px] h-full sm:h-[80vh] sm:max-h-[600px] flex flex-col shadow-2xl overflow-hidden" onclick="event.stopPropagation()">
       <div class="p-4 bg-slate-900 text-white flex items-center justify-between shrink-0">
-        <div class="flex items-center space-x-2"><i class="fa-solid fa-comments text-amber-400"></i><span class="font-bold text-sm">Team Message Box</span></div>
+        <div class="flex items-center space-x-2">
+          <i class="fa-solid fa-comments text-amber-400"></i>
+          <span class="font-bold text-sm">Team Message Box</span>
+        </div>
         <button onclick="closeChatModal()" class="w-8 h-8 rounded-lg bg-slate-800 text-slate-300 flex items-center justify-center"><i class="fa-solid fa-xmark"></i></button>
       </div>
       <div id="listChatMessages" class="flex-1 p-3 overflow-y-auto custom-scroll bg-slate-100 flex flex-col space-y-3"></div>
       <div class="p-3 bg-white border-t border-slate-200 shrink-0">
         <form onsubmit="sendChatMessage(event)" class="flex items-end space-x-2">
           <textarea id="inputChatMessage" rows="1" placeholder="Type a message..." class="flex-1 bg-slate-50 border border-slate-300 rounded-xl px-3 py-2.5 text-xs font-medium focus:outline-none focus:ring-2 focus:ring-cyan-500 resize-none custom-scroll" oninput="this.style.height = ''; this.style.height = this.scrollHeight + 'px'"></textarea>
-          <button type="submit" class="w-10 h-10 rounded-xl bg-cyan-600 active:bg-cyan-700 text-white flex items-center justify-center shrink-0 shadow-md"><i class="fa-solid fa-paper-plane text-xs relative -ml-0.5"></i></button>
+          <button type="submit" class="w-10 h-10 rounded-xl bg-cyan-600 active:bg-cyan-700 text-white flex items-center justify-center shrink-0 shadow-md">
+            <i class="fa-solid fa-paper-plane text-xs relative -ml-0.5"></i>
+          </button>
         </form>
       </div>
     </div>
@@ -731,7 +815,6 @@
       </div>
       <div class="p-4 overflow-y-auto space-y-4 custom-scroll">
         <div class="bg-slate-50 border border-slate-200 p-3.5 rounded-2xl space-y-3">
-          <h4 id="lblAccountFormTitle" class="text-xs font-extrabold text-slate-700 uppercase">Add New Vessel Account</h4>
           <input type="hidden" id="editBoatId" value="">
           <input type="text" id="inputBoatName" placeholder="Vessel Name..." class="w-full h-11 bg-white border border-slate-300 rounded-xl px-3 font-bold">
           <div class="grid grid-cols-2 gap-2.5">
@@ -739,7 +822,7 @@
             <select id="inputBoatWeight" class="w-full h-11 bg-white border border-slate-300 rounded-xl px-2.5 font-bold"><option value="50 Kg">50 Kg</option><option value="25 Kg">25 Kg</option><option value="Other">Other</option></select>
           </div>
           <div class="flex space-x-2">
-            <button onclick="saveBoatAccount()" id="btnSaveBoat" class="flex-1 h-11 bg-cyan-600 text-white rounded-xl text-xs font-extrabold">Save</button>
+            <button onclick="saveBoatAccount()" class="flex-1 h-11 bg-cyan-600 text-white rounded-xl text-xs font-extrabold">Save</button>
             <button onclick="cancelBoatEdit()" id="btnCancelBoat" class="hidden h-11 px-4 bg-slate-200 text-slate-700 rounded-xl text-xs font-bold">Cancel</button>
           </div>
         </div>
@@ -840,7 +923,7 @@
     function toggleMenu() { document.getElementById('systemMenuDropdown').classList.toggle('hidden'); }
     function closeMenu() { document.getElementById('systemMenuDropdown').classList.add('hidden'); }
 
-    // FIXED TAB SWITCHING SYSTEM (ACCURATE & FUNCTIONAL)
+    // TAB SWITCHING SYSTEM
     function switchTab(tabId) {
       if (appData.currentUser && appData.currentUser.role === 'MEMBER' && tabId !== 'tabEntry') {
         tabId = 'tabEntry';
@@ -880,9 +963,22 @@
     // Init App Data
     const ORG_STORAGE_KEY = 'MV_INTAKE_ACTIVE_ORG';
     const ALLOWED_ORGS_KEY = 'MV_INTAKE_ALLOWED_ORGS_CACHE';
+    const ACTIVE_USER_ID_KEY = 'MV_INTAKE_ACTIVE_USER_ID';
     let allowedOrgCodes = ['KNA-001'];
     let currentOrgCode = localStorage.getItem(ORG_STORAGE_KEY) || '';
     let isSyncingCloud = false;
+
+    // Load Allowed Orgs Cache Immediately
+    const cachedAllowed = localStorage.getItem(ALLOWED_ORGS_KEY);
+    if (cachedAllowed) {
+      try {
+        const arr = JSON.parse(cachedAllowed);
+        if (Array.isArray(arr) && arr.length > 0) allowedOrgCodes = arr;
+      } catch (e) {}
+    }
+    if (!allowedOrgCodes.includes('KNA-001')) {
+      allowedOrgCodes.unshift('KNA-001');
+    }
 
     let appData = {
       cloudUrl: '', activeBoatId: null, lockedBoatId: null, sessionLocked: false,
@@ -907,7 +1003,12 @@
       if(!Array.isArray(appData.users) || appData.users.length === 0) {
         appData.users = [{ id: 'U-001', name: 'Super Admin (Owner)', role: 'SUPER_ADMIN', accessKey: 'KEY-SUPER01' }];
       }
-      if (!appData.currentUser || !appData.currentUser.name) {
+
+      // Restore active user mode across page refreshes
+      const savedUserId = localStorage.getItem(ACTIVE_USER_ID_KEY);
+      if (savedUserId && appData.users.some(x => x.id === savedUserId)) {
+        appData.currentUser = appData.users.find(x => x.id === savedUserId);
+      } else if (!appData.currentUser || !appData.currentUser.name) {
         appData.currentUser = appData.users[0];
       } else {
         const u = appData.users.find(x => x.id === appData.currentUser.id);
@@ -919,6 +1020,9 @@
       if (!currentOrgCode) return;
       appData.lastUpdated = Date.now();
       localStorage.setItem(getStorageKeyForOrg(currentOrgCode), JSON.stringify(appData));
+      if (appData.currentUser) {
+        localStorage.setItem(ACTIVE_USER_ID_KEY, appData.currentUser.id);
+      }
       if(typeof syncChannel !== 'undefined') syncChannel.postMessage('sync');
       if (!skipCloudPush && appData.cloudUrl) pushToCloud();
     }
@@ -946,8 +1050,8 @@
       document.getElementById('memberEntryFormWrapper').style.display = isMember ? 'block' : 'none';
       document.getElementById('btnDirectShipper').style.display = isMember ? 'none' : '';
       
-      const isMasterKNA = (currentOrgCode === 'KNA-001' && isSuperAdmin);
-      document.getElementById('menuBtnOrgLicenses').style.display = isMasterKNA ? '' : 'none';
+      // Super Admin can always access Authorized Org Codes
+      document.getElementById('menuBtnOrgLicenses').style.display = isSuperAdmin ? '' : 'none';
 
       ['btnHeaderCloud', 'menuBtnCloud', 'btnHeaderUsers', 'menuBtnUsers', 'menuBtnReset'].forEach(id => {
         document.getElementById(id).style.display = isSuperAdmin ? '' : 'none';
@@ -957,6 +1061,95 @@
         document.getElementById(id).style.display = isMember ? 'none' : '';
       });
       if (isMember) switchTab('tabEntry');
+    }
+
+    // AUTHORIZED ORG LICENSES MANAGEMENT FUNCTIONS
+    function openOrgLicensesModal() {
+      renderAllowedOrgsList();
+      document.getElementById('modalOrgLicenses').classList.remove('hidden');
+    }
+    function closeOrgLicensesModal() {
+      document.getElementById('modalOrgLicenses').classList.add('hidden');
+    }
+    function renderAllowedOrgsList() {
+      const container = document.getElementById('listAllowedOrgs');
+      if (!container) return;
+      container.innerHTML = '';
+
+      allowedOrgCodes.forEach(code => {
+        const isMaster = (code === 'KNA-001');
+        const div = document.createElement('div');
+        div.className = 'flex items-center justify-between p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-xs font-bold';
+        div.innerHTML = `
+          <div class="flex items-center space-x-2">
+            <i class="fa-solid fa-building-circle-check text-emerald-600"></i>
+            <span class="font-mono text-slate-800">${code}</span>
+            ${isMaster ? '<span class="text-[9px] px-1.5 py-0.2 rounded bg-amber-100 text-amber-800 font-bold">Master</span>' : ''}
+          </div>
+          ${!isMaster ? `
+            <button onclick="removeAllowedOrgCode('${code}')" class="w-7 h-7 rounded-lg bg-rose-50 text-rose-500 hover:bg-rose-100 flex items-center justify-center">
+              <i class="fa-solid fa-trash text-[10px]"></i>
+            </button>
+          ` : ''}
+        `;
+        container.appendChild(div);
+      });
+    }
+    async function addAllowedOrgCode() {
+      const input = document.getElementById('inputNewAllowedOrg');
+      const val = input.value.trim().toUpperCase().replace(/[^A-Z0-9_-]/g, '');
+      if (!val) {
+        showToast('Please enter an Org Code');
+        return;
+      }
+      if (allowedOrgCodes.includes(val)) {
+        showToast('Code already authorized');
+        return;
+      }
+
+      allowedOrgCodes.push(val);
+      localStorage.setItem(ALLOWED_ORGS_KEY, JSON.stringify(allowedOrgCodes));
+      input.value = '';
+      renderAllowedOrgsList();
+      pushAllowedOrgsToCloud();
+      showToast(`Authorized Code: ${val}`);
+    }
+    async function removeAllowedOrgCode(code) {
+      if (code === 'KNA-001') return;
+      if (confirm(`Revoke access for Organization Code "${code}"?`)) {
+        allowedOrgCodes = allowedOrgCodes.filter(c => c !== code);
+        localStorage.setItem(ALLOWED_ORGS_KEY, JSON.stringify(allowedOrgCodes));
+        renderAllowedOrgsList();
+        pushAllowedOrgsToCloud();
+        showToast(`Revoked Code: ${code}`);
+      }
+    }
+    async function syncAllowedOrgsFromCloud() {
+      if (!appData.cloudUrl) return;
+      try {
+        const endpoint = `${normalizeCloudUrl(appData.cloudUrl)}/authorized_orgs.json`;
+        const res = await fetch(endpoint + '?t=' + Date.now());
+        if (res.ok) {
+          const cloudList = await res.json();
+          if (Array.isArray(cloudList) && cloudList.length > 0) {
+            allowedOrgCodes = cloudList;
+            if (!allowedOrgCodes.includes('KNA-001')) allowedOrgCodes.unshift('KNA-001');
+            localStorage.setItem(ALLOWED_ORGS_KEY, JSON.stringify(allowedOrgCodes));
+            renderAllowedOrgsList();
+          }
+        }
+      } catch (e) {}
+    }
+    async function pushAllowedOrgsToCloud() {
+      if (!appData.cloudUrl) return;
+      try {
+        const endpoint = `${normalizeCloudUrl(appData.cloudUrl)}/authorized_orgs.json`;
+        await fetch(endpoint, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(allowedOrgCodes)
+        });
+      } catch (e) {}
     }
 
     function checkOrgGate() {
@@ -971,7 +1164,12 @@
     async function submitOrgGate() {
       const code = document.getElementById('inputOrgGateCode').value.trim().toUpperCase();
       if (!code) return;
-      if (appData.cloudUrl) await syncAllowedOrgsFromCloud();
+      
+      // Check local cache immediately for instant access
+      if (!allowedOrgCodes.includes(code)) {
+        if (appData.cloudUrl) await syncAllowedOrgsFromCloud();
+      }
+      
       if (!allowedOrgCodes.includes(code)) {
         document.getElementById('txtOrgGateError').textContent = 'Invalid Code!';
         document.getElementById('txtOrgGateError').classList.remove('hidden');
@@ -985,6 +1183,7 @@
     function handleUserBadgeClick() { if (!appData.sessionLocked) openProfileModal(); else showToast(`Locked to ${appData.currentUser.name}`); }
     function returnToSuperAdmin() {
       appData.currentUser = appData.users.find(u => u.role === 'SUPER_ADMIN') || appData.users[0];
+      localStorage.setItem(ACTIVE_USER_ID_KEY, appData.currentUser.id);
       appData.sessionLocked = false; appData.lockedBoatId = null;
       saveData(true); renderAll(); showToast('Returned to Super Admin mode');
     }
@@ -996,26 +1195,162 @@
       const c = document.getElementById('listProfiles'); c.innerHTML = '';
       appData.users.forEach(u => {
         const isActive = appData.currentUser.id === u.id; const btn = document.createElement('button');
-        btn.onclick = () => { appData.currentUser = u; saveData(true); renderAll(); closeProfileModal(); };
+        btn.onclick = () => { 
+          appData.currentUser = u; 
+          localStorage.setItem(ACTIVE_USER_ID_KEY, u.id);
+          saveData(true); 
+          renderAll(); 
+          closeProfileModal(); 
+        };
         btn.className = `w-full text-left p-3.5 rounded-2xl border flex items-center justify-between text-xs font-bold ${isActive ? 'bg-cyan-50 border-cyan-500' : 'bg-slate-50 border-slate-200 hover:bg-slate-100'}`;
         btn.innerHTML = `<div><div class="font-extrabold text-sm">${u.name}</div><div class="text-[10px] text-slate-400 mt-0.5">${u.role}</div></div>`; c.appendChild(btn);
       });
     }
 
-    // Cloud Sync
+    // Cloud Sync (DIRECT CONNECTION FIX)
     function openCloudModal() { document.getElementById('inputCloudUrl').value = appData.cloudUrl; document.getElementById('modalCloud').classList.remove('hidden'); }
     function closeCloudModal() { document.getElementById('modalCloud').classList.add('hidden'); }
     function handleCloudClick() { (!appData.sessionLocked && appData.currentUser.role === 'SUPER_ADMIN') ? openCloudModal() : forceCloudPull(); }
     function disconnectCloud() { appData.cloudUrl = ''; saveData(true); updateCloudBadgeUI(false); closeCloudModal(); }
+    
     async function saveCloudConfig() {
-      let val = document.getElementById('inputCloudUrl').value.trim(); if(!val) return; if(!val.startsWith('http')) val = 'https://' + val;
-      appData.cloudUrl = val; saveData(true); await pushToCloud(); await pullFromCloud(true); closeCloudModal();
+      let val = document.getElementById('inputCloudUrl').value.trim();
+      if(!val) {
+        showToast('Please enter Firebase URL');
+        return;
+      }
+      val = normalizeCloudUrl(val);
+      appData.cloudUrl = val;
+      saveData(true);
+      closeCloudModal();
+      showToast('Connecting...');
+      
+      pushAllowedOrgsToCloud();
+      await pushToCloud();
+      await pullFromCloud(true);
     }
+    
+    function normalizeCloudUrl(url) {
+      if (!url) return '';
+      let clean = url.trim().replace(/\/+$/, '');
+      if (!clean.startsWith('http')) clean = 'https://' + clean;
+      return clean;
+    }
+
+    async function pushToCloud() {
+      if (!appData.cloudUrl || !currentOrgCode) return;
+      const orgPath = currentOrgCode.toUpperCase().replace(/[^A-Z0-9_-]/g, '_');
+      const endpoint = `${normalizeCloudUrl(appData.cloudUrl)}/organizations/${orgPath}.json`;
+      const payload = {
+        boats: appData.boats || [],
+        shippers: appData.shippers || [],
+        users: appData.users || [],
+        records: appData.records || [],
+        notifications: appData.notifications || [],
+        chatMessages: appData.chatMessages || [],
+        lastUpdated: appData.lastUpdated || Date.now()
+      };
+      try {
+        await fetch(endpoint, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        updateCloudBadgeUI(true);
+      } catch (err) {
+        updateCloudBadgeUI(false);
+      }
+    }
+
+    async function pullFromCloud(showNotification = false) {
+      if (!appData.cloudUrl || !currentOrgCode || isSyncingCloud) return;
+      isSyncingCloud = true;
+      const orgPath = currentOrgCode.toUpperCase().replace(/[^A-Z0-9_-]/g, '_');
+      const endpoint = `${normalizeCloudUrl(appData.cloudUrl)}/organizations/${orgPath}.json`;
+      try {
+        const res = await fetch(endpoint + '?t=' + Date.now());
+        if (res.ok) {
+          const remote = await res.json();
+          if (remote) {
+            let changed = false;
+
+            if (Array.isArray(remote.boats) && JSON.stringify(remote.boats) !== JSON.stringify(appData.boats)) {
+              appData.boats = remote.boats;
+              if (!appData.activeBoatId && appData.boats.length > 0) appData.activeBoatId = appData.boats[0].id;
+              changed = true;
+            }
+            if (Array.isArray(remote.shippers) && JSON.stringify(remote.shippers) !== JSON.stringify(appData.shippers)) {
+              appData.shippers = remote.shippers;
+              changed = true;
+            }
+            if (Array.isArray(remote.users) && JSON.stringify(remote.users) !== JSON.stringify(appData.users)) {
+              appData.users = remote.users;
+              // Preserve active logged-in user state, never overwrite to User
+              const savedUserId = localStorage.getItem(ACTIVE_USER_ID_KEY);
+              if (savedUserId && appData.users.some(x => x.id === savedUserId)) {
+                appData.currentUser = appData.users.find(x => x.id === savedUserId);
+              }
+              changed = true;
+            }
+            if (Array.isArray(remote.records) && JSON.stringify(remote.records) !== JSON.stringify(appData.records)) {
+              appData.records = remote.records;
+              changed = true;
+            }
+            if (Array.isArray(remote.notifications) && JSON.stringify(remote.notifications) !== JSON.stringify(appData.notifications)) {
+              appData.notifications = remote.notifications;
+              changed = true;
+              checkUnreadNotifications();
+            }
+            if (Array.isArray(remote.chatMessages) && JSON.stringify(remote.chatMessages) !== JSON.stringify(appData.chatMessages)) {
+              appData.chatMessages = remote.chatMessages;
+              changed = true;
+              checkUnreadChat();
+              if(!document.getElementById('modalChat').classList.contains('hidden')) {
+                renderChatMessages();
+                const box = document.getElementById('listChatMessages');
+                box.scrollTop = box.scrollHeight;
+              }
+            }
+
+            if (changed) {
+              const key = getStorageKeyForOrg(currentOrgCode);
+              localStorage.setItem(key, JSON.stringify(appData));
+              renderAll();
+              if (!document.getElementById('tabTemplate').classList.contains('hidden')) renderTemplateTable();
+              if (!document.getElementById('tabRecords').classList.contains('hidden')) renderAllRecordsTable();
+              if (!document.getElementById('tabPicker').classList.contains('hidden')) runShipperFilter();
+              if (!document.getElementById('tabAttendance').classList.contains('hidden')) renderAttendanceTable();
+            }
+          }
+          updateCloudBadgeUI(true);
+          if (showNotification) showToast('Live data synced from Cloud');
+        }
+      } catch (e) {
+        updateCloudBadgeUI(false);
+      } finally {
+        isSyncingCloud = false;
+      }
+    }
+
+    function forceCloudPull() {
+      if (appData.cloudUrl) {
+        pullFromCloud(true);
+      } else {
+        loadData();
+        renderAll();
+        showToast('Refreshed local data');
+      }
+    }
+
     function updateCloudBadgeUI(online) {
       const dot = document.getElementById('dotCloud'); if (!dot) return;
       if (!appData.cloudUrl) { dot.className = 'w-1.5 h-1.5 rounded-full bg-amber-400 absolute top-1 right-1'; return; }
       dot.className = online ? 'w-1.5 h-1.5 rounded-full bg-emerald-400 absolute top-1 right-1 animate-pulse' : 'w-1.5 h-1.5 rounded-full bg-rose-400 absolute top-1 right-1';
     }
+
+    setInterval(() => {
+      if (appData.cloudUrl && currentOrgCode) pullFromCloud(false);
+    }, 3000);
 
     // Interactive Clock Picker
     let clock24TargetInputId = null; let clock24TargetCallback = null; let clock24SelectedHour = 8; let clock24SelectedMinute = 0;
@@ -1243,7 +1578,7 @@
       saveData(); closeAdminEditModal(); renderAll(); showToast('Updated');
     }
 
-    // Modal Manager Logic Re-Attachment
+    // Modal Manager Logic
     function openAccountModal() { renderVesselList(); document.getElementById('modalAccount').classList.remove('hidden'); }
     function closeAccountModal() { document.getElementById('modalAccount').classList.add('hidden'); cancelBoatEdit(); }
     function renderVesselList() {
@@ -1415,7 +1750,7 @@
       if (filtered.length === 0) { tbody.innerHTML = '<tr><td colspan="9" class="text-center py-6 text-slate-400">No records found.</td></tr>'; return; }
       filtered.forEach(r => {
         const tr = document.createElement('tr'); tr.className = 'hover:bg-slate-50 text-xs border-b';
-        tr.innerHTML = `<td class="py-2 px-2.5">${r.date}</td><td class="py-2 px-2.5">${r.shift}</td><td class="py-2 px-2.5">${r.boatName}</td><td class="py-2 px-2.5 font-bold text-cyan-700">H-${r.hatch}</td><td class="py-2 px-2.5">${r.shipper}</td><td class="py-2 px-2.5 text-slate-500">${r.checkerName}</td><td class="py-2 px-2.5 text-right font-bold">${r.dTotal} ${r.unit}</td><td class="py-2.5 px-2.5 text-right font-bold text-emerald-600">${r.totalTons.toFixed(3)}</td><td class="py-2.5 px-2.5 text-center"><button onclick="editRecord('${r.id}')" class="w-7 h-7 rounded bg-cyan-50 text-cyan-600 mr-1"><i class="fa-solid fa-pen"></i></button><button onclick="deleteRecord('${r.id}')" class="w-7 h-7 rounded bg-rose-50 text-rose-500"><i class="fa-solid fa-trash"></i></button></td>`;
+        tr.innerHTML = `<td class="py-2 px-2.5">${r.date}</td><td class="py-2 px-2.5">${r.shift}</td><td class="py-2 px-2.5">${r.boatName}</td><td class="py-2 px-2.5 font-bold text-cyan-700">H-${r.hatch}</td><td class="py-2 px-2.5">${r.shipper}</td><td class="py-2 px-2.5 text-slate-500">${r.checkerName}</td><td class="py-2 px-2.5 text-right font-bold">${r.dTotal} ${r.unit}</td><td class="py-2 px-2.5 text-right font-bold text-emerald-600">${r.totalTons.toFixed(3)}</td><td class="py-2 px-2.5 text-center"><button onclick="editRecord('${r.id}')" class="w-7 h-7 rounded bg-cyan-50 text-cyan-600 mr-1"><i class="fa-solid fa-pen"></i></button><button onclick="deleteRecord('${r.id}')" class="w-7 h-7 rounded bg-rose-50 text-rose-500"><i class="fa-solid fa-trash"></i></button></td>`;
         tbody.appendChild(tr);
       });
     }
