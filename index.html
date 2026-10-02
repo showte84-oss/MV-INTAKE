@@ -1559,8 +1559,9 @@
     }
 
     function saveAdminDirectEdit(e) {
-      e.preventDefault(); const recId = document.getElementById('adminEditRecId').value; const idx = appData.records.findIndex(r => r.id === recId); if(idx===-1) return;
-      const dTotal = parseFloat(document.getElementById('adminEditDTotal').value)||0; const unit = document.getElementById('adminEditUnit').value; const totalKgs = unit==='KG' ? dTotal : dTotal*50;
+      e.preventDefault();
+      if (!appData.currentUser || !['ADMIN', 'SUPER_ADMIN'].includes(appData.currentUser.role)) { showToast('Permission denied'); return; } const recId = document.getElementById('adminEditRecId').value; const idx = appData.records.findIndex(r => r.id === recId); if(idx===-1) return;
+      const dTotal = parseFloat(document.getElementById('adminEditDTotal').value)||0; const unit = document.getElementById('adminEditUnit').value; const oldWeight = Number(appData.records[idx].totalKgs || 0) / Number(appData.records[idx].dTotal || 1); const totalKgs = unit==='KG' ? dTotal : dTotal * (Number.isFinite(oldWeight) && oldWeight > 0 ? oldWeight : 50);
       appData.records[idx] = {
         ...appData.records[idx], date: document.getElementById('adminEditDate').value, shift: document.getElementById('adminEditShift').value, hatch: parseInt(document.getElementById('adminEditHatch').value),
         shipper: document.getElementById('adminEditShipper').value, dTotal: dTotal, unit: unit, totalKgs: totalKgs, totalTons: totalKgs/1000, remarks: document.getElementById('adminEditRemarks').value,
@@ -1588,7 +1589,7 @@
     }
     function editBoatAccount(id) { const b=appData.boats.find(x=>x.id===id); if(!b) return; document.getElementById('editBoatId').value=b.id; document.getElementById('inputBoatName').value=b.name; document.getElementById('inputBoatUnit').value=b.unit; document.getElementById('inputBoatWeight').value=b.weight; document.getElementById('btnCancelBoat').classList.remove('hidden'); }
     function cancelBoatEdit() { document.getElementById('editBoatId').value=''; document.getElementById('inputBoatName').value=''; document.getElementById('btnCancelBoat').classList.add('hidden'); }
-    function deleteBoatAccount(id) { if(confirm('Delete?')) { appData.boats=appData.boats.filter(b=>b.id!==id); appData.records=appData.records.filter(r=>r.boatId!==id); saveData(); renderVesselList(); renderAll(); } }
+    function deleteBoatAccount(id) { if(confirm('Delete?')) { appData.boats=appData.boats.filter(b=>b.id!==id); appData.records=appData.records.filter(r=>r.boatId!==id); if (appData.activeBoatId === id) appData.activeBoatId = appData.boats[0]?.id || null; saveData(); renderVesselList(); renderAll(); } }
 
     function openShipperModal() { renderShipperList(); document.getElementById('modalShipper').classList.remove('hidden'); }
     function closeShipperModal() { document.getElementById('modalShipper').classList.add('hidden'); cancelShipperEdit(); }
@@ -1694,8 +1695,6 @@
       });
       return `${window.location.origin}${window.location.pathname}#${params.toString()}`;
     }
-    function copyDirectLink(link) { navigator.clipboard.writeText(link); showToast('Link Copied'); }
-
     // Routing for Personal Invite Links
     function handleRouting() {
       const hash = window.location.hash.replace(/^#/, '');
@@ -1877,6 +1876,9 @@
       document.getElementById('editingIndicator').classList.add('hidden'); document.getElementById('btnCancelEdit').classList.add('hidden');
     }
     function deleteRecord(id) {
+      const rec = appData.records.find(r => r.id === id);
+      const canDelete = appData.currentUser && ['ADMIN', 'SUPER_ADMIN'].includes(appData.currentUser.role);
+      if (!canDelete && (!rec || rec.checkerId !== appData.currentUser.id)) { showToast('Permission denied'); return; }
       if(confirm('Delete Record?')) { appData.records = appData.records.filter(r => r.id !== id); pushSystemNotification(`${appData.currentUser.name} deleted a record.`); saveData(); renderAll(); showToast('Deleted'); }
     }
 
@@ -2036,7 +2038,7 @@
       document.getElementById('pDayBags').textContent = dayBags.toLocaleString();
       document.getElementById('pNightBags').textContent = nightBags.toLocaleString();
       document.getElementById('pTotBags').textContent = totBags.toLocaleString();
-      document.getElementById('pTotTons').textContent = totBags.toFixed(2) + ' MT';
+      document.getElementById('pTotTons').textContent = totTons.toFixed(2) + ' MT';
       const tbody = document.getElementById('tblPickerBody'); tbody.innerHTML = '';
       if (filtered.length === 0) { tbody.innerHTML = '<tr><td colspan="7" class="text-center py-6 text-slate-400">No records.</td></tr>'; return; }
       filtered.forEach(r => {
@@ -2044,6 +2046,106 @@
         tr.innerHTML = `<td class="py-2 px-2.5">${r.date}</td><td class="py-2 px-2.5">${r.shift}</td><td class="py-2 px-2.5 font-bold">${r.boatName}</td><td class="py-2 px-2.5">${r.shipper}</td><td class="py-2 px-2.5 font-bold text-cyan-700">H-${r.hatch}</td><td class="py-2 px-2.5 text-right font-bold">${r.dTotal}</td><td class="py-2 px-2.5 text-right font-bold text-emerald-600">${r.totalTons.toFixed(3)}</td>`;
         tbody.appendChild(tr);
       });
+    }
+
+    // Date pickers, export, backup/restore, and modal helpers
+    let pickerDate = null;
+    let pickerAdminEdit = null;
+
+    function initDatepickers() {
+      const config = {
+        dateFormat: 'd/m/Y',
+        allowInput: true,
+        disableMobile: true,
+        onChange: () => {
+          if (typeof runShipperFilter === 'function') runShipperFilter();
+        }
+      };
+      if (typeof flatpickr === 'function') {
+        pickerDate = flatpickr('#inputDate', { ...config, defaultDate: new Date() });
+        pickerAdminEdit = flatpickr('#adminEditDate', config);
+        flatpickr('#filterPickerFrom', config);
+        flatpickr('#filterPickerTo', config);
+      } else {
+        // Keep the app usable if the optional CDN is unavailable.
+        const today = new Date();
+        const formatted = `${String(today.getDate()).padStart(2, '0')}/${String(today.getMonth() + 1).padStart(2, '0')}/${today.getFullYear()}`;
+        const input = document.getElementById('inputDate');
+        if (input && !input.value) input.value = formatted;
+      }
+    }
+
+    function closeAdminEditModal() {
+      document.getElementById('modalAdminEdit').classList.add('hidden');
+      document.getElementById('adminEditForm').reset();
+      document.getElementById('adminEditRecId').value = '';
+      renderStoppagesList('adminStoppagesList', []);
+    }
+
+    function downloadExcel() {
+      if (typeof XLSX === 'undefined') {
+        showToast('Excel library is unavailable');
+        return;
+      }
+      const rows = appData.records.map(r => ({
+        Date: r.date, Shift: r.shift, Vessel: r.boatName || '', Hatch: `H-${r.hatch}`,
+        Shipper: r.shipper, 'Tally / Sample': r.checkerName || '', 'D Total': r.dTotal,
+        Unit: r.unit, 'Total KG': Number(r.totalKgs || 0), 'Metric Tons': Number(r.totalTons || 0),
+        Commenced: r.commencedTime || '', Completed: r.completedTime || '', Remarks: r.remarks || ''
+      }));
+      const workbook = XLSX.utils.book_new();
+      const sheet = XLSX.utils.json_to_sheet(rows.length ? rows : [{ Message: 'No records found' }]);
+      XLSX.utils.book_append_sheet(workbook, sheet, 'Intake Records');
+      XLSX.writeFile(workbook, `vessel-detail-${currentOrgCode || 'data'}-${new Date().toISOString().slice(0, 10)}.xlsx`);
+      showToast('Excel downloaded');
+    }
+
+    function backupSystemData() {
+      const payload = { version: 1, exportedAt: new Date().toISOString(), orgCode: currentOrgCode, data: appData };
+      const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = `vessel-detail-backup-${currentOrgCode || 'data'}.json`;
+      document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+      showToast('Backup downloaded');
+    }
+
+    function restoreSystemData(event) {
+      const file = event.target.files && event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        try {
+          const parsed = JSON.parse(reader.result);
+          const restored = parsed && parsed.data ? parsed.data : parsed;
+          if (!restored || !Array.isArray(restored.records) || !Array.isArray(restored.boats) || !Array.isArray(restored.users)) {
+            throw new Error('Invalid backup');
+          }
+          if (!currentOrgCode) throw new Error('Organization access required');
+          appData = { ...appData, ...restored, currentUser: restored.currentUser || appData.currentUser };
+          saveData(true); loadData(); renderAll();
+          showToast('Data restored successfully');
+        } catch (error) {
+          showToast('Invalid backup file');
+        } finally {
+          event.target.value = '';
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    function copyDirectLink(link) {
+      const fallback = () => {
+        const area = document.createElement('textarea');
+        area.value = link; area.style.position = 'fixed'; area.style.opacity = '0';
+        document.body.appendChild(area); area.select();
+        try { document.execCommand('copy'); showToast('Link Copied'); }
+        catch (e) { showToast('Copy failed'); }
+        area.remove();
+      };
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(link).then(() => showToast('Link Copied')).catch(fallback);
+      } else fallback();
     }
 
     // Document Init
