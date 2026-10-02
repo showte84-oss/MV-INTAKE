@@ -306,6 +306,11 @@
             </label>
             <div id="shipperButtonsContainer" class="flex flex-wrap gap-1.5 pt-0.5"></div>
             <select id="selectShipper" onchange="onShipperDropdownChange(this.value)" class="w-full h-11 bg-white border border-slate-300 rounded-xl px-3 font-bold text-slate-800 focus:ring-2 focus:ring-cyan-500" required></select>
+            <div id="shipperQuotaSummary" class="hidden grid grid-cols-3 gap-1.5 text-[10px]">
+              <div class="rounded-lg bg-indigo-50 border border-indigo-100 px-2 py-1.5"><span class="block text-indigo-500 font-bold uppercase">Target</span><span id="shipperTargetValue" class="font-black text-indigo-900">-</span></div>
+              <div class="rounded-lg bg-slate-50 border border-slate-200 px-2 py-1.5"><span class="block text-slate-500 font-bold uppercase">Loaded</span><span id="shipperLoadedValue" class="font-black text-slate-800">-</span></div>
+              <div class="rounded-lg bg-emerald-50 border border-emerald-100 px-2 py-1.5"><span class="block text-emerald-600 font-bold uppercase">Balance</span><span id="shipperBalanceValue" class="font-black text-emerald-800">-</span></div>
+            </div>
           </div>
 
           <!-- HATCH SELECTION -->
@@ -467,7 +472,7 @@
         </div>
       </div>
 
-      <div class="grid grid-cols-2 lg:grid-cols-4 gap-2.5">
+      <div class="grid grid-cols-2 lg:grid-cols-5 gap-2.5">
         <div class="bg-white border border-slate-200 rounded-2xl p-3 shadow-xs">
           <div class="text-[10px] font-bold text-slate-400 uppercase">Day Bags</div><div id="pDayBags" class="text-lg font-black text-amber-600">0</div>
         </div>
@@ -480,6 +485,9 @@
         <div class="bg-white border border-slate-200 rounded-2xl p-3 shadow-xs">
           <div class="text-[10px] font-bold text-slate-400 uppercase">Metric Tons</div><div id="pTotTons" class="text-lg font-black text-emerald-600">0.00 MT</div>
         </div>
+        <div class="bg-emerald-50 border border-emerald-200 rounded-2xl p-3 shadow-xs">
+          <div class="text-[10px] font-bold text-emerald-600 uppercase">Balance</div><div id="pBalance" class="text-lg font-black text-emerald-800">-</div>
+        </div>
       </div>
 
       <div class="bg-white rounded-2xl border border-slate-200 p-3.5 shadow-xs overflow-x-auto custom-scroll">
@@ -487,7 +495,7 @@
           <thead>
             <tr class="bg-slate-100 text-slate-600 uppercase text-[10px] tracking-wider border-b border-slate-200">
               <th class="py-2.5 px-2.5">Date</th><th class="py-2.5 px-2.5">Shift</th><th class="py-2.5 px-2.5">Boat No</th>
-              <th class="py-2.5 px-2.5">Shipper</th><th class="py-2.5 px-2.5">Hatch</th><th class="py-2.5 px-2.5 text-right">D Total</th><th class="py-2.5 px-2.5 text-right">TONS</th>
+              <th class="py-2.5 px-2.5">Shipper</th><th class="py-2.5 px-2.5">Hatch</th><th class="py-2.5 px-2.5 text-right">D Total</th><th class="py-2.5 px-2.5 text-right">TONS</th><th class="py-2.5 px-2.5 text-right">BALANCE</th>
             </tr>
           </thead>
           <tbody id="tblPickerBody" class="divide-y divide-slate-100"></tbody>
@@ -816,6 +824,14 @@
           <input type="hidden" id="editShipperIndex" value="">
           <label id="lblShipperForm" class="block text-[11px] font-bold text-slate-600 uppercase">Add or Edit Shipper</label>
           <input type="text" id="inputNewShipper" placeholder="Shipper name..." class="w-full h-11 bg-white border border-slate-300 rounded-xl px-3 font-bold">
+          <div class="grid grid-cols-2 gap-2">
+            <input type="number" min="0" step="any" id="inputShipperTarget" placeholder="Target quantity" class="w-full h-11 bg-white border border-slate-300 rounded-xl px-3 font-bold">
+            <select id="inputShipperTargetUnit" class="w-full h-11 bg-white border border-slate-300 rounded-xl px-3 font-bold">
+              <option value="MT">Metric Tons (MT)</option>
+              <option value="Bags">Bags</option>
+            </select>
+          </div>
+          <p class="text-[10px] text-slate-500">သတ်မှတ်ထားသော Target ကို Shipper Picker တွင် Balance အဖြစ် အလိုအလျောက်တွက်ပေးပါမည်။</p>
           <div class="flex space-x-2">
             <button onclick="saveShipperItem()" id="btnSaveShipper" class="flex-1 h-11 bg-cyan-600 text-white rounded-xl text-xs font-extrabold">Save</button>
             <button onclick="cancelShipperEdit()" id="btnCancelShipper" class="hidden h-11 px-4 bg-slate-200 text-slate-700 rounded-xl text-xs font-bold">Cancel</button>
@@ -975,7 +991,7 @@
       cloudUrl: '', activeBoatId: null, lockedBoatId: null, sessionLocked: false,
       currentUser: { id: 'U-001', name: 'Super Admin (Owner)', role: 'SUPER_ADMIN', accessKey: 'KEY-SUPER01' },
       boats: [], shippers: [], users: [{ id: 'U-001', name: 'Super Admin (Owner)', role: 'SUPER_ADMIN', accessKey: 'KEY-SUPER01' }],
-      records: [], notifications: [], chatMessages: [], lastUpdated: 0
+      records: [], shipperTargets: {}, notifications: [], chatMessages: [], lastUpdated: 0
     };
 
     function getStorageKeyForOrg(code) { return `MV_INTAKE_DATA_ORG_${code.toUpperCase().replace(/[^A-Z0-9_-]/g, '')}`; }
@@ -989,6 +1005,7 @@
           appData = { ...appData, ...parsed }; 
         } catch (e) {} 
       }
+      if(!appData.shipperTargets || typeof appData.shipperTargets !== 'object') appData.shipperTargets = {};
       if(!appData.notifications) appData.notifications = [];
       if(!appData.chatMessages) appData.chatMessages = [];
       if(!Array.isArray(appData.users) || appData.users.length === 0) {
@@ -1593,22 +1610,64 @@
 
     function openShipperModal() { renderShipperList(); document.getElementById('modalShipper').classList.remove('hidden'); }
     function closeShipperModal() { document.getElementById('modalShipper').classList.add('hidden'); cancelShipperEdit(); }
+    function getShipperTarget(name) {
+      const target = appData.shipperTargets && appData.shipperTargets[name];
+      return { quantity: Number(target?.quantity) || 0, unit: target?.unit === 'Bags' ? 'Bags' : 'MT' };
+    }
+    function getBoatBagWeightKg(boat) {
+      const match = String(boat?.weight || '').match(/[0-9.]+/);
+      const kg = match ? Number(match[0]) : 50;
+      return Number.isFinite(kg) && kg > 0 ? kg : 50;
+    }
+    function getShipperLoadedQuantity(name, unit, records = appData.records) {
+      const matching = records.filter(r => r.shipper === name);
+      if (unit === 'MT') return matching.reduce((sum, r) => sum + Number(r.totalTons || 0), 0);
+      return matching.reduce((sum, r) => {
+        if (r.unit === 'Bags') return sum + Number(r.dTotal || 0);
+        const boat = appData.boats.find(b => b.id === r.boatId);
+        return sum + Number(r.totalKgs || 0) / getBoatBagWeightKg(boat);
+      }, 0);
+    }
+    function formatShipperQuantity(value, unit) { return `${Number(value || 0).toLocaleString(undefined, { maximumFractionDigits: 2 })} ${unit}`; }
+    function getShipperBalance(name, records = appData.records) {
+      const target = getShipperTarget(name);
+      if (!target.quantity) return { ...target, loaded: getShipperLoadedQuantity(name, target.unit, records), balance: null };
+      const loaded = getShipperLoadedQuantity(name, target.unit, records);
+      return { ...target, loaded, balance: target.quantity - loaded };
+    }
+    function renderSelectedShipperQuota(name) {
+      const wrap = document.getElementById('shipperQuotaSummary');
+      if (!wrap) return;
+      if (!name || !appData.shippers.includes(name)) { wrap.classList.add('hidden'); return; }
+      const q = getShipperBalance(name);
+      wrap.classList.remove('hidden');
+      document.getElementById('shipperTargetValue').textContent = q.quantity ? formatShipperQuantity(q.quantity, q.unit) : 'Not set';
+      document.getElementById('shipperLoadedValue').textContent = formatShipperQuantity(q.loaded, q.unit);
+      const balanceEl = document.getElementById('shipperBalanceValue');
+      balanceEl.textContent = q.balance === null ? '' : (q.balance < 0 ? `Over ${formatShipperQuantity(Math.abs(q.balance), q.unit)}` : formatShipperQuantity(q.balance, q.unit));
+      balanceEl.className = `font-black ${q.balance !== null && q.balance < 0 ? 'text-rose-700' : 'text-emerald-800'}`;
+    }
     function renderShipperList() {
       const c = document.getElementById('listShippers'); c.innerHTML='';
       appData.shippers.forEach((s,i)=>{
-        const d = document.createElement('div'); d.className='flex justify-between p-3 bg-white border rounded-xl text-xs';
-        d.innerHTML=`<span class="font-bold">${s}</span><div class="flex space-x-1"><button onclick="startEditShipper(${i})" class="w-8 h-8 rounded bg-slate-50 text-cyan-600"><i class="fa-solid fa-pen"></i></button><button onclick="deleteShipper(${i})" class="w-8 h-8 rounded bg-rose-50 text-rose-500"><i class="fa-solid fa-trash"></i></button></div>`; c.appendChild(d);
+        const q = getShipperTarget(s);
+        const d = document.createElement('div'); d.className='flex justify-between items-center p-3 bg-white border rounded-xl text-xs';
+        d.innerHTML=`<div><div class="font-bold">${s}</div><div class="text-[10px] text-indigo-600 font-semibold">Target: ${q.quantity ? formatShipperQuantity(q.quantity, q.unit) : 'Not set'}</div></div><div class="flex space-x-1"><button onclick="startEditShipper(${i})" class="w-8 h-8 rounded bg-slate-50 text-cyan-600"><i class="fa-solid fa-pen"></i></button><button onclick="deleteShipper(${i})" class="w-8 h-8 rounded bg-rose-50 text-rose-500"><i class="fa-solid fa-trash"></i></button></div>`; c.appendChild(d);
       });
     }
     function saveShipperItem() {
-      const name = document.getElementById('inputNewShipper').value.trim(); const editIdx = document.getElementById('editShipperIndex').value; if(!name) return;
-      if(editIdx!=='') { const idx = parseInt(editIdx); const old = appData.shippers[idx]; appData.shippers[idx]=name; appData.records.forEach(r=>{if(r.shipper===old) r.shipper=name;}); } 
+      const name = document.getElementById('inputNewShipper').value.trim(); const editIdx = document.getElementById('editShipperIndex').value;
+      const quantity = Math.max(0, Number(document.getElementById('inputShipperTarget').value) || 0); const unit = document.getElementById('inputShipperTargetUnit').value === 'Bags' ? 'Bags' : 'MT';
+      if(!name) return;
+      if(!appData.shipperTargets) appData.shipperTargets = {};
+      if(editIdx!=='') { const idx = parseInt(editIdx); const old = appData.shippers[idx]; appData.shippers[idx]=name; appData.records.forEach(r=>{if(r.shipper===old) r.shipper=name;}); if (old !== name && appData.shipperTargets[old]) delete appData.shipperTargets[old]; }
       else { if(!appData.shippers.includes(name)) appData.shippers.push(name); }
+      appData.shipperTargets[name] = { quantity, unit };
       saveData(); cancelShipperEdit(); renderShipperList(); renderAll();
     }
-    function startEditShipper(i) { document.getElementById('editShipperIndex').value=i; document.getElementById('inputNewShipper').value=appData.shippers[i]; document.getElementById('btnCancelShipper').classList.remove('hidden'); }
-    function cancelShipperEdit() { document.getElementById('editShipperIndex').value=''; document.getElementById('inputNewShipper').value=''; document.getElementById('btnCancelShipper').classList.add('hidden'); }
-    function deleteShipper(i) { if(confirm('Delete?')) { appData.shippers.splice(i,1); saveData(); renderShipperList(); renderAll(); } }
+    function startEditShipper(i) { const name=appData.shippers[i]; const q=getShipperTarget(name); document.getElementById('editShipperIndex').value=i; document.getElementById('inputNewShipper').value=name; document.getElementById('inputShipperTarget').value=q.quantity || ''; document.getElementById('inputShipperTargetUnit').value=q.unit; document.getElementById('btnCancelShipper').classList.remove('hidden'); }
+    function cancelShipperEdit() { document.getElementById('editShipperIndex').value=''; document.getElementById('inputNewShipper').value=''; document.getElementById('inputShipperTarget').value=''; document.getElementById('inputShipperTargetUnit').value='MT'; document.getElementById('btnCancelShipper').classList.add('hidden'); }
+    function deleteShipper(i) { if(confirm('Delete?')) { const name=appData.shippers[i]; appData.shippers.splice(i,1); if(appData.shipperTargets) delete appData.shipperTargets[name]; saveData(); renderShipperList(); renderAll(); } }
 
     function openUserManagerModal() { renderTeamUsersList(); document.getElementById('modalUserManager').classList.remove('hidden'); }
     function closeUserManagerModal() { document.getElementById('modalUserManager').classList.add('hidden'); cancelUserEdit(); }
@@ -1962,6 +2021,7 @@
           btnContainer.appendChild(btn);
         });
       }
+      renderSelectedShipperQuota(sel.value);
       const fSel = document.getElementById('filterPickerShipper');
       if (fSel) {
         const fCur = fSel.value; fSel.innerHTML = '<option value="ALL">All Shippers</option>';
@@ -1973,8 +2033,9 @@
     function selectShipperByButton(name) {
       document.getElementById('selectShipper').value = name;
       highlightActiveShipperButton(name);
+      renderSelectedShipperQuota(name);
     }
-    function onShipperDropdownChange(val) { highlightActiveShipperButton(val); }
+    function onShipperDropdownChange(val) { highlightActiveShipperButton(val); renderSelectedShipperQuota(val); }
     function highlightActiveShipperButton(activeName) {
       document.querySelectorAll('.shipper-chip-btn').forEach(btn => {
         const name = btn.getAttribute('data-shipper');
@@ -2039,11 +2100,17 @@
       document.getElementById('pNightBags').textContent = nightBags.toLocaleString();
       document.getElementById('pTotBags').textContent = totBags.toLocaleString();
       document.getElementById('pTotTons').textContent = totTons.toFixed(2) + ' MT';
+      const selectedTarget = shipper !== 'ALL' ? getShipperBalance(shipper) : null;
+      const balanceEl = document.getElementById('pBalance');
+      balanceEl.textContent = selectedTarget && selectedTarget.balance !== null ? (selectedTarget.balance < 0 ? `Over ${formatShipperQuantity(Math.abs(selectedTarget.balance), selectedTarget.unit)}` : formatShipperQuantity(selectedTarget.balance, selectedTarget.unit)) : '';
+      balanceEl.className = `text-lg font-black ${selectedTarget && selectedTarget.balance !== null && selectedTarget.balance < 0 ? 'text-rose-700' : 'text-emerald-800'}`;
       const tbody = document.getElementById('tblPickerBody'); tbody.innerHTML = '';
-      if (filtered.length === 0) { tbody.innerHTML = '<tr><td colspan="7" class="text-center py-6 text-slate-400">No records.</td></tr>'; return; }
+      if (filtered.length === 0) { tbody.innerHTML = '<tr><td colspan="8" class="text-center py-6 text-slate-400">No records.</td></tr>'; return; }
       filtered.forEach(r => {
+        const rowTarget = getShipperBalance(r.shipper);
+        const rowBalance = rowTarget.balance === null ? '' : (rowTarget.balance < 0 ? `Over ${formatShipperQuantity(Math.abs(rowTarget.balance), rowTarget.unit)}` : formatShipperQuantity(rowTarget.balance, rowTarget.unit));
         const tr = document.createElement('tr');
-        tr.innerHTML = `<td class="py-2 px-2.5">${r.date}</td><td class="py-2 px-2.5">${r.shift}</td><td class="py-2 px-2.5 font-bold">${r.boatName}</td><td class="py-2 px-2.5">${r.shipper}</td><td class="py-2 px-2.5 font-bold text-cyan-700">H-${r.hatch}</td><td class="py-2 px-2.5 text-right font-bold">${r.dTotal}</td><td class="py-2 px-2.5 text-right font-bold text-emerald-600">${r.totalTons.toFixed(3)}</td>`;
+        tr.innerHTML = `<td class="py-2 px-2.5">${r.date}</td><td class="py-2 px-2.5">${r.shift}</td><td class="py-2 px-2.5 font-bold">${r.boatName}</td><td class="py-2 px-2.5">${r.shipper}</td><td class="py-2 px-2.5 font-bold text-cyan-700">H-${r.hatch}</td><td class="py-2 px-2.5 text-right font-bold">${r.dTotal}</td><td class="py-2 px-2.5 text-right font-bold text-emerald-600">${r.totalTons.toFixed(3)}</td><td class="py-2 px-2.5 text-right font-bold ${rowTarget.balance !== null && rowTarget.balance < 0 ? 'text-rose-600' : 'text-emerald-700'}">${rowBalance}</td>`;
         tbody.appendChild(tr);
       });
     }
