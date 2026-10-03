@@ -162,7 +162,7 @@
           </button>
           <button id="menuBtnShippers" onclick="openShipperModal(); closeMenu()" class="w-full flex items-center space-x-3 px-3 py-3 rounded-xl hover:bg-slate-100 active:bg-slate-200 text-slate-700">
             <i class="fa-solid fa-building w-5 text-indigo-600 text-sm"></i>
-            <span>Shippers / Companies</span>
+            <span>Clients / Companies</span>
           </button>
           <button id="menuBtnShare" onclick="openShareModal(); closeMenu()" class="w-full flex items-center space-x-3 px-3 py-3 rounded-xl hover:bg-slate-100 active:bg-slate-200 text-slate-700">
             <i class="fa-solid fa-link w-5 text-amber-600 text-sm"></i>
@@ -210,7 +210,7 @@
         <i class="fa-solid fa-pen-to-square"></i><span>1. DATA ENTRY</span>
       </button>
       <button onclick="switchTab('tabPicker')" id="btnTabPicker" class="tab-btn px-3 py-2 rounded-xl text-xs font-semibold whitespace-nowrap bg-slate-100 text-slate-600 flex items-center space-x-1.5">
-        <i class="fa-solid fa-calendar-day"></i><span>2. SHIPPER PICKER</span>
+        <i class="fa-solid fa-calendar-day"></i><span>2. CLIENT PICKER</span>
       </button>
       <button onclick="switchTab('tabTemplate')" id="btnTabTemplate" class="tab-btn px-3 py-2 rounded-xl text-xs font-semibold whitespace-nowrap bg-slate-100 text-slate-600 flex items-center space-x-1.5">
         <i class="fa-solid fa-table"></i><span>3. TEMPLATE</span>
@@ -243,13 +243,13 @@
         </div>
       </div>
 
-      <div class="flex items-center gap-1.5 w-full sm:w-auto">
-        <select id="selectActiveBoat" onchange="changeActiveBoat(this.value)" class="flex-1 min-w-0 sm:w-44 h-10 bg-slate-50 border border-slate-300 text-slate-800 text-xs rounded-xl px-2.5 font-bold focus:ring-2 focus:ring-cyan-500 truncate"></select>
+      <div class="flex flex-wrap items-center gap-1.5 w-full sm:w-auto">
+        <select id="selectActiveBoat" onchange="changeActiveBoat(this.value)" class="basis-full w-full min-w-0 sm:basis-auto sm:w-44 h-10 bg-slate-50 border border-slate-300 text-slate-800 text-xs rounded-xl px-2.5 font-bold focus:ring-2 focus:ring-cyan-500"></select>
         <button id="btnGearBoat" onclick="openAccountModal()" class="h-10 px-3 rounded-xl bg-cyan-600 active:bg-cyan-700 text-white flex items-center justify-center space-x-1 shrink-0 text-xs font-bold shadow-xs whitespace-nowrap">
           <i class="fa-solid fa-plus text-xs"></i><span>Vessel</span>
         </button>
         <button id="btnDirectShipper" onclick="openShipperModal()" class="h-10 px-3 rounded-xl bg-indigo-600 active:bg-indigo-700 text-white flex items-center justify-center space-x-1 shrink-0 text-xs font-bold shadow-xs whitespace-nowrap">
-          <i class="fa-solid fa-building text-xs"></i><span>Shipper</span>
+          <i class="fa-solid fa-building text-xs"></i><span>Client</span>
         </button>
         <button id="btnAdminManualEntry" onclick="toggleAdminManualEntry()" class="hidden h-10 px-3 rounded-xl bg-amber-600 active:bg-amber-700 text-white flex items-center justify-center space-x-1 shrink-0 text-xs font-bold shadow-xs whitespace-nowrap" title="Admin Manual Tally Entry">
           <i class="fa-solid fa-pen-to-square text-xs"></i><span id="lblAdminManualEntry">Fill Tally</span>
@@ -312,7 +312,7 @@
 
           <div class="bg-slate-50/80 p-3 rounded-2xl border border-slate-200/90 space-y-2">
             <label class="block text-[11px] font-bold text-slate-600 uppercase flex items-center space-x-1.5">
-              <i class="fa-solid fa-building text-cyan-600"></i><span>Select Shipper / Company</span>
+              <i class="fa-solid fa-building text-cyan-600"></i><span>Select Client / Company</span>
             </label>
             <div id="shipperButtonsContainer" class="flex flex-wrap gap-1.5 pt-0.5"></div>
             <select id="selectShipper" onchange="onShipperDropdownChange(this.value)" class="w-full h-11 bg-white border border-slate-300 rounded-xl px-3 font-bold text-slate-800 focus:ring-2 focus:ring-cyan-500" required></select>
@@ -365,7 +365,7 @@
             <div class="pt-2 border-t border-indigo-100/90 space-y-2.5">
               <div class="flex items-center justify-between">
                 <label class="text-[11px] font-extrabold text-slate-700 uppercase flex items-center space-x-1">
-                  <i class="fa-solid fa-triangle-exclamation text-amber-500"></i><span>Work Stoppages / Delays</span>
+                  <i class="fa-solid fa-triangle-exclamation text-amber-500"></i><span>Work Stop/Resume Log</span>
                 </label>
                 <button type="button" onclick="addStoppageRow('memberStoppagesList')" class="px-2.5 py-1 rounded-lg bg-indigo-600 active:bg-indigo-700 text-white text-[11px] font-extrabold shadow-2xs flex items-center space-x-1">
                   <i class="fa-solid fa-plus text-[9px]"></i><span>+ Add Stoppage</span>
@@ -378,10 +378,14 @@
 
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 bg-slate-50 p-3 rounded-2xl border border-slate-200">
             <div>
-              <label class="block text-[11px] font-bold text-slate-600 uppercase mb-1">Input Unit</label>
+              <label class="block text-[11px] font-bold text-slate-600 uppercase mb-1">Cargo Unit</label>
               <select id="selectUnit" onchange="updateUnitLogic()" class="w-full h-11 bg-white border border-slate-300 rounded-xl px-3 font-bold text-slate-800">
-                <option value="Bags">Bags (အိတ်)</option>
-                <option value="KG">KG (ကီလိုဂရမ်)</option>
+                <option value="KG">Kg</option>
+                <option value="MT">MT</option>
+                <option value="Pcs">Pcs</option>
+                <option value="Bundle">Bundle</option>
+                <option value="Other">Other</option>
+                <option value="Bags">Bags (Legacy)</option>
               </select>
             </div>
 
@@ -397,6 +401,10 @@
             <div id="wrapperOtherKg" class="hidden">
               <label class="block text-[11px] font-bold text-slate-600 uppercase mb-1">Custom KG / Bag</label>
               <input type="number" step="any" id="inputOtherKg" placeholder="e.g. 40" class="w-full h-11 bg-white border border-slate-300 rounded-xl px-3 font-bold">
+            </div>
+            <div id="wrapperOtherUnit" class="hidden">
+              <label class="block text-[11px] font-bold text-slate-600 uppercase mb-1">Custom Unit</label>
+              <input type="text" id="inputOtherUnit" placeholder="Enter custom unit..." class="w-full h-11 bg-white border border-slate-300 rounded-xl px-3 font-bold">
             </div>
 
             <div>
@@ -445,7 +453,7 @@
               <tr class="bg-slate-100 text-slate-600 uppercase text-[10px] tracking-wider border-b border-slate-200">
                 <th class="py-2.5 px-2.5">Date/Shift</th>
                 <th class="py-2.5 px-2.5">Hatch</th>
-                <th class="py-2.5 px-2.5">Shipper</th>
+                <th class="py-2.5 px-2.5">Client</th>
                 <th class="py-2.5 px-2.5 text-right">D Total</th>
                 <th class="py-2.5 px-2.5 text-right">TONS</th>
                 <th class="py-2.5 px-2.5 text-center">Action</th>
@@ -462,13 +470,13 @@
     <section id="tabPicker" class="hidden space-y-3">
       <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-xs">
         <h2 class="font-bold text-slate-800 text-sm mb-3 flex items-center space-x-2">
-          <i class="fa-solid fa-filter text-indigo-600"></i><span>Shipper & Date Filter</span>
+          <i class="fa-solid fa-filter text-indigo-600"></i><span>Client & Date Filter</span>
         </h2>
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <div>
-            <label class="block text-[11px] font-bold text-slate-600 uppercase mb-1">Shipper</label>
+            <label class="block text-[11px] font-bold text-slate-600 uppercase mb-1">Client</label>
             <select id="filterPickerShipper" onchange="runShipperFilter()" class="w-full h-11 bg-slate-50 border border-slate-300 rounded-xl px-3 font-bold">
-              <option value="ALL">All Shippers</option>
+              <option value="ALL">All Clients</option>
             </select>
           </div>
           <div>
@@ -505,7 +513,7 @@
           <thead>
             <tr class="bg-slate-100 text-slate-600 uppercase text-[10px] tracking-wider border-b border-slate-200">
               <th class="py-2.5 px-2.5">Date</th><th class="py-2.5 px-2.5">Shift</th><th class="py-2.5 px-2.5">Boat No</th>
-              <th class="py-2.5 px-2.5">Shipper</th><th class="py-2.5 px-2.5">Hatch</th><th class="py-2.5 px-2.5 text-right">D Total</th><th class="py-2.5 px-2.5 text-right">TONS</th><th class="py-2.5 px-2.5 text-right">BALANCE</th>
+              <th class="py-2.5 px-2.5">Client</th><th class="py-2.5 px-2.5">Hatch</th><th class="py-2.5 px-2.5 text-right">D Total</th><th class="py-2.5 px-2.5 text-right">TONS</th><th class="py-2.5 px-2.5 text-right">BALANCE</th>
             </tr>
           </thead>
           <tbody id="tblPickerBody" class="divide-y divide-slate-100"></tbody>
@@ -520,7 +528,7 @@
           <h2 class="font-bold text-slate-800 text-sm flex items-center space-x-2">
             <i class="fa-solid fa-table text-cyan-600"></i><span>MV INTAKE Master Template</span>
           </h2>
-          <p class="text-[11px] text-slate-500">BOAT NO Column တွင် Shipper အမည်များကို အစမှအဆုံး အစီအစဉ်လိုက် ဖော်ပြထားပါသည်</p>
+          <p class="text-[11px] text-slate-500">BOAT NO Column တွင် Client အမည်များကို အစမှအဆုံး အစီအစဉ်လိုက် ဖော်ပြထားပါသည်</p>
         </div>
         <button onclick="downloadExcel()" class="h-10 px-4 bg-emerald-600 active:bg-emerald-700 text-white rounded-xl text-xs font-bold shadow-xs flex items-center space-x-2">
           <i class="fa-solid fa-file-excel"></i><span>Download Excel (.xlsx)</span>
@@ -545,8 +553,8 @@
               <th class="py-2 px-2 border border-slate-300">3</th>
               <th class="py-2 px-2 border border-slate-300">4</th>
               <th class="py-2 px-2 border border-slate-300">5</th>
-              <th class="py-2 px-2 border border-slate-300">KGS</th>
-              <th class="py-2 px-2 border border-slate-300">TONS</th>
+              <th id="templateQtyHeader" class="py-2 px-2 border border-slate-300">TOTAL</th>
+              <th id="templateTonHeader" class="py-2 px-2 border border-slate-300">WEIGHT MT</th>
               <th class="py-2 px-2 border border-slate-300">REMARKS</th>
             </tr>
           </thead>
@@ -563,7 +571,7 @@
       <div class="bg-white rounded-2xl border border-slate-200 p-3.5 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
         <h2 class="font-bold text-slate-800 text-sm">Master Intake Records</h2>
         <div class="flex items-center w-full sm:w-64">
-          <input type="text" id="searchAllRecords" placeholder="Search boat, shipper, checker..." class="h-10 flex-1 min-w-0 bg-slate-50 border border-slate-300 border-r-0 rounded-l-xl px-3 text-xs">
+          <input type="text" id="searchAllRecords" placeholder="Search boat, client, checker..." class="h-10 flex-1 min-w-0 bg-slate-50 border border-slate-300 border-r-0 rounded-l-xl px-3 text-xs">
           <button type="button" onclick="runAllRecordsSearch()" class="h-10 w-10 shrink-0 bg-cyan-600 hover:bg-cyan-700 text-white rounded-r-xl flex items-center justify-center" title="Search All Records" aria-label="Search All Records"><i class="fa-solid fa-magnifying-glass text-xs"></i></button>
         </div>
       </div>
@@ -572,7 +580,7 @@
           <thead>
             <tr class="bg-slate-100 text-slate-600 uppercase text-[10px] tracking-wider border-b border-slate-200">
               <th class="py-2.5 px-2.5">Date</th><th class="py-2.5 px-2.5">Shift</th><th class="py-2.5 px-2.5">Boat No</th>
-              <th class="py-2.5 px-2.5">Hatch</th><th class="py-2.5 px-2.5">Shipper</th><th class="py-2.5 px-2.5 text-slate-500">Tally/Sample</th>
+              <th class="py-2.5 px-2.5">Hatch</th><th class="py-2.5 px-2.5">Client</th><th class="py-2.5 px-2.5 text-slate-500">Tally/Sample</th>
               <th class="py-2.5 px-2.5 text-right">D Total</th><th class="py-2.5 px-2.5 text-right">TONS</th><th class="py-2.5 px-2.5 text-center">Action</th>
             </tr>
           </thead>
@@ -689,7 +697,7 @@
         </div>
         <div class="grid grid-cols-2 gap-2.5">
           <div><label class="block text-[11px] font-bold text-slate-600 uppercase mb-1">Hatch No</label><select id="adminEditHatch" class="w-full h-11 bg-slate-50 border border-slate-300 rounded-xl px-3 font-bold text-slate-800"><option value="1">H-1</option><option value="2">H-2</option><option value="3">H-3</option><option value="4">H-4</option><option value="5">H-5</option></select></div>
-          <div><label class="block text-[11px] font-bold text-slate-600 uppercase mb-1">Shipper</label><select id="adminEditShipper" class="w-full h-11 bg-slate-50 border border-slate-300 rounded-xl px-3 font-bold text-slate-800" required></select></div>
+          <div><label class="block text-[11px] font-bold text-slate-600 uppercase mb-1">Client</label><select id="adminEditShipper" class="w-full h-11 bg-slate-50 border border-slate-300 rounded-xl px-3 font-bold text-slate-800" required></select></div>
         </div>
         <div class="bg-indigo-50 border border-indigo-200 p-3 rounded-xl space-y-2.5">
           <div class="grid grid-cols-2 gap-2">
@@ -707,14 +715,15 @@
             </div>
           </div>
           <div class="pt-2 border-t border-indigo-200 space-y-2">
-            <div class="flex items-center justify-between"><span class="text-[10px] font-extrabold text-slate-700 uppercase">Work Stoppages (24-Hour)</span><button type="button" onclick="addStoppageRow('adminStoppagesList')" class="px-2 py-0.5 rounded bg-indigo-600 active:bg-indigo-700 text-white text-[10px] font-bold flex items-center space-x-1"><i class="fa-solid fa-plus text-[8px]"></i><span>+ Add Row</span></button></div>
+            <div class="flex items-center justify-between"><span class="text-[10px] font-extrabold text-slate-700 uppercase">Work Stop/Resume Log (24-Hour)</span><button type="button" onclick="addStoppageRow('adminStoppagesList')" class="px-2 py-0.5 rounded bg-indigo-600 active:bg-indigo-700 text-white text-[10px] font-bold flex items-center space-x-1"><i class="fa-solid fa-plus text-[8px]"></i><span>+ Add Row</span></button></div>
             <div id="adminStoppagesList" class="space-y-2"></div>
           </div>
         </div>
         <div class="grid grid-cols-2 gap-2.5">
           <div><label class="block text-[11px] font-bold text-slate-600 uppercase mb-1">D Total Amount</label><input type="number" step="any" id="adminEditDTotal" class="w-full h-11 bg-white border-2 border-cyan-500 rounded-xl px-3 font-extrabold text-slate-900" required></div>
-          <div><label class="block text-[11px] font-bold text-slate-600 uppercase mb-1">Unit</label><select id="adminEditUnit" class="w-full h-11 bg-slate-50 border border-slate-300 rounded-xl px-3 font-bold text-slate-800"><option value="Bags">Bags (50 Kg)</option><option value="KG">KG</option></select></div>
+          <div><label class="block text-[11px] font-bold text-slate-600 uppercase mb-1">Unit</label><select id="adminEditUnit" onchange="updateAdminEditUnit()" class="w-full h-11 bg-slate-50 border border-slate-300 rounded-xl px-3 font-bold text-slate-800"><option value="Bags">Bags (အိတ်)</option><option value="KG">Kg</option><option value="MT">MT</option><option value="Pcs">Pcs</option><option value="Bundle">Bundle</option><option value="Other">Other</option></select></div>
         </div>
+        <div id="wrapperAdminEditOtherUnit" class="hidden"><label class="block text-[11px] font-bold text-slate-600 uppercase mb-1">Custom Unit</label><input type="text" id="adminEditOtherUnit" placeholder="Enter custom unit..." class="w-full h-10 bg-slate-50 border border-slate-300 rounded-xl px-3 text-xs"></div>
         <div><label class="block text-[11px] font-bold text-slate-600 uppercase mb-1">Remarks</label><input type="text" id="adminEditRemarks" placeholder="Notes..." class="w-full h-10 bg-slate-50 border border-slate-300 rounded-xl px-3 text-xs"></div>
         <div class="flex items-center space-x-2 pt-1">
           <button type="submit" class="flex-1 h-11 bg-cyan-600 active:bg-cyan-700 text-white rounded-xl font-extrabold shadow-xs">Save Changes</button>
@@ -782,9 +791,14 @@
           <input type="hidden" id="editBoatId" value="">
           <input type="text" id="inputBoatName" placeholder="Vessel Name..." class="w-full h-11 bg-white border border-slate-300 rounded-xl px-3 font-bold">
           <div class="grid grid-cols-2 gap-2.5">
-            <select id="inputBoatUnit" class="w-full h-11 bg-white border border-slate-300 rounded-xl px-2.5 font-bold"><option value="Bags">Bags</option><option value="KG">KG</option></select>
+            <input type="text" id="inputBoatQuality" placeholder="Quality..." class="w-full h-11 bg-white border border-slate-300 rounded-xl px-2.5 font-bold">
+            <input type="number" min="0" step="any" id="inputBoatQuantity" placeholder="Quantity..." class="w-full h-11 bg-white border border-slate-300 rounded-xl px-2.5 font-bold">
+          </div>
+          <div class="grid grid-cols-2 gap-2.5">
+            <select id="inputBoatUnit" onchange="toggleBoatCustomUnit()" class="w-full h-11 bg-white border border-slate-300 rounded-xl px-2.5 font-bold"><option value="KG">Kg</option><option value="MT">MT</option><option value="Pcs">Pcs</option><option value="Bundle">Bundle</option><option value="Other">Other</option><option value="Bags">Bags (Legacy)</option></select>
             <select id="inputBoatWeight" class="w-full h-11 bg-white border border-slate-300 rounded-xl px-2.5 font-bold"><option value="50 Kg">50 Kg</option><option value="25 Kg">25 Kg</option><option value="Other">Other</option></select>
           </div>
+          <input type="text" id="inputBoatCustomUnit" placeholder="Custom Unit (when Other)" class="hidden w-full h-11 bg-white border border-slate-300 rounded-xl px-3 font-bold">
           <div class="flex space-x-2">
             <button onclick="saveBoatAccount()" id="btnSaveBoat" class="flex-1 h-11 bg-cyan-600 text-white rounded-xl text-xs font-extrabold">Save</button>
             <button onclick="cancelBoatEdit()" id="btnCancelBoat" class="hidden h-11 px-4 bg-slate-200 text-slate-700 rounded-xl text-xs font-bold">Cancel</button>
@@ -798,22 +812,27 @@
   <div id="modalShipper" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-end sm:items-center justify-center p-0 sm:p-4">
     <div class="bg-white rounded-t-3xl sm:rounded-2xl max-w-md w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
       <div class="p-4 bg-slate-900 text-white flex items-center justify-between">
-        <div class="flex items-center space-x-2"><i class="fa-solid fa-building text-cyan-400"></i><span class="font-bold text-sm">Shippers</span></div>
+        <div class="flex items-center space-x-2"><i class="fa-solid fa-building text-cyan-400"></i><span class="font-bold text-sm">Clients</span></div>
         <button onclick="closeShipperModal()" class="w-8 h-8 rounded-lg bg-slate-800 text-slate-300 flex items-center justify-center"><i class="fa-solid fa-xmark"></i></button>
       </div>
       <div class="p-4 overflow-y-auto space-y-4 custom-scroll">
         <div class="bg-slate-50 border border-slate-200 p-3.5 rounded-2xl space-y-2.5">
           <input type="hidden" id="editShipperIndex" value="">
-          <label id="lblShipperForm" class="block text-[11px] font-bold text-slate-600 uppercase">Add or Edit Shipper</label>
-          <input type="text" id="inputNewShipper" placeholder="Shipper name..." class="w-full h-11 bg-white border border-slate-300 rounded-xl px-3 font-bold">
+          <label id="lblShipperForm" class="block text-[11px] font-bold text-slate-600 uppercase">Add or Edit Client</label>
+          <input type="text" id="inputNewShipper" placeholder="Client name..." class="w-full h-11 bg-white border border-slate-300 rounded-xl px-3 font-bold">
           <div class="grid grid-cols-2 gap-2">
             <input type="number" min="0" step="any" id="inputShipperTarget" placeholder="Target quantity" class="w-full h-11 bg-white border border-slate-300 rounded-xl px-3 font-bold">
-            <select id="inputShipperTargetUnit" class="w-full h-11 bg-white border border-slate-300 rounded-xl px-3 font-bold">
+            <select id="inputShipperTargetUnit" class="w-full h-11 bg-white border border-slate-300 rounded-xl px-2.5 font-bold">
               <option value="MT">Metric Tons (MT)</option>
               <option value="Bags">Bags</option>
             </select>
           </div>
-          <p class="text-[10px] text-slate-500">သတ်မှတ်ထားသော Target ကို Shipper Picker တွင် Balance အဖြစ် အလိုအလျောက်တွက်ပေးပါမည်။</p>
+          <label class="block text-[11px] font-bold text-slate-600 uppercase mb-1">Cargo Unit for Member Mode</label>
+          <select id="inputShipperCargoUnit" onchange="toggleClientCustomUnit()" class="w-full h-11 bg-white border border-slate-300 rounded-xl px-2.5 font-bold">
+            <option value="KG">Kg</option><option value="MT">MT</option><option value="Pcs">Pcs</option><option value="Bundle">Bundle</option><option value="Other">Other</option><option value="Bags">Bags (Legacy)</option>
+          </select>
+          <input type="text" id="inputShipperCustomUnit" placeholder="Custom Unit (when Other)" class="hidden w-full h-11 bg-white border border-slate-300 rounded-xl px-3 font-bold">
+          <p class="text-[10px] text-slate-500">သတ်မှတ်ထားသော Target ကို Client Picker တွင် Balance အဖြစ် အလိုအလျောက်တွက်ပေးပါမည်။</p>
           <div class="flex space-x-2">
             <button onclick="saveShipperItem()" id="btnSaveShipper" class="flex-1 h-11 bg-cyan-600 text-white rounded-xl text-xs font-extrabold">Save</button>
             <button onclick="cancelShipperEdit()" id="btnCancelShipper" class="hidden h-11 px-4 bg-slate-200 text-slate-700 rounded-xl text-xs font-bold">Cancel</button>
@@ -1019,7 +1038,7 @@
       cloudUrl: '', legacyOrg: '', setupDone: false, activeBoatId: null, lockedBoatId: null, sessionLocked: false,
       currentUser: { id: '', name: '', role: 'SUPER_ADMIN', accessKey: '' },
       boats: [], shippers: [], users: [],
-      records: [], shipperTargets: {}, deleted: {}, notifications: [], chatMessages: [], lastUpdated: 0
+      records: [], shipperTargets: {}, shipperUnits: {}, deleted: {}, notifications: [], chatMessages: [], lastUpdated: 0
     };
 
     function loadData() {
@@ -1038,6 +1057,7 @@
         }
       }
       if(!appData.shipperTargets || typeof appData.shipperTargets !== 'object') appData.shipperTargets = {};
+      if(!appData.shipperUnits || typeof appData.shipperUnits !== 'object') appData.shipperUnits = {};
       if(!appData.deleted || typeof appData.deleted !== 'object') appData.deleted = {};
       if(!appData.notifications) appData.notifications = [];
       if(!appData.chatMessages) appData.chatMessages = [];
@@ -1230,6 +1250,7 @@
         notifications: byId(p.notifications), chatMessages: byId(p.chatMessages),
         shippers: toList(p.shippers).slice().sort(),
         shipperTargets: toList(p.shipperTargets).slice().sort((a, b) => String(a.name).localeCompare(String(b.name))),
+        shipperUnits: toList(p.shipperUnits).slice().sort((a, b) => String(a.name).localeCompare(String(b.name))),
         deleted: toList(p.deleted).slice().sort((a, b) => String(a.k).localeCompare(String(b.k)))
       }) || '{}');
     }
@@ -1241,6 +1262,7 @@
         shipperTargets: Object.entries(appData.shipperTargets || {}).map(([name, t]) => ({
           name, quantity: Number(t && t.quantity) || 0, unit: (t && t.unit === 'Bags') ? 'Bags' : 'MT', updatedAt: tsOf(t)
         })),
+        shipperUnits: Object.entries(appData.shipperUnits || {}).map(([name, unit]) => ({ name, unit, updatedAt: tsOf(unit) })),
         deleted: Object.entries(appData.deleted || {}).map(([k, t]) => ({ k, t }))
       };
     }
@@ -1263,12 +1285,16 @@
 
       const targets = {};
       Object.entries(appData.shipperTargets || {}).forEach(([n, t]) => { targets[n] = { ...t }; });
+      const cargoUnits = {};
+      Object.entries(appData.shipperUnits || {}).forEach(([n, unit]) => { cargoUnits[n] = { unit, updatedAt: Date.now() }; });
       toList(remote.shipperTargets).forEach(t => {
         if (!t.name) return;
         const cur = targets[t.name];
         if (!cur || tsOf(t) > tsOf(cur)) targets[t.name] = { quantity: Number(t.quantity) || 0, unit: t.unit === 'Bags' ? 'Bags' : 'MT', updatedAt: tsOf(t) };
       });
       Object.keys(targets).forEach(n => { const d = tomb['S:' + n]; if (d && d >= tsOf(targets[n])) delete targets[n]; });
+      toList(remote.shipperUnits).forEach(x => { if (x.name && (!cargoUnits[x.name] || tsOf(x) > tsOf(cargoUnits[x.name]))) cargoUnits[x.name] = { unit: x.unit || 'KG', updatedAt: tsOf(x) }; });
+      Object.keys(cargoUnits).forEach(n => { const d = tomb['S:' + n]; if (d) delete cargoUnits[n]; });
 
       const shippers = [];
       toList(appData.shippers).concat(toList(remote.shippers)).forEach(sName => {
@@ -1288,11 +1314,12 @@
         chatMessages: mergeCollection('M:', appData.chatMessages, remote.chatMessages, {}).sort((a, b) => ts(a) - ts(b)).slice(-200)
       };
       if (next.users.length === 0) next.users = toList(appData.users);
-      next.shippers = shippers; next.shipperTargets = targets; next.deleted = tomb;
+      next.shippers = shippers; next.shipperTargets = targets; next.shipperUnits = Object.fromEntries(Object.entries(cargoUnits).map(([n, x]) => [n, x.unit])); next.deleted = tomb;
 
       const asPayload = n => ({
         ...n,
         shipperTargets: Object.entries(n.shipperTargets).map(([name, t]) => ({ name, quantity: t.quantity, unit: t.unit, updatedAt: tsOf(t) })),
+        shipperUnits: Object.entries(n.shipperUnits || {}).map(([name, unit]) => ({ name, unit, updatedAt: Date.now() })),
         deleted: Object.entries(n.deleted).map(([k, t]) => ({ k, t }))
       });
       const mergedCanon = canonPayload(asPayload(next));
@@ -1511,7 +1538,11 @@
               <input type="text" id="${rowId}_t" readonly value="${esc(s.to)}" placeholder="00:00" onclick="open24HrClockModal('${rowId}_t','To',()=>updStop('${cid}',${i}))" class="w-full h-8 bg-slate-50 border border-slate-300 rounded-lg px-2 text-xs font-mono font-bold cursor-pointer">
             </div>
           </div>
-          <input type="text" value="${esc(s.reason)}" placeholder="Reason..." class="w-full h-8 bg-slate-50 border border-slate-300 rounded-lg px-2.5 text-xs font-medium" onchange="updStopReason('${cid}',${i},this.value)">
+          ${(() => {
+            const reasons = ['Due to Weather Conditions','Due to Rain','Due to Cloudy','Due to Waiting for Cargo','Due to Truck','Other Reason'];
+            const isPreset = reasons.includes(s.reason);
+            return `<select data-stop-reason="true" onchange="updStopReasonSelect('${cid}',${i},this.value)" class="w-full h-8 bg-slate-50 border border-slate-300 rounded-lg px-2.5 text-xs font-medium">${reasons.map(reason => `<option value="${reason}" ${((isPreset && s.reason === reason) || (!isPreset && reason === 'Other Reason')) ? 'selected' : ''}>${reason}</option>`).join('')}</select><input data-stop-custom="true" type="text" value="${!isPreset ? esc(s.reason) : ''}" placeholder="Enter Other Reason..." class="${(!isPreset || s.reason === 'Other Reason') ? '' : 'hidden'} w-full h-8 mt-2 bg-slate-50 border border-slate-300 rounded-lg px-2.5 text-xs font-medium" onchange="updStopCustom('${cid}',${i},this.value)">`;
+          })()}
         `;
         c.appendChild(div);
       });
@@ -1523,12 +1554,14 @@
         arr.push({
           from: r.querySelector(`[id$='_f']`).value.trim(),
           to: r.querySelector(`[id$='_t']`).value.trim(),
-          reason: r.querySelector('input[type="text"]:not([readonly])').value.trim()
+          reason: (() => { const select = r.querySelector('[data-stop-reason]'); const custom = r.querySelector('[data-stop-custom]'); return select && select.value === 'Other Reason' ? (custom ? custom.value.trim() : '') : (select ? select.value : ''); })()
         });
       }); return arr;
     }
     function updStop(cid,i) { const arr=getStops(cid); renderStoppagesList(cid,arr); }
     function updStopReason(cid,i,val) { const arr=getStops(cid); arr[i].reason=val; renderStoppagesList(cid,arr); }
+    function updStopReasonSelect(cid,i,val) { const arr=getStops(cid); arr[i].reason = val === 'Other Reason' ? '' : val; renderStoppagesList(cid,arr); }
+    function updStopCustom(cid,i,val) { const arr=getStops(cid); arr[i].reason = val; renderStoppagesList(cid,arr); }
     function addStoppageRow(cid) { const arr=getStops(cid); arr.push({from:'',to:'',reason:''}); renderStoppagesList(cid,arr); }
     function remStop(cid,i) { const arr=getStops(cid); arr.splice(i,1); renderStoppagesList(cid,arr); }
 
@@ -1600,17 +1633,17 @@
     // Form logic
     function handleFormSubmit(e) {
       e.preventDefault(); const b = getActiveBoat(); if(!b) { showToast('Add Vessel Account!'); return; }
-      const s = document.getElementById('selectShipper').value; if(!s) { showToast('Add Shipper!'); return; }
+      const s = document.getElementById('selectShipper').value; if(!s) { showToast('Add Client!'); return; }
       
       const recId = document.getElementById('entryRecordId').value;
-      const dTotal = parseFloat(document.getElementById('inputDTotal').value)||0; const unit = document.getElementById('selectUnit').value;
-      const effKg = unit === 'KG' ? 1 : (document.getElementById('selectWeightOpt').value === 'Other' ? (parseFloat(document.getElementById('inputOtherKg').value)||50) : parseInt(document.getElementById('selectWeightOpt').value)||50);
+      const dTotal = parseFloat(document.getElementById('inputDTotal').value)||0; const unit = document.getElementById('selectUnit').value; const unitCustom = unit === 'Other' ? document.getElementById('inputOtherUnit').value.trim() : '';
+      const effKg = unit === 'KG' ? 1 : (unit === 'MT' ? 1000 : (unit === 'Bags' ? (document.getElementById('selectWeightOpt').value === 'Other' ? (parseFloat(document.getElementById('inputOtherKg').value)||50) : parseInt(document.getElementById('selectWeightOpt').value)||50) : 0));
       if (dTotal <= 0) { showToast('Enter an amount greater than 0'); return; }
       const totalKgs = dTotal * effKg;
 
       const rec = {
         id: recId || 'R-'+Date.now(), boatId: b.id, boatName: b.name, date: document.getElementById('inputDate').value, shift: document.getElementById('inputShift').value, shipper: s,
-        hatch: parseInt(document.getElementById('inputHatch').value), unit: unit, weightOpt: document.getElementById('selectWeightOpt').value, otherKg: parseFloat(document.getElementById('inputOtherKg').value)||50,
+        hatch: parseInt(document.getElementById('inputHatch').value), unit: unit, unitCustom: unitCustom, weightOpt: document.getElementById('selectWeightOpt').value, otherKg: parseFloat(document.getElementById('inputOtherKg').value)||50,
         dTotal: dTotal, totalKgs: totalKgs, totalTons: totalKgs/1000, remarks: document.getElementById('inputRemarks').value,
         commencedTime: document.getElementById('inputCommencedTime').value, completedTime: document.getElementById('inputCompletedTime').value, stoppages: getStops('memberStoppagesList'), updatedAt: Date.now()
       };
@@ -1629,10 +1662,10 @@
     function saveAdminDirectEdit(e) {
       e.preventDefault();
       if (!appData.currentUser || !['ADMIN', 'SUPER_ADMIN'].includes(appData.currentUser.role)) { showToast('Permission denied'); return; } const recId = document.getElementById('adminEditRecId').value; const idx = appData.records.findIndex(r => r.id === recId); if(idx===-1) return;
-      const dTotal = parseFloat(document.getElementById('adminEditDTotal').value)||0; const unit = document.getElementById('adminEditUnit').value; const oldRec = appData.records[idx]; const oldWeight = oldRec.unit === 'Bags' ? Number(oldRec.totalKgs || 0) / Number(oldRec.dTotal || 1) : getBoatBagWeightKg(appData.boats.find(b => b.id === oldRec.boatId)); const totalKgs = unit==='KG' ? dTotal : dTotal * (Number.isFinite(oldWeight) && oldWeight > 0 ? oldWeight : 50);
+      const dTotal = parseFloat(document.getElementById('adminEditDTotal').value)||0; const unit = document.getElementById('adminEditUnit').value; const unitCustom = unit === 'Other' ? document.getElementById('adminEditOtherUnit').value.trim() : ''; const oldRec = appData.records[idx]; const oldWeight = oldRec.unit === 'Bags' ? Number(oldRec.totalKgs || 0) / Number(oldRec.dTotal || 1) : getBoatBagWeightKg(appData.boats.find(b => b.id === oldRec.boatId)); const totalKgs = unit==='KG' ? dTotal : (unit==='MT' ? dTotal * 1000 : (unit==='Bags' ? dTotal * (Number.isFinite(oldWeight) && oldWeight > 0 ? oldWeight : 50) : 0));
       appData.records[idx] = {
         ...appData.records[idx], date: document.getElementById('adminEditDate').value, shift: document.getElementById('adminEditShift').value, hatch: parseInt(document.getElementById('adminEditHatch').value),
-        shipper: document.getElementById('adminEditShipper').value, dTotal: dTotal, unit: unit, totalKgs: totalKgs, totalTons: totalKgs/1000, remarks: document.getElementById('adminEditRemarks').value,
+        shipper: document.getElementById('adminEditShipper').value, dTotal: dTotal, unit: unit, unitCustom: unitCustom, totalKgs: totalKgs, totalTons: totalKgs/1000, remarks: document.getElementById('adminEditRemarks').value,
         commencedTime: document.getElementById('adminEditCommenced').value, completedTime: document.getElementById('adminEditCompleted').value, stoppages: getStops('adminStoppagesList'), lastModifiedBy: appData.currentUser.name, updatedAt: Date.now()
       };
       saveData(); closeAdminEditModal(); renderAll(); showToast('Updated');
@@ -1645,18 +1678,20 @@
       const c = document.getElementById('listVessels'); c.innerHTML='';
       appData.boats.forEach(b=>{
         const d = document.createElement('div'); d.className='flex justify-between p-3 bg-white border rounded-xl text-xs';
-        d.innerHTML=`<div><div class="font-bold">${esc(b.name)}</div><div class="text-[10px] text-slate-400">${b.unit}</div></div><div class="flex space-x-1"><button onclick="editBoatAccount('${b.id}')" class="w-8 h-8 rounded bg-slate-50 text-cyan-600"><i class="fa-solid fa-pen"></i></button><button onclick="deleteBoatAccount('${b.id}')" class="w-8 h-8 rounded bg-rose-50 text-rose-500"><i class="fa-solid fa-trash"></i></button></div>`; c.appendChild(d);
+        d.innerHTML=`<div class="min-w-0 flex-1 pr-2"><div class="font-bold break-words">${esc(b.name)}</div><div class="text-[10px] text-slate-400 break-words">${esc(b.quality || 'Quality not set')} · Qty: ${Number(b.quantity || 0).toLocaleString()}</div><div class="text-[10px] text-cyan-700 font-semibold">Cargo Unit: ${esc(b.unit || 'KG')}</div></div><div class="flex space-x-1 shrink-0"><button onclick="editBoatAccount('${b.id}')" class="w-8 h-8 rounded bg-slate-50 text-cyan-600"><i class="fa-solid fa-pen"></i></button><button onclick="deleteBoatAccount('${b.id}')" class="w-8 h-8 rounded bg-rose-50 text-rose-500"><i class="fa-solid fa-trash"></i></button></div>`; c.appendChild(d);
       });
     }
+    function toggleBoatCustomUnit() { document.getElementById('inputBoatCustomUnit').classList.toggle('hidden', document.getElementById('inputBoatUnit').value !== 'Other'); }
+    function toggleClientCustomUnit() { document.getElementById('inputShipperCustomUnit').classList.toggle('hidden', document.getElementById('inputShipperCargoUnit').value !== 'Other'); }
     function saveBoatAccount() {
-      const name = document.getElementById('inputBoatName').value.trim(); const unit = document.getElementById('inputBoatUnit').value; const weight = document.getElementById('inputBoatWeight').value; const editId = document.getElementById('editBoatId').value;
+      const name = document.getElementById('inputBoatName').value.trim(); const quality = document.getElementById('inputBoatQuality').value.trim(); const quantity = Math.max(0, Number(document.getElementById('inputBoatQuantity').value) || 0); const unit = document.getElementById('inputBoatUnit').value; const unitCustom = unit === 'Other' ? document.getElementById('inputBoatCustomUnit').value.trim() : ''; const weight = document.getElementById('inputBoatWeight').value; const editId = document.getElementById('editBoatId').value;
       if(!name) return;
-      if(editId) { const idx = appData.boats.findIndex(b=>b.id===editId); if(idx!==-1) { appData.boats[idx]={...appData.boats[idx], name, unit, weight, updatedAt: Date.now()}; appData.records.forEach(r=>{if(r.boatId===editId && r.boatName!==name){ r.boatName=name; r.updatedAt=Date.now(); }}); } } 
-      else { const b = { id: 'B-'+Date.now(), name, unit, weight, updatedAt: Date.now() }; appData.boats.push(b); appData.activeBoatId = b.id; }
+      if(editId) { const idx = appData.boats.findIndex(b=>b.id===editId); if(idx!==-1) { appData.boats[idx]={...appData.boats[idx], name, quality, quantity, unit, unitCustom, weight, updatedAt: Date.now()}; appData.records.forEach(r=>{if(r.boatId===editId && r.boatName!==name){ r.boatName=name; r.updatedAt=Date.now(); }}); } } 
+      else { const b = { id: 'B-'+Date.now(), name, quality, quantity, unit, unitCustom, weight, updatedAt: Date.now() }; appData.boats.push(b); appData.activeBoatId = b.id; }
       saveData(); cancelBoatEdit(); renderVesselList(); renderAll();
     }
-    function editBoatAccount(id) { const b=appData.boats.find(x=>x.id===id); if(!b) return; document.getElementById('editBoatId').value=b.id; document.getElementById('inputBoatName').value=b.name; document.getElementById('inputBoatUnit').value=b.unit; document.getElementById('inputBoatWeight').value=b.weight; document.getElementById('btnCancelBoat').classList.remove('hidden'); }
-    function cancelBoatEdit() { document.getElementById('editBoatId').value=''; document.getElementById('inputBoatName').value=''; document.getElementById('btnCancelBoat').classList.add('hidden'); }
+    function editBoatAccount(id) { const b=appData.boats.find(x=>x.id===id); if(!b) return; document.getElementById('editBoatId').value=b.id; document.getElementById('inputBoatName').value=b.name; document.getElementById('inputBoatQuality').value=b.quality || ''; document.getElementById('inputBoatQuantity').value=b.quantity || ''; document.getElementById('inputBoatUnit').value=b.unit; document.getElementById('inputBoatCustomUnit').value=b.unitCustom || ''; toggleBoatCustomUnit(); document.getElementById('inputBoatWeight').value=b.weight; document.getElementById('btnCancelBoat').classList.remove('hidden'); }
+    function cancelBoatEdit() { document.getElementById('editBoatId').value=''; document.getElementById('inputBoatName').value=''; document.getElementById('inputBoatQuality').value=''; document.getElementById('inputBoatQuantity').value=''; document.getElementById('inputBoatUnit').value='KG'; document.getElementById('inputBoatCustomUnit').value=''; toggleBoatCustomUnit(); document.getElementById('btnCancelBoat').classList.add('hidden'); }
     function deleteBoatAccount(id) { if(confirm('Delete this vessel and ALL of its records?')) { markDeleted('B:'+id); appData.records.filter(r=>r.boatId===id).forEach(r=>markDeleted('R:'+r.id)); appData.boats=appData.boats.filter(b=>b.id!==id); appData.records=appData.records.filter(r=>r.boatId!==id); if (appData.activeBoatId === id) appData.activeBoatId = appData.boats[0]?.id || null; saveData(); renderVesselList(); renderAll(); } }
 
     function openShipperModal() { renderShipperList(); document.getElementById('modalShipper').classList.remove('hidden'); }
@@ -1702,23 +1737,26 @@
       const c = document.getElementById('listShippers'); c.innerHTML='';
       appData.shippers.forEach((s,i)=>{
         const q = getShipperTarget(s);
-        const d = document.createElement('div'); d.className='flex justify-between items-center p-3 bg-white border rounded-xl text-xs';
-        d.innerHTML=`<div><div class="font-bold">${esc(s)}</div><div class="text-[10px] text-indigo-600 font-semibold">Target: ${q.quantity ? formatShipperQuantity(q.quantity, q.unit) : 'Not set'}</div></div><div class="flex space-x-1"><button onclick="startEditShipper(${i})" class="w-8 h-8 rounded bg-slate-50 text-cyan-600"><i class="fa-solid fa-pen"></i></button><button onclick="deleteShipper(${i})" class="w-8 h-8 rounded bg-rose-50 text-rose-500"><i class="fa-solid fa-trash"></i></button></div>`; c.appendChild(d);
+        const d = document.createElement('div'); d.className='flex justify-between items-start p-3 bg-white border rounded-xl text-xs';
+        d.innerHTML=`<div class="min-w-0 flex-1 pr-2"><div class="font-bold break-words">${esc(s)}</div><div class="text-[10px] text-indigo-600 font-semibold break-words">Unit: ${esc(appData.shipperUnits?.[s]?.unit || appData.shipperUnits?.[s] || 'KG')}${appData.shipperUnits?.[s]?.custom ? ` (${esc(appData.shipperUnits[s].custom)})` : ''} · Target: ${q.quantity ? formatShipperQuantity(q.quantity, q.unit) : 'Not set'}</div></div><div class="flex space-x-1 shrink-0"><button onclick="startEditShipper(${i})" class="w-8 h-8 rounded bg-slate-50 text-cyan-600"><i class="fa-solid fa-pen"></i></button><button onclick="deleteShipper(${i})" class="w-8 h-8 rounded bg-rose-50 text-rose-500"><i class="fa-solid fa-trash"></i></button></div>`; c.appendChild(d);
       });
     }
     function saveShipperItem() {
       const name = document.getElementById('inputNewShipper').value.trim(); const editIdx = document.getElementById('editShipperIndex').value;
       const quantity = Math.max(0, Number(document.getElementById('inputShipperTarget').value) || 0); const unit = document.getElementById('inputShipperTargetUnit').value === 'Bags' ? 'Bags' : 'MT';
+      const cargoUnit = document.getElementById('inputShipperCargoUnit').value || 'KG'; const cargoUnitCustom = cargoUnit === 'Other' ? document.getElementById('inputShipperCustomUnit').value.trim() : '';
       if(!name) return;
       if(!appData.shipperTargets) appData.shipperTargets = {};
-      if(editIdx!=='') { const idx = parseInt(editIdx); const old = appData.shippers[idx]; appData.shippers[idx]=name; appData.records.forEach(r=>{if(r.shipper===old && old!==name){ r.shipper=name; r.updatedAt=Date.now(); }}); if (old !== name) { markDeleted('S:'+old); delete appData.shipperTargets[old]; } }
+      if(!appData.shipperUnits) appData.shipperUnits = {};
+      if(editIdx!=='') { const idx = parseInt(editIdx); const old = appData.shippers[idx]; appData.shippers[idx]=name; appData.records.forEach(r=>{if(r.shipper===old && old!==name){ r.shipper=name; r.updatedAt=Date.now(); }}); if (old !== name) { markDeleted('S:'+old); delete appData.shipperTargets[old]; delete appData.shipperUnits[old]; } }
       else { if(!appData.shippers.includes(name)) appData.shippers.push(name); }
       appData.shipperTargets[name] = { quantity, unit, updatedAt: Date.now() };
+      appData.shipperUnits[name] = { unit: cargoUnit, custom: cargoUnitCustom, updatedAt: Date.now() };
       saveData(); cancelShipperEdit(); renderShipperList(); renderAll();
     }
-    function startEditShipper(i) { const name=appData.shippers[i]; const q=getShipperTarget(name); document.getElementById('editShipperIndex').value=i; document.getElementById('inputNewShipper').value=name; document.getElementById('inputShipperTarget').value=q.quantity || ''; document.getElementById('inputShipperTargetUnit').value=q.unit; document.getElementById('btnCancelShipper').classList.remove('hidden'); }
-    function cancelShipperEdit() { document.getElementById('editShipperIndex').value=''; document.getElementById('inputNewShipper').value=''; document.getElementById('inputShipperTarget').value=''; document.getElementById('inputShipperTargetUnit').value='MT'; document.getElementById('btnCancelShipper').classList.add('hidden'); }
-    function deleteShipper(i) { if(confirm('Delete?')) { const name=appData.shippers[i]; markDeleted('S:'+name); appData.shippers.splice(i,1); if(appData.shipperTargets) delete appData.shipperTargets[name]; saveData(); renderShipperList(); renderAll(); } }
+    function startEditShipper(i) { const name=appData.shippers[i]; const q=getShipperTarget(name); document.getElementById('editShipperIndex').value=i; document.getElementById('inputNewShipper').value=name; document.getElementById('inputShipperTarget').value=q.quantity || ''; document.getElementById('inputShipperTargetUnit').value=q.unit; const savedCargo = appData.shipperUnits?.[name]; document.getElementById('inputShipperCargoUnit').value=savedCargo?.unit || savedCargo || 'KG'; document.getElementById('inputShipperCustomUnit').value=savedCargo?.custom || ''; toggleClientCustomUnit(); document.getElementById('btnCancelShipper').classList.remove('hidden'); }
+    function cancelShipperEdit() { document.getElementById('editShipperIndex').value=''; document.getElementById('inputNewShipper').value=''; document.getElementById('inputShipperTarget').value=''; document.getElementById('inputShipperTargetUnit').value='MT'; document.getElementById('inputShipperCargoUnit').value='KG'; document.getElementById('inputShipperCustomUnit').value=''; toggleClientCustomUnit(); document.getElementById('btnCancelShipper').classList.add('hidden'); }
+    function deleteShipper(i) { if(confirm('Delete?')) { const name=appData.shippers[i]; markDeleted('S:'+name); appData.shippers.splice(i,1); if(appData.shipperTargets) delete appData.shipperTargets[name]; if(appData.shipperUnits) delete appData.shipperUnits[name]; saveData(); renderShipperList(); renderAll(); } }
 
     function openUserManagerModal() { renderTeamUsersList(); document.getElementById('modalUserManager').classList.remove('hidden'); }
     function closeUserManagerModal() { document.getElementById('modalUserManager').classList.add('hidden'); cancelUserEdit(); }
@@ -1873,6 +1911,8 @@
     }
 
     // Render Engines
+    function displayRecordUnit(r) { return r.unit === 'Other' ? (r.unitCustom || 'Other') : (r.unit === 'KG' ? 'Kg' : (r.unit || '')); }
+
     function renderAll() { 
       checkSetup(); 
       applyRolePermissions(); 
@@ -1911,34 +1951,44 @@
       const active = getActiveBoat(); const tbody = document.getElementById('tblTemplateBody'); const tfoot = document.getElementById('tblTemplateFoot');
       tbody.innerHTML = ''; tfoot.innerHTML = ''; if (!active) return;
       const logs = appData.records.filter(r => r.boatId === active.id);
+      const recordUnits = [...new Set(logs.map(r => r.unit === 'Other' ? (r.unitCustom || 'Other') : (r.unit || active.unit || 'KG')))];
+      const templateUnit = recordUnits.length === 1 ? recordUnits[0] : (active.unit || 'KG');
+      const qh = document.getElementById('templateQtyHeader'); const th = document.getElementById('templateTonHeader');
+      if (qh) qh.textContent = `TOTAL (${templateUnit === 'KG' ? 'Kg' : templateUnit}${recordUnits.length > 1 ? ' / MIXED' : ''})`;
+      if (th) th.textContent = 'WEIGHT MT';
       const dMap = {};
       logs.forEach(r => {
         if(!dMap[r.date]) dMap[r.date] = { date: r.date, ts: parseDMYTimestamp(r.date), e: {} };
-        const k = `${r.shift}_${r.shipper}`;
-        if(!dMap[r.date].e[k]) dMap[r.date].e[k] = { shift: r.shift, shipper: r.shipper, h: {1:0,2:0,3:0,4:0,5:0}, kgs:0, tons:0, rmks:[] };
-        dMap[r.date].e[k].h[r.hatch] += r.dTotal; dMap[r.date].e[k].kgs += r.totalKgs; dMap[r.date].e[k].tons += r.totalTons;
+        const rowUnit = r.unit === 'Other' ? (r.unitCustom || 'Other') : (r.unit || templateUnit);
+        const k = `${r.shift}_${r.shipper}_${rowUnit}`;
+        if(!dMap[r.date].e[k]) dMap[r.date].e[k] = { shift: r.shift, shipper: r.shipper, unit: rowUnit, h: {1:0,2:0,3:0,4:0,5:0}, qty:0, tons:0, rmks:[] };
+        dMap[r.date].e[k].h[r.hatch] += Number(r.dTotal || 0); dMap[r.date].e[k].qty += Number(r.dTotal || 0); dMap[r.date].e[k].tons += Number(r.totalTons || 0);
         if(r.remarks && !dMap[r.date].e[k].rmks.includes(r.remarks)) dMap[r.date].e[k].rmks.push(r.remarks);
       });
-
-      let gH={1:0,2:0,3:0,4:0,5:0}, gK=0, gT=0;
+      let gH={1:0,2:0,3:0,4:0,5:0}, gQty=0, gT=0, gUnits=new Set();
       Object.values(dMap).sort((a,b)=>a.ts-b.ts).forEach(dObj => {
-        let dH={1:0,2:0,3:0,4:0,5:0}, dK=0, dT=0;
+        let dH={1:0,2:0,3:0,4:0,5:0}, dQty=0, dT=0, dUnits=new Set();
         Object.values(dObj.e).sort((a,b)=>a.shift==='Day'?-1:1).forEach(e => {
-          dK+=e.kgs; dT+=e.tons; for(let i=1;i<=5;i++) dH[i]+=e.h[i];
+          dQty+=e.qty; dT+=e.tons; dUnits.add(e.unit); for(let i=1;i<=5;i++) dH[i]+=e.h[i]; gUnits.add(e.unit);
           const tr = document.createElement('tr'); tr.className='border-b text-[11px] hover:bg-slate-50';
-          tr.innerHTML = `<td class="py-2 px-2 border-r font-semibold">${dObj.date}</td><td class="py-2 px-2 border-r font-bold ${e.shift==='Day'?'text-amber-600':'text-indigo-600'}">${e.shift}</td><td class="py-2 px-2 border-r text-left font-bold text-slate-800">${esc(e.shipper)}</td>
+          const weightText = ['KG','MT','Bags'].includes(e.unit) ? e.tons.toFixed(3) : '-';
+          tr.innerHTML = `<td class="py-2 px-2 border-r font-semibold">${dObj.date}</td><td class="py-2 px-2 border-r font-bold ${e.shift==='Day'?'text-amber-600':'text-indigo-600'}">${e.shift}</td><td class="py-2 px-2 border-r text-left font-bold text-slate-800">${esc(e.shipper)}<br><span class="text-[9px] text-cyan-700">${esc(e.unit)}</span></td>
             <td class="py-2 px-2 border-r text-right">${e.h[1]||'-'}</td><td class="py-2 px-2 border-r text-right">${e.h[2]||'-'}</td><td class="py-2 px-2 border-r text-right">${e.h[3]||'-'}</td><td class="py-2 px-2 border-r text-right">${e.h[4]||'-'}</td><td class="py-2 px-2 border-r text-right">${e.h[5]||'-'}</td>
-            <td class="py-2 px-2 border-r text-right font-bold">${e.kgs.toLocaleString()}</td><td class="py-2 px-2 border-r text-right font-bold text-emerald-600">${e.tons.toFixed(3)}</td><td class="py-2 px-2 text-left">${esc(e.rmks.join(', '))}</td>`;
+            <td class="py-2 px-2 border-r text-right font-bold">${e.qty.toLocaleString()} ${esc(e.unit)}</td><td class="py-2 px-2 border-r text-right font-bold text-emerald-600">${weightText}</td><td class="py-2 px-2 text-left">${esc(e.rmks.join(', '))}</td>`;
           tbody.appendChild(tr);
         });
-        gK+=dK; gT+=dT; for(let i=1;i<=5;i++) gH[i]+=dH[i];
+        const unitLabel = dUnits.size === 1 ? [...dUnits][0] : 'MIXED';
+        const dailyMixed = dUnits.size !== 1;
+        gQty+=dQty; gT+=dT; for(let i=1;i<=5;i++) gH[i]+=dH[i];
         const trD = document.createElement('tr'); trD.className='bg-rose-50 border-y-2 border-rose-300 text-rose-600 text-[11px] font-black';
-        trD.innerHTML = `<td class="py-2 px-2 border-r">${dObj.date}</td><td class="py-2 px-2 border-r">TOTAL</td><td class="py-2 px-2 border-r text-left">Daily Total (D+N)</td>
-          <td class="py-2 px-2 border-r text-right">${dH[1]||'-'}</td><td class="py-2 px-2 border-r text-right">${dH[2]||'-'}</td><td class="py-2 px-2 border-r text-right">${dH[3]||'-'}</td><td class="py-2 px-2 border-r text-right">${dH[4]||'-'}</td><td class="py-2 px-2 border-r text-right">${dH[5]||'-'}</td>
-          <td class="py-2 px-2 border-r text-right">${dK.toLocaleString()}</td><td class="py-2 px-2 border-r text-right">${dT.toFixed(3)}</td><td class="py-2 px-2 text-left text-[10px] italic">Daily Total</td>`;
+        trD.innerHTML = `<td class="py-2 px-2 border-r">${dObj.date}</td><td class="py-2 px-2 border-r">TOTAL</td><td class="py-2 px-2 border-r text-left">Daily Total (${esc(unitLabel)})</td>
+          <td class="py-2 px-2 border-r text-right">${dailyMixed ? '-' : (dH[1]||'-')}</td><td class="py-2 px-2 border-r text-right">${dailyMixed ? '-' : (dH[2]||'-')}</td><td class="py-2 px-2 border-r text-right">${dailyMixed ? '-' : (dH[3]||'-')}</td><td class="py-2 px-2 border-r text-right">${dailyMixed ? '-' : (dH[4]||'-')}</td><td class="py-2 px-2 border-r text-right">${dailyMixed ? '-' : (dH[5]||'-')}</td>
+          <td class="py-2 px-2 border-r text-right">${dailyMixed ? '-' : `${dQty.toLocaleString()} ${esc(unitLabel)}`}</td><td class="py-2 px-2 border-r text-right">${!dailyMixed && ['KG','MT','Bags'].includes(unitLabel) ? dT.toFixed(3) : '-'}</td><td class="py-2 px-2 text-left text-[10px] italic">Daily Total</td>`;
         tbody.appendChild(trD);
       });
-      tfoot.innerHTML = `<td colspan="3" class="py-2.5 px-3 text-left border-r font-black">GRAND TOTAL</td><td class="py-2.5 px-2 text-right border-r font-black">${gH[1].toLocaleString()}</td><td class="py-2.5 px-2 text-right border-r font-black">${gH[2].toLocaleString()}</td><td class="py-2.5 px-2 text-right border-r font-black">${gH[3].toLocaleString()}</td><td class="py-2.5 px-2 text-right border-r font-black">${gH[4].toLocaleString()}</td><td class="py-2.5 px-2 text-right border-r font-black">${gH[5].toLocaleString()}</td><td class="py-2.5 px-2 text-right border-r font-black">${gK.toLocaleString()}</td><td class="py-2.5 px-2 text-right border-r font-black text-emerald-700">${gT.toFixed(3)}</td><td></td>`;
+      const grandMixed = gUnits.size !== 1;
+      const grandUnit = grandMixed ? 'MIXED UNITS' : [...gUnits][0];
+      tfoot.innerHTML = `<td colspan="3" class="py-2.5 px-3 text-left border-r font-black">GRAND TOTAL</td><td class="py-2.5 px-2 text-right border-r font-black">${grandMixed ? '-' : gH[1].toLocaleString()}</td><td class="py-2.5 px-2 text-right border-r font-black">${grandMixed ? '-' : gH[2].toLocaleString()}</td><td class="py-2.5 px-2 text-right border-r font-black">${grandMixed ? '-' : gH[3].toLocaleString()}</td><td class="py-2.5 px-2 text-right border-r font-black">${grandMixed ? '-' : gH[4].toLocaleString()}</td><td class="py-2.5 px-2 text-right border-r font-black">${grandMixed ? '-' : gH[5].toLocaleString()}</td><td class="py-2.5 px-2 text-right border-r font-black">${grandMixed ? grandUnit : `${gQty.toLocaleString()} ${esc(grandUnit)}`}</td><td class="py-2.5 px-2 text-right border-r font-black text-emerald-700">${!grandMixed && ['KG','MT','Bags'].includes(grandUnit) ? gT.toFixed(3) : '-'}</td><td></td>`;
     }
 
     function renderAttendanceTable() {
@@ -1954,7 +2004,7 @@
           stHtml = `<div class="space-y-1"><div class="px-1.5 py-0.5 rounded text-[9px] font-black bg-rose-100 text-rose-900 border border-rose-300 inline-block">Delay: ${fmtMins(calcTotDur(stList))}</div><div class="bg-slate-50 p-2 rounded-xl border">${stList.map(s=>`<div class="py-1 border-b last:border-0"><span class="font-bold text-rose-700">[${esc(s.from)}-${esc(s.to)}]</span> <span class="text-[11px] text-slate-700">${esc(s.reason)}</span></div>`).join('')}</div></div>`;
         }
         const tr = document.createElement('tr'); tr.className = 'hover:bg-slate-50 border-b';
-        tr.innerHTML = `<td class="py-2.5 px-3 font-bold">${r.date}</td><td class="py-2.5 px-3 font-bold">${r.shift}</td><td class="py-2.5 px-3">${esc(r.checkerName||'Member')}</td><td class="py-2.5 px-3 font-bold text-cyan-700">H-${r.hatch}</td><td class="py-2.5 px-3 text-[11px] font-mono">S: ${r.commencedTime||'-'}<br>E: ${r.completedTime||'-'}</td><td class="py-2.5 px-3">${stHtml}</td><td class="py-2.5 px-3 text-right font-bold">${r.dTotal} ${r.unit}</td><td class="py-2.5 px-3 text-right font-bold text-emerald-600">${r.totalTons.toFixed(2)} MT</td><td class="py-2.5 px-3 text-[9px]">${r.lastModifiedBy?`Edited: ${r.lastModifiedBy}`:'Original'}</td>`;
+        tr.innerHTML = `<td class="py-2.5 px-3 font-bold">${r.date}</td><td class="py-2.5 px-3 font-bold">${r.shift}</td><td class="py-2.5 px-3">${esc(r.checkerName||'Member')}</td><td class="py-2.5 px-3 font-bold text-cyan-700">H-${r.hatch}</td><td class="py-2.5 px-3 text-[11px] font-mono">S: ${r.commencedTime||'-'}<br>E: ${r.completedTime||'-'}</td><td class="py-2.5 px-3">${stHtml}</td><td class="py-2.5 px-3 text-right font-bold">${r.dTotal} ${displayRecordUnit(r)}</td><td class="py-2.5 px-3 text-right font-bold text-emerald-600">${r.totalTons.toFixed(2)} MT</td><td class="py-2.5 px-3 text-[9px]">${r.lastModifiedBy?`Edited: ${r.lastModifiedBy}`:'Original'}</td>`;
         tbody.appendChild(tr);
       });
     }
@@ -1966,7 +2016,7 @@
       if (filtered.length === 0) { tbody.innerHTML = '<tr><td colspan="9" class="text-center py-6 text-slate-400">No records found.</td></tr>'; return; }
       filtered.forEach(r => {
         const tr = document.createElement('tr'); tr.className = 'hover:bg-slate-50 text-xs border-b';
-        tr.innerHTML = `<td class="py-2 px-2.5">${r.date}</td><td class="py-2 px-2.5">${r.shift}</td><td class="py-2 px-2.5">${esc(r.boatName)}</td><td class="py-2 px-2.5 font-bold text-cyan-700">H-${r.hatch}</td><td class="py-2 px-2.5">${esc(r.shipper)}</td><td class="py-2 px-2.5 text-slate-500">${esc(r.checkerName)}</td><td class="py-2 px-2.5 text-right font-bold">${r.dTotal} ${r.unit}</td><td class="py-2.5 px-2.5 text-right font-bold text-emerald-600">${r.totalTons.toFixed(3)}</td><td class="py-2.5 px-2.5 text-center"><button onclick="editRecord('${r.id}')" class="w-7 h-7 rounded bg-cyan-50 text-cyan-600 mr-1"><i class="fa-solid fa-pen"></i></button><button onclick="deleteRecord('${r.id}')" class="w-7 h-7 rounded bg-rose-50 text-rose-500"><i class="fa-solid fa-trash"></i></button></td>`;
+        tr.innerHTML = `<td class="py-2 px-2.5">${r.date}</td><td class="py-2 px-2.5">${r.shift}</td><td class="py-2 px-2.5">${esc(r.boatName)}</td><td class="py-2 px-2.5 font-bold text-cyan-700">H-${r.hatch}</td><td class="py-2 px-2.5">${esc(r.shipper)}</td><td class="py-2 px-2.5 text-slate-500">${esc(r.checkerName)}</td><td class="py-2 px-2.5 text-right font-bold">${r.dTotal} ${displayRecordUnit(r)}</td><td class="py-2.5 px-2.5 text-right font-bold text-emerald-600">${r.totalTons.toFixed(3)}</td><td class="py-2.5 px-2.5 text-center"><button onclick="editRecord('${r.id}')" class="w-7 h-7 rounded bg-cyan-50 text-cyan-600 mr-1"><i class="fa-solid fa-pen"></i></button><button onclick="deleteRecord('${r.id}')" class="w-7 h-7 rounded bg-rose-50 text-rose-500"><i class="fa-solid fa-trash"></i></button></td>`;
         tbody.appendChild(tr);
       });
     }
@@ -1976,7 +2026,7 @@
       if (appData.currentUser.role === 'MEMBER') {
         document.getElementById('entryRecordId').value = rec.id;
         pickerDate.setDate(rec.date); selectShift(rec.shift); document.getElementById('selectShipper').value = rec.shipper;
-        selectHatch(rec.hatch); document.getElementById('selectUnit').value = rec.unit; updateUnitLogic();
+        selectHatch(rec.hatch); document.getElementById('selectUnit').value = rec.unit === 'Bags' ? 'Bags' : rec.unit; document.getElementById('inputOtherUnit').value = rec.unitCustom || ''; updateUnitLogic();
         if(rec.unit==='Bags') document.getElementById('selectWeightOpt').value = rec.weightOpt; updateWeightLogic();
         document.getElementById('inputDTotal').value = rec.dTotal; document.getElementById('inputRemarks').value = rec.remarks||''; document.getElementById('inputOtherKg').value = rec.otherKg||''; document.getElementById('inputCommencedTime').value = rec.commencedTime||'';
         document.getElementById('inputCompletedTime').value = rec.completedTime||'';
@@ -1986,7 +2036,7 @@
       } else {
         document.getElementById('adminEditRecId').value = rec.id; pickerAdminEdit.setDate(rec.date);
         document.getElementById('adminEditShift').value = rec.shift; document.getElementById('adminEditHatch').value = rec.hatch;
-        document.getElementById('adminEditDTotal').value = rec.dTotal; document.getElementById('adminEditUnit').value = rec.unit;
+        document.getElementById('adminEditDTotal').value = rec.dTotal; document.getElementById('adminEditUnit').value = rec.unit; document.getElementById('adminEditOtherUnit').value = rec.unitCustom || ''; updateAdminEditUnit();
         document.getElementById('adminEditRemarks').value = rec.remarks||''; document.getElementById('adminEditCommenced').value = rec.commencedTime||''; document.getElementById('adminEditCompleted').value = rec.completedTime||'';
         renderStoppagesList('adminStoppagesList', Array.isArray(rec.stoppages)?rec.stoppages:[]);
         const s = document.getElementById('adminEditShipper'); s.innerHTML=''; appData.shippers.forEach(x=>{ const o=document.createElement('option'); o.value=x; o.textContent=x; if(x===rec.shipper) o.selected=true; s.appendChild(o); });
@@ -2018,6 +2068,20 @@
 
     // Dynamic Vessel Selectors & Stats
     function getActiveBoat() { return appData.boats.find(b => b.id === appData.activeBoatId) || appData.boats[0]; }
+    function getConfiguredCargoUnit(clientName) {
+      const clientSetting = clientName && appData.shipperUnits && appData.shipperUnits[clientName];
+      const clientUnit = clientSetting?.unit || clientSetting;
+      const boatUnit = getActiveBoat()?.unit;
+      return clientUnit || boatUnit || 'KG';
+    }
+    function applyConfiguredCargoUnit(clientName) {
+      const sel = document.getElementById('selectUnit'); if (!sel) return;
+      const unit = getConfiguredCargoUnit(clientName);
+      if ([...sel.options].some(o => o.value === unit)) sel.value = unit;
+      const setting = clientName && appData.shipperUnits?.[clientName];
+      document.getElementById('inputOtherUnit').value = setting?.custom || (getActiveBoat()?.unit === 'Other' ? (getActiveBoat()?.unitCustom || '') : '');
+      updateUnitLogic();
+    }
     function changeActiveBoat(id) { appData.activeBoatId = id; saveData(true); renderAll(); }
     
     function renderActiveBoatUI() {
@@ -2035,6 +2099,7 @@
         sel.appendChild(opt);
       });
       document.getElementById('bannerBoatName').textContent = active ? active.name : 'No Vessel Account';
+      if (!document.getElementById('entryRecordId').value) applyConfiguredCargoUnit(document.getElementById('selectShipper')?.value || '');
     }
 
     function renderStats() {
@@ -2072,7 +2137,7 @@
       const cur = sel.value;
       sel.innerHTML = ''; btnContainer.innerHTML = '';
       if (appData.shippers.length === 0) {
-        const opt = document.createElement('option'); opt.value = ''; opt.textContent = '-- No Shippers --'; sel.appendChild(opt);
+        const opt = document.createElement('option'); opt.value = ''; opt.textContent = '-- No Clients --'; sel.appendChild(opt);
       } else {
         const activeShipper = (cur && appData.shippers.includes(cur)) ? cur : appData.shippers[0];
         appData.shippers.forEach(s => {
@@ -2082,15 +2147,16 @@
           const btn = document.createElement('button'); btn.type = 'button'; btn.setAttribute('data-shipper', s);
           btn.onclick = () => selectShipperByButton(s);
           const isSelected = (s === activeShipper);
-          btn.className = isSelected ? 'shipper-chip-btn px-3 py-2 rounded-xl border text-xs font-extrabold bg-cyan-600 text-white border-cyan-600 shadow-xs' : 'shipper-chip-btn px-3 py-2 rounded-xl border text-xs font-bold bg-white text-slate-700 border-slate-300 hover:bg-slate-100';
+          btn.className = isSelected ? 'shipper-chip-btn px-3 py-2 rounded-xl border text-xs font-extrabold bg-cyan-600 text-white border-cyan-600 shadow-xs whitespace-normal break-words text-left' : 'shipper-chip-btn px-3 py-2 rounded-xl border text-xs font-bold bg-white text-slate-700 border-slate-300 hover:bg-slate-100 whitespace-normal break-words text-left';
           btn.textContent = s;
           btnContainer.appendChild(btn);
         });
       }
       renderSelectedShipperQuota(sel.value);
+      if (!document.getElementById('entryRecordId').value) applyConfiguredCargoUnit(sel.value);
       const fSel = document.getElementById('filterPickerShipper');
       if (fSel) {
-        const fCur = fSel.value; fSel.innerHTML = '<option value="ALL">All Shippers</option>';
+        const fCur = fSel.value; fSel.innerHTML = '<option value="ALL">All Clients</option>';
         appData.shippers.forEach(s => { const opt = document.createElement('option'); opt.value = s; opt.textContent = s; fSel.appendChild(opt); });
         if (fCur) fSel.value = fCur;
       }
@@ -2100,13 +2166,14 @@
       document.getElementById('selectShipper').value = name;
       highlightActiveShipperButton(name);
       renderSelectedShipperQuota(name);
+      if (!document.getElementById('entryRecordId').value) applyConfiguredCargoUnit(name);
     }
-    function onShipperDropdownChange(val) { highlightActiveShipperButton(val); renderSelectedShipperQuota(val); }
+    function onShipperDropdownChange(val) { highlightActiveShipperButton(val); renderSelectedShipperQuota(val); if (!document.getElementById('entryRecordId').value) applyConfiguredCargoUnit(val); }
     function highlightActiveShipperButton(activeName) {
       document.querySelectorAll('.shipper-chip-btn').forEach(btn => {
         const name = btn.getAttribute('data-shipper');
-        if (name === activeName) btn.className = 'shipper-chip-btn px-3 py-2 rounded-xl border text-xs font-extrabold bg-cyan-600 text-white border-cyan-600 shadow-xs';
-        else btn.className = 'shipper-chip-btn px-3 py-2 rounded-xl border text-xs font-bold bg-white text-slate-700 border-slate-300 hover:bg-slate-100';
+        if (name === activeName) btn.className = 'shipper-chip-btn px-3 py-2 rounded-xl border text-xs font-extrabold bg-cyan-600 text-white border-cyan-600 shadow-xs whitespace-normal break-words text-left';
+        else btn.className = 'shipper-chip-btn px-3 py-2 rounded-xl border text-xs font-bold bg-white text-slate-700 border-slate-300 hover:bg-slate-100 whitespace-normal break-words text-left';
       });
     }
 
@@ -2131,10 +2198,18 @@
     function updateUnitLogic() {
       const unit = document.getElementById('selectUnit').value;
       const wrapWeight = document.getElementById('wrapperWeightOpt');
-      const wrapOther = document.getElementById('wrapperOtherKg');
+      const wrapOtherKg = document.getElementById('wrapperOtherKg');
+      const wrapOtherUnit = document.getElementById('wrapperOtherUnit');
       const lblUnit = document.getElementById('lblUnitName');
-      if (unit === 'KG') { wrapWeight.classList.add('hidden'); wrapOther.classList.add('hidden'); lblUnit.textContent = 'KG'; } 
-      else { wrapWeight.classList.remove('hidden'); lblUnit.textContent = 'Bags'; updateWeightLogic(); }
+      wrapWeight.classList.toggle('hidden', unit !== 'Bags');
+      wrapOtherKg.classList.toggle('hidden', unit !== 'Bags' || document.getElementById('selectWeightOpt').value !== 'Other');
+      wrapOtherUnit.classList.toggle('hidden', unit !== 'Other');
+      lblUnit.textContent = unit === 'Other' ? (document.getElementById('inputOtherUnit').value.trim() || 'Other') : (unit === 'KG' ? 'Kg' : unit);
+      if (unit === 'Bags') updateWeightLogic();
+    }
+    function updateAdminEditUnit() {
+      const unit = document.getElementById('adminEditUnit').value;
+      document.getElementById('wrapperAdminEditOtherUnit').classList.toggle('hidden', unit !== 'Other');
     }
     function updateWeightLogic() {
       const opt = document.getElementById('selectWeightOpt').value;
@@ -2222,8 +2297,8 @@
       }
       const rows = appData.records.map(r => ({
         Date: r.date, Shift: r.shift, Vessel: r.boatName || '', Hatch: `H-${r.hatch}`,
-        Shipper: r.shipper, 'Tally / Sample': r.checkerName || '', 'D Total': r.dTotal,
-        Unit: r.unit, 'Total KG': Number(r.totalKgs || 0), 'Metric Tons': Number(r.totalTons || 0),
+        Client: r.shipper, 'Tally / Sample': r.checkerName || '', 'D Total': r.dTotal,
+        Unit: r.unit === 'Other' ? (r.unitCustom || 'Other') : r.unit, 'Total Quantity': Number(r.dTotal || 0), 'Weight MT': ['KG','MT','Bags'].includes(r.unit) ? Number(r.totalTons || 0) : '',
         Commenced: r.commencedTime || '', Completed: r.completedTime || '', Remarks: r.remarks || ''
       }));
       const workbook = XLSX.utils.book_new();
