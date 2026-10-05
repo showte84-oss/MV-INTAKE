@@ -240,6 +240,7 @@
             </span>
           </div>
           <div id="bannerBoatName" class="text-sm sm:text-base font-extrabold text-slate-800 truncate">No Vessel Account</div>
+          <div id="bannerBoatDetails" class="text-[10px] sm:text-[11px] text-slate-500 font-semibold leading-5">Vessel Name: — · Quality: — · Quantity: — MT · Port: —</div>
         </div>
       </div>
 
@@ -792,18 +793,14 @@
           <input type="text" id="inputBoatName" placeholder="Vessel Name..." class="w-full h-11 bg-white border border-slate-300 rounded-xl px-3 font-bold">
           <div class="grid grid-cols-2 gap-2.5">
             <input type="text" id="inputBoatQuality" placeholder="Quality..." class="w-full h-11 bg-white border border-slate-300 rounded-xl px-2.5 font-bold">
-            <input type="number" min="0" step="any" id="inputBoatQuantity" placeholder="Quantity..." class="w-full h-11 bg-white border border-slate-300 rounded-xl px-2.5 font-bold">
+            <input type="number" min="0" step="any" id="inputBoatQuantity" placeholder="Quantity (MT)..." class="w-full h-11 bg-white border border-slate-300 rounded-xl px-2.5 font-bold">
+            <input type="text" id="inputBoatPort" placeholder="Port..." class="col-span-2 w-full h-11 bg-white border border-slate-300 rounded-xl px-2.5 font-bold">
           </div>
           <div class="grid grid-cols-2 gap-2.5">
             <select id="inputBoatUnit" onchange="toggleBoatCustomUnit()" class="w-full h-11 bg-white border border-slate-300 rounded-xl px-2.5 font-bold"><option value="Bags">Bags (Legacy)</option><option value="KG">Kg</option><option value="MT">MT</option><option value="Pcs">Pcs</option><option value="Bundle">Bundle</option><option value="Other">Other</option></select>
             <select id="inputBoatWeight" class="w-full h-11 bg-white border border-slate-300 rounded-xl px-2.5 font-bold"><option value="50 Kg">50 Kg</option><option value="25 Kg">25 Kg</option><option value="Other">Other</option></select>
           </div>
           <input type="text" id="inputBoatCustomUnit" placeholder="Custom Unit (when Other)" class="hidden w-full h-11 bg-white border border-slate-300 rounded-xl px-3 font-bold">
-          <div class="border border-cyan-200 bg-cyan-50/60 rounded-xl p-2.5 space-y-1.5">
-            <label class="block text-[11px] font-extrabold text-cyan-900 uppercase">Assigned Clients for this Vessel</label>
-            <div id="vesselClientAssignmentList" class="grid grid-cols-1 sm:grid-cols-2 gap-1.5"></div>
-            <p class="text-[10px] text-slate-500">ဒီ Vessel မှာ အသုံးပြုမယ့် Client တွေကိုသာ ရွေးပါ။</p>
-          </div>
           <div class="flex space-x-2">
             <button onclick="saveBoatAccount()" id="btnSaveBoat" class="flex-1 h-11 bg-cyan-600 text-white rounded-xl text-xs font-extrabold">Save</button>
             <button onclick="cancelBoatEdit()" id="btnCancelBoat" class="hidden h-11 px-4 bg-slate-200 text-slate-700 rounded-xl text-xs font-bold">Cancel</button>
@@ -825,6 +822,7 @@
           <input type="hidden" id="editShipperIndex" value="">
           <label id="lblShipperForm" class="block text-[11px] font-bold text-slate-600 uppercase">Add or Edit Client</label>
           <input type="text" id="inputNewShipper" placeholder="Client name..." class="w-full h-11 bg-white border border-slate-300 rounded-xl px-3 font-bold">
+          <input type="text" id="inputShipperQuality" placeholder="Quality..." class="w-full h-11 bg-white border border-slate-300 rounded-xl px-3 font-bold">
           <div class="grid grid-cols-2 gap-2">
             <input type="number" min="0" step="any" id="inputShipperTarget" placeholder="Target quantity" class="w-full h-11 bg-white border border-slate-300 rounded-xl px-3 font-bold">
             <select id="inputShipperTargetUnit" class="w-full h-11 bg-white border border-slate-300 rounded-xl px-2.5 font-bold">
@@ -1050,7 +1048,7 @@
       cloudUrl: '', legacyOrg: '', setupDone: false, activeBoatId: null, lockedBoatId: null, sessionLocked: false,
       currentUser: { id: '', name: '', role: 'SUPER_ADMIN', accessKey: '' },
       boats: [], shippers: [], users: [],
-      records: [], shipperTargets: {}, shipperUnits: {}, deleted: {}, notifications: [], chatMessages: [], lastUpdated: 0
+      records: [], shipperTargets: {}, shipperUnits: {}, shipperQualities: {}, deleted: {}, notifications: [], chatMessages: [], lastUpdated: 0
     };
 
     function loadData() {
@@ -1070,6 +1068,7 @@
       }
       if(!appData.shipperTargets || typeof appData.shipperTargets !== 'object') appData.shipperTargets = {};
       if(!appData.shipperUnits || typeof appData.shipperUnits !== 'object') appData.shipperUnits = {};
+      if(!appData.shipperQualities || typeof appData.shipperQualities !== 'object') appData.shipperQualities = {};
       if (Array.isArray(appData.boats) && Array.isArray(appData.shippers)) appData.boats.forEach(b => { if (!Array.isArray(b.clientNames)) b.clientNames = appData.shippers.slice(); });
       if(!appData.deleted || typeof appData.deleted !== 'object') appData.deleted = {};
       if(!appData.notifications) appData.notifications = [];
@@ -1265,6 +1264,7 @@
         shippers: toList(p.shippers).slice().sort(),
         shipperTargets: toList(p.shipperTargets).slice().sort((a, b) => String(a.name).localeCompare(String(b.name))),
         shipperUnits: toList(p.shipperUnits).slice().sort((a, b) => String(a.name).localeCompare(String(b.name))),
+        shipperQualities: toList(p.shipperQualities).slice().sort((a, b) => String(a.name).localeCompare(String(b.name))),
         deleted: toList(p.deleted).slice().sort((a, b) => String(a.k).localeCompare(String(b.k)))
       }) || '{}');
     }
@@ -1277,6 +1277,7 @@
           name, quantity: Number(t && t.quantity) || 0, unit: (t && t.unit === 'Bags') ? 'Bags' : 'MT', updatedAt: tsOf(t)
         })),
         shipperUnits: Object.entries(appData.shipperUnits || {}).map(([name, unit]) => ({ name, unit, updatedAt: tsOf(unit) })),
+        shipperQualities: Object.entries(appData.shipperQualities || {}).map(([name, quality]) => ({ name, quality, updatedAt: Date.now() })),
         deleted: Object.entries(appData.deleted || {}).map(([k, t]) => ({ k, t }))
       };
     }
@@ -1301,6 +1302,8 @@
       Object.entries(appData.shipperTargets || {}).forEach(([n, t]) => { targets[n] = { ...t }; });
       const cargoUnits = {};
       Object.entries(appData.shipperUnits || {}).forEach(([n, unit]) => { cargoUnits[n] = { unit, updatedAt: Date.now() }; });
+      const qualities = {};
+      Object.entries(appData.shipperQualities || {}).forEach(([n, quality]) => { qualities[n] = { quality, updatedAt: Date.now() }; });
       toList(remote.shipperTargets).forEach(t => {
         if (!t.name) return;
         const cur = targets[t.name];
@@ -1308,6 +1311,7 @@
       });
       Object.keys(targets).forEach(n => { const d = tomb['S:' + n]; if (d && d >= tsOf(targets[n])) delete targets[n]; });
       toList(remote.shipperUnits).forEach(x => { if (x.name && (!cargoUnits[x.name] || tsOf(x) > tsOf(cargoUnits[x.name]))) cargoUnits[x.name] = { unit: x.unit || 'KG', updatedAt: tsOf(x) }; });
+      toList(remote.shipperQualities).forEach(x => { if (x.name && (!qualities[x.name] || tsOf(x) >= tsOf(qualities[x.name]))) qualities[x.name] = { quality: x.quality || '', updatedAt: tsOf(x) }; });
       Object.keys(cargoUnits).forEach(n => { const d = tomb['S:' + n]; if (d) delete cargoUnits[n]; });
 
       const shippers = [];
@@ -1328,12 +1332,13 @@
         chatMessages: mergeCollection('M:', appData.chatMessages, remote.chatMessages, {}).sort((a, b) => ts(a) - ts(b)).slice(-200)
       };
       if (next.users.length === 0) next.users = toList(appData.users);
-      next.shippers = shippers; next.shipperTargets = targets; next.shipperUnits = Object.fromEntries(Object.entries(cargoUnits).map(([n, x]) => [n, x.unit])); next.deleted = tomb;
+      next.shippers = shippers; next.shipperTargets = targets; next.shipperUnits = Object.fromEntries(Object.entries(cargoUnits).map(([n, x]) => [n, x.unit])); next.shipperQualities = Object.fromEntries(Object.entries(qualities).map(([n, x]) => [n, x.quality])); next.deleted = tomb;
 
       const asPayload = n => ({
         ...n,
         shipperTargets: Object.entries(n.shipperTargets).map(([name, t]) => ({ name, quantity: t.quantity, unit: t.unit, updatedAt: tsOf(t) })),
         shipperUnits: Object.entries(n.shipperUnits || {}).map(([name, unit]) => ({ name, unit, updatedAt: Date.now() })),
+        shipperQualities: Object.entries(n.shipperQualities || {}).map(([name, quality]) => ({ name, quality, updatedAt: Date.now() })),
         deleted: Object.entries(n.deleted).map(([k, t]) => ({ k, t }))
       });
       const mergedCanon = canonPayload(asPayload(next));
@@ -1686,14 +1691,8 @@
     }
 
     // Modal Manager Logic
-    function openAccountModal() { renderVesselList(); renderVesselClientAssignments(null); document.getElementById('modalAccount').classList.remove('hidden'); }
+    function openAccountModal() { renderVesselList();; document.getElementById('modalAccount').classList.remove('hidden'); }
     function closeAccountModal() { document.getElementById('modalAccount').classList.add('hidden'); cancelBoatEdit(); }
-    function renderVesselClientAssignments(boat) {
-      const wrap = document.getElementById('vesselClientAssignmentList'); if (!wrap) return;
-      const assigned = Array.isArray(boat?.clientNames) ? boat.clientNames : [];
-      wrap.innerHTML = appData.shippers.length ? appData.shippers.map(name => `<label class="flex items-center gap-2 bg-white border border-slate-200 rounded-lg px-2 py-1.5 text-xs font-bold text-slate-700"><input type="checkbox" class="vessel-client-check accent-cyan-600" value="${esc(name)}" ${assigned.includes(name) ? 'checked' : ''}><span class="break-words">${esc(name)}</span></label>`).join('') : '<span class="text-[10px] text-slate-500 italic">Client မရှိသေးပါ။</span>';
-    }
-    function getSelectedVesselClients() { return [...document.querySelectorAll('.vessel-client-check:checked')].map(x => x.value); }
     function getActiveVesselClients() {
       const active = getActiveBoat();
       const allowed = Array.isArray(active?.clientNames) ? active.clientNames : appData.shippers;
@@ -1703,20 +1702,20 @@
       const c = document.getElementById('listVessels'); c.innerHTML='';
       appData.boats.forEach(b=>{
         const d = document.createElement('div'); d.className='flex justify-between p-3 bg-white border rounded-xl text-xs';
-        d.innerHTML=`<div class="min-w-0 flex-1 pr-2"><div class="font-bold break-words">${esc(b.name)}</div><div class="text-[10px] text-slate-400 break-words">${esc(b.quality || 'Quality not set')} · Qty: ${Number(b.quantity || 0).toLocaleString()}</div><div class="text-[10px] text-cyan-700 font-semibold">Cargo Unit: ${esc(b.unit || 'KG')}</div><div class="text-[10px] text-indigo-600 break-words">Clients: ${esc((b.clientNames || []).join(', ') || 'None')}</div></div><div class="flex space-x-1 shrink-0"><button onclick="editBoatAccount('${b.id}')" class="w-8 h-8 rounded bg-slate-50 text-cyan-600"><i class="fa-solid fa-pen"></i></button><button onclick="deleteBoatAccount('${b.id}')" class="w-8 h-8 rounded bg-rose-50 text-rose-500"><i class="fa-solid fa-trash"></i></button></div>`; c.appendChild(d);
+        d.innerHTML=`<div class="min-w-0 flex-1 pr-2"><div class="font-bold break-words">${esc(b.name)}</div><div class="text-[10px] text-slate-500 break-words">Vessel Name: ${esc(b.name || '—')}</div><div class="text-[10px] text-slate-500 break-words">Quality: ${esc(b.quality || '—')}</div><div class="text-[10px] text-slate-500 break-words">Quantity: ${Number(b.quantity || 0).toLocaleString()} MT</div><div class="text-[10px] text-slate-500 break-words">Port: ${esc(b.port || '—')}</div><div class="text-[10px] text-cyan-700 font-semibold">Cargo Unit: ${esc(b.unit || 'KG')}</div></div><div class="flex space-x-1 shrink-0"><button onclick="editBoatAccount('${b.id}')" class="w-8 h-8 rounded bg-slate-50 text-cyan-600"><i class="fa-solid fa-pen"></i></button><button onclick="deleteBoatAccount('${b.id}')" class="w-8 h-8 rounded bg-rose-50 text-rose-500"><i class="fa-solid fa-trash"></i></button></div>`; c.appendChild(d);
       });
     }
     function toggleBoatCustomUnit() { document.getElementById('inputBoatCustomUnit').classList.toggle('hidden', document.getElementById('inputBoatUnit').value !== 'Other'); }
     function toggleClientCustomUnit() { document.getElementById('inputShipperCustomUnit').classList.toggle('hidden', document.getElementById('inputShipperCargoUnit').value !== 'Other'); }
     function saveBoatAccount() {
-      const name = document.getElementById('inputBoatName').value.trim(); const quality = document.getElementById('inputBoatQuality').value.trim(); const quantity = Math.max(0, Number(document.getElementById('inputBoatQuantity').value) || 0); const unit = document.getElementById('inputBoatUnit').value; const unitCustom = unit === 'Other' ? document.getElementById('inputBoatCustomUnit').value.trim() : ''; const weight = document.getElementById('inputBoatWeight').value; const editId = document.getElementById('editBoatId').value; const clientNames = getSelectedVesselClients();
+      const name = document.getElementById('inputBoatName').value.trim(); const quality = document.getElementById('inputBoatQuality').value.trim(); const quantity = Math.max(0, Number(document.getElementById('inputBoatQuantity').value) || 0); const unit = document.getElementById('inputBoatUnit').value; const unitCustom = unit === 'Other' ? document.getElementById('inputBoatCustomUnit').value.trim() : ''; const weight = document.getElementById('inputBoatWeight').value; const port = document.getElementById('inputBoatPort').value.trim(); const editId = document.getElementById('editBoatId').value;
       if(!name) return;
-      if(editId) { const idx = appData.boats.findIndex(b=>b.id===editId); if(idx!==-1) { appData.boats[idx]={...appData.boats[idx], name, quality, quantity, unit, unitCustom, weight, clientNames, updatedAt: Date.now()}; appData.records.forEach(r=>{if(r.boatId===editId && r.boatName!==name){ r.boatName=name; r.updatedAt=Date.now(); }}); } } 
-      else { const b = { id: 'B-'+Date.now(), name, quality, quantity, unit, unitCustom, weight, clientNames, updatedAt: Date.now() }; appData.boats.push(b); appData.activeBoatId = b.id; }
+      if(editId) { const idx = appData.boats.findIndex(b=>b.id===editId); if(idx!==-1) { appData.boats[idx]={...appData.boats[idx], name, quality, quantity, port, unit, unitCustom, weight, updatedAt: Date.now()}; appData.records.forEach(r=>{if(r.boatId===editId && r.boatName!==name){ r.boatName=name; r.updatedAt=Date.now(); }}); } } 
+      else { const b = { id: 'B-'+Date.now(), name, quality, quantity, port, unit, unitCustom, weight, clientNames: [], updatedAt: Date.now() }; appData.boats.push(b); appData.activeBoatId = b.id; }
       saveData(); cancelBoatEdit(); renderVesselList(); renderAll();
     }
-    function editBoatAccount(id) { const b=appData.boats.find(x=>x.id===id); if(!b) return; document.getElementById('editBoatId').value=b.id; document.getElementById('inputBoatName').value=b.name; document.getElementById('inputBoatQuality').value=b.quality || ''; document.getElementById('inputBoatQuantity').value=b.quantity || ''; document.getElementById('inputBoatUnit').value=b.unit; document.getElementById('inputBoatCustomUnit').value=b.unitCustom || ''; toggleBoatCustomUnit(); document.getElementById('inputBoatWeight').value=b.weight; renderVesselClientAssignments(b); document.getElementById('btnCancelBoat').classList.remove('hidden'); }
-    function cancelBoatEdit() { document.getElementById('editBoatId').value=''; document.getElementById('inputBoatName').value=''; document.getElementById('inputBoatQuality').value=''; document.getElementById('inputBoatQuantity').value=''; document.getElementById('inputBoatUnit').value='KG'; document.getElementById('inputBoatCustomUnit').value=''; toggleBoatCustomUnit(); renderVesselClientAssignments(null); document.getElementById('btnCancelBoat').classList.add('hidden'); }
+    function editBoatAccount(id) { const b=appData.boats.find(x=>x.id===id); if(!b) return; document.getElementById('editBoatId').value=b.id; document.getElementById('inputBoatName').value=b.name; document.getElementById('inputBoatQuality').value=b.quality || ''; document.getElementById('inputBoatQuantity').value=b.quantity || ''; document.getElementById('inputBoatPort').value=b.port || ''; document.getElementById('inputBoatUnit').value=b.unit; document.getElementById('inputBoatCustomUnit').value=b.unitCustom || ''; toggleBoatCustomUnit(); document.getElementById('inputBoatWeight').value=b.weight;; document.getElementById('btnCancelBoat').classList.remove('hidden'); }
+    function cancelBoatEdit() { document.getElementById('editBoatId').value=''; document.getElementById('inputBoatName').value=''; document.getElementById('inputBoatQuality').value=''; document.getElementById('inputBoatQuantity').value=''; document.getElementById('inputBoatPort').value=''; document.getElementById('inputBoatUnit').value='KG'; document.getElementById('inputBoatCustomUnit').value=''; toggleBoatCustomUnit();; document.getElementById('btnCancelBoat').classList.add('hidden'); }
     function deleteBoatAccount(id) { if(confirm('Delete this vessel and ALL of its records?')) { markDeleted('B:'+id); appData.records.filter(r=>r.boatId===id).forEach(r=>markDeleted('R:'+r.id)); appData.boats=appData.boats.filter(b=>b.id!==id); appData.records=appData.records.filter(r=>r.boatId!==id); if (appData.activeBoatId === id) appData.activeBoatId = appData.boats[0]?.id || null; saveData(); renderVesselList(); renderAll(); } }
 
     function openShipperModal() { renderShipperList(); document.getElementById('modalShipper').classList.remove('hidden'); }
@@ -1761,27 +1760,29 @@
     function renderShipperList() {
       const c = document.getElementById('listShippers'); c.innerHTML='';
       appData.shippers.forEach((s,i)=>{
-        const q = getShipperTarget(s);
+        const q = getShipperTarget(s); const quality = appData.shipperQualities?.[s] || '';
         const d = document.createElement('div'); d.className='flex justify-between items-start p-3 bg-white border rounded-xl text-xs';
-        d.innerHTML=`<div class="min-w-0 flex-1 pr-2"><div class="font-bold break-words">${esc(s)}</div><div class="text-[10px] text-indigo-600 font-semibold break-words">Unit: ${esc(appData.shipperUnits?.[s]?.unit || appData.shipperUnits?.[s] || 'KG')}${appData.shipperUnits?.[s]?.custom ? ` (${esc(appData.shipperUnits[s].custom)})` : ''} · Target: ${q.quantity ? formatShipperQuantity(q.quantity, q.unit) : 'Not set'}</div></div><div class="flex space-x-1 shrink-0"><button onclick="startEditShipper(${i})" class="w-8 h-8 rounded bg-slate-50 text-cyan-600"><i class="fa-solid fa-pen"></i></button><button onclick="deleteShipper(${i})" class="w-8 h-8 rounded bg-rose-50 text-rose-500"><i class="fa-solid fa-trash"></i></button></div>`; c.appendChild(d);
+        d.innerHTML=`<div class="min-w-0 flex-1 pr-2"><div class="font-bold break-words">${esc(s)}</div><div class="text-[10px] text-slate-500 break-words">Quality: ${esc(quality || '—')}</div><div class="text-[10px] text-indigo-600 font-semibold break-words">Unit: ${esc(appData.shipperUnits?.[s]?.unit || appData.shipperUnits?.[s] || 'KG')}${appData.shipperUnits?.[s]?.custom ? ` (${esc(appData.shipperUnits[s].custom)})` : ''} · Target: ${q.quantity ? formatShipperQuantity(q.quantity, q.unit) : 'Not set'}</div></div><div class="flex space-x-1 shrink-0"><button onclick="startEditShipper(${i})" class="w-8 h-8 rounded bg-slate-50 text-cyan-600"><i class="fa-solid fa-pen"></i></button><button onclick="deleteShipper(${i})" class="w-8 h-8 rounded bg-rose-50 text-rose-500"><i class="fa-solid fa-trash"></i></button></div>`; c.appendChild(d);
       });
     }
     function saveShipperItem() {
-      const name = document.getElementById('inputNewShipper').value.trim(); const editIdx = document.getElementById('editShipperIndex').value;
+      const name = document.getElementById('inputNewShipper').value.trim(); const quality = document.getElementById('inputShipperQuality').value.trim(); const editIdx = document.getElementById('editShipperIndex').value;
       const quantity = Math.max(0, Number(document.getElementById('inputShipperTarget').value) || 0); const unit = document.getElementById('inputShipperTargetUnit').value === 'Bags' ? 'Bags' : 'MT';
       const cargoUnit = document.getElementById('inputShipperCargoUnit').value || 'KG'; const cargoUnitCustom = cargoUnit === 'Other' ? document.getElementById('inputShipperCustomUnit').value.trim() : '';
       if(!name) return;
       if(!appData.shipperTargets) appData.shipperTargets = {};
       if(!appData.shipperUnits) appData.shipperUnits = {};
-      if(editIdx!=='') { const idx = parseInt(editIdx); const old = appData.shippers[idx]; appData.shippers[idx]=name; appData.records.forEach(r=>{if(r.shipper===old && old!==name){ r.shipper=name; r.updatedAt=Date.now(); }}); if (old !== name) { markDeleted('S:'+old); delete appData.shipperTargets[old]; delete appData.shipperUnits[old]; appData.boats.forEach(b => { if (Array.isArray(b.clientNames)) b.clientNames = b.clientNames.map(x => x === old ? name : x); }); } }
+      if(!appData.shipperQualities) appData.shipperQualities = {};
+      if(editIdx!=='') { const idx = parseInt(editIdx); const old = appData.shippers[idx]; appData.shippers[idx]=name; appData.records.forEach(r=>{if(r.shipper===old && old!==name){ r.shipper=name; r.updatedAt=Date.now(); }}); if (old !== name) { markDeleted('S:'+old); delete appData.shipperTargets[old]; delete appData.shipperUnits[old]; if (appData.shipperQualities) { appData.shipperQualities[name] = appData.shipperQualities[old] || quality; delete appData.shipperQualities[old]; } appData.boats.forEach(b => { if (Array.isArray(b.clientNames)) b.clientNames = b.clientNames.map(x => x === old ? name : x); }); } }
       else { if(!appData.shippers.includes(name)) appData.shippers.push(name); const active = getActiveBoat(); if (active) { if (!Array.isArray(active.clientNames)) active.clientNames = []; if (!active.clientNames.includes(name)) active.clientNames.push(name); } }
       appData.shipperTargets[name] = { quantity, unit, updatedAt: Date.now() };
+      appData.shipperQualities[name] = quality;
       appData.shipperUnits[name] = { unit: cargoUnit, custom: cargoUnitCustom, updatedAt: Date.now() };
       saveData(); cancelShipperEdit(); renderShipperList(); renderAll();
     }
-    function startEditShipper(i) { const name=appData.shippers[i]; const q=getShipperTarget(name); document.getElementById('editShipperIndex').value=i; document.getElementById('inputNewShipper').value=name; document.getElementById('inputShipperTarget').value=q.quantity || ''; document.getElementById('inputShipperTargetUnit').value=q.unit; const savedCargo = appData.shipperUnits?.[name]; document.getElementById('inputShipperCargoUnit').value=savedCargo?.unit || savedCargo || 'KG'; document.getElementById('inputShipperCustomUnit').value=savedCargo?.custom || ''; toggleClientCustomUnit(); document.getElementById('btnCancelShipper').classList.remove('hidden'); }
-    function cancelShipperEdit() { document.getElementById('editShipperIndex').value=''; document.getElementById('inputNewShipper').value=''; document.getElementById('inputShipperTarget').value=''; document.getElementById('inputShipperTargetUnit').value='MT'; document.getElementById('inputShipperCargoUnit').value='KG'; document.getElementById('inputShipperCustomUnit').value=''; toggleClientCustomUnit(); document.getElementById('btnCancelShipper').classList.add('hidden'); }
-    function deleteShipper(i) { if(confirm('Delete?')) { const name=appData.shippers[i]; markDeleted('S:'+name); appData.shippers.splice(i,1); if(appData.shipperTargets) delete appData.shipperTargets[name]; if(appData.shipperUnits) delete appData.shipperUnits[name]; appData.boats.forEach(b => { if (Array.isArray(b.clientNames)) b.clientNames = b.clientNames.filter(x => x !== name); }); saveData(); renderShipperList(); renderAll(); } }
+    function startEditShipper(i) { const name=appData.shippers[i]; const q=getShipperTarget(name); document.getElementById('editShipperIndex').value=i; document.getElementById('inputNewShipper').value=name; document.getElementById('inputShipperQuality').value=appData.shipperQualities?.[name] || ''; document.getElementById('inputShipperTarget').value=q.quantity || ''; document.getElementById('inputShipperTargetUnit').value=q.unit; const savedCargo = appData.shipperUnits?.[name]; document.getElementById('inputShipperCargoUnit').value=savedCargo?.unit || savedCargo || 'KG'; document.getElementById('inputShipperCustomUnit').value=savedCargo?.custom || ''; toggleClientCustomUnit(); document.getElementById('btnCancelShipper').classList.remove('hidden'); }
+    function cancelShipperEdit() { document.getElementById('editShipperIndex').value=''; document.getElementById('inputNewShipper').value=''; document.getElementById('inputShipperQuality').value=''; document.getElementById('inputShipperTarget').value=''; document.getElementById('inputShipperTargetUnit').value='MT'; document.getElementById('inputShipperCargoUnit').value='KG'; document.getElementById('inputShipperCustomUnit').value=''; toggleClientCustomUnit(); document.getElementById('btnCancelShipper').classList.add('hidden'); }
+    function deleteShipper(i) { if(confirm('Delete?')) { const name=appData.shippers[i]; markDeleted('S:'+name); appData.shippers.splice(i,1); if(appData.shipperTargets) delete appData.shipperTargets[name]; if(appData.shipperUnits) delete appData.shipperUnits[name]; if(appData.shipperQualities) delete appData.shipperQualities[name]; appData.boats.forEach(b => { if (Array.isArray(b.clientNames)) b.clientNames = b.clientNames.filter(x => x !== name); }); saveData(); renderShipperList(); renderAll(); } }
 
     function openUserManagerModal() { renderTeamUsersList(); document.getElementById('modalUserManager').classList.remove('hidden'); }
     function closeUserManagerModal() { document.getElementById('modalUserManager').classList.add('hidden'); cancelUserEdit(); }
@@ -2116,6 +2117,7 @@
       if (appData.boats.length === 0) {
         const opt = document.createElement('option'); opt.value = ''; opt.textContent = '-- No Vessel --'; sel.appendChild(opt);
         document.getElementById('bannerBoatName').textContent = 'No Vessel Account';
+        document.getElementById('bannerBoatDetails').textContent = 'Vessel Name: — · Quality: — · Quantity: — MT · Port: —';
         return;
       }
       appData.boats.forEach(b => {
@@ -2124,6 +2126,7 @@
         sel.appendChild(opt);
       });
       document.getElementById('bannerBoatName').textContent = active ? active.name : 'No Vessel Account';
+      document.getElementById('bannerBoatDetails').textContent = active ? `Vessel Name: ${active.name || '—'} · Quality: ${active.quality || '—'} · Quantity: ${Number(active.quantity || 0).toLocaleString()} MT · Port: ${active.port || '—'}` : 'Vessel Name: — · Quality: — · Quantity: — MT · Port: —';
       if (!document.getElementById('entryRecordId').value) applyConfiguredCargoUnit(document.getElementById('selectShipper')?.value || '');
     }
 
