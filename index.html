@@ -213,7 +213,7 @@
         <i class="fa-solid fa-calendar-day"></i><span>2. CLIENT PICKER</span>
       </button>
       <button onclick="switchTab('tabTemplate')" id="btnTabTemplate" class="tab-btn px-3 py-2 rounded-xl text-xs font-semibold whitespace-nowrap bg-slate-100 text-slate-600 flex items-center space-x-1.5">
-        <i class="fa-solid fa-table"></i><span>3. TEMPLATE</span>
+        <i class="fa-solid fa-table"></i><span>3. INTAKE</span>
       </button>
       <button onclick="switchTab('tabRecords')" id="btnTabRecords" class="tab-btn px-3 py-2 rounded-xl text-xs font-semibold whitespace-nowrap bg-slate-100 text-slate-600 flex items-center space-x-1.5">
         <i class="fa-solid fa-list-check"></i><span>4. ALL RECORDS</span>
@@ -243,7 +243,7 @@
         </div>
       </div>
 
-      <div class="flex flex-wrap items-center gap-1.5 w-full sm:w-auto">
+      <div id="dataEntryAccountControls" class="flex flex-wrap items-center gap-1.5 w-full sm:w-auto">
         <select id="selectActiveBoat" onchange="changeActiveBoat(this.value)" class="basis-full w-full min-w-0 sm:basis-auto sm:w-44 h-10 bg-slate-50 border border-slate-300 text-slate-800 text-xs rounded-xl px-2.5 font-bold focus:ring-2 focus:ring-cyan-500"></select>
         <button id="btnGearBoat" onclick="openAccountModal()" class="h-10 px-3 rounded-xl bg-cyan-600 active:bg-cyan-700 text-white flex items-center justify-center space-x-1 shrink-0 text-xs font-bold shadow-xs whitespace-nowrap">
           <i class="fa-solid fa-plus text-xs"></i><span>Vessel</span>
@@ -380,12 +380,12 @@
             <div>
               <label class="block text-[11px] font-bold text-slate-600 uppercase mb-1">Cargo Unit</label>
               <select id="selectUnit" onchange="updateUnitLogic()" class="w-full h-11 bg-white border border-slate-300 rounded-xl px-3 font-bold text-slate-800">
+                <option value="Bags">Bags (Legacy)</option>
                 <option value="KG">Kg</option>
                 <option value="MT">MT</option>
                 <option value="Pcs">Pcs</option>
                 <option value="Bundle">Bundle</option>
                 <option value="Other">Other</option>
-                <option value="Bags">Bags (Legacy)</option>
               </select>
             </div>
 
@@ -526,7 +526,7 @@
       <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-xs flex flex-wrap items-center justify-between gap-3">
         <div>
           <h2 class="font-bold text-slate-800 text-sm flex items-center space-x-2">
-            <i class="fa-solid fa-table text-cyan-600"></i><span>MV INTAKE Master Template</span>
+            <i class="fa-solid fa-table text-cyan-600"></i><span>MV INTAKE</span>
           </h2>
           <p class="text-[11px] text-slate-500">BOAT NO Column တွင် Client အမည်များကို အစမှအဆုံး အစီအစဉ်လိုက် ဖော်ပြထားပါသည်</p>
         </div>
@@ -795,10 +795,15 @@
             <input type="number" min="0" step="any" id="inputBoatQuantity" placeholder="Quantity..." class="w-full h-11 bg-white border border-slate-300 rounded-xl px-2.5 font-bold">
           </div>
           <div class="grid grid-cols-2 gap-2.5">
-            <select id="inputBoatUnit" onchange="toggleBoatCustomUnit()" class="w-full h-11 bg-white border border-slate-300 rounded-xl px-2.5 font-bold"><option value="KG">Kg</option><option value="MT">MT</option><option value="Pcs">Pcs</option><option value="Bundle">Bundle</option><option value="Other">Other</option><option value="Bags">Bags (Legacy)</option></select>
+            <select id="inputBoatUnit" onchange="toggleBoatCustomUnit()" class="w-full h-11 bg-white border border-slate-300 rounded-xl px-2.5 font-bold"><option value="Bags">Bags (Legacy)</option><option value="KG">Kg</option><option value="MT">MT</option><option value="Pcs">Pcs</option><option value="Bundle">Bundle</option><option value="Other">Other</option></select>
             <select id="inputBoatWeight" class="w-full h-11 bg-white border border-slate-300 rounded-xl px-2.5 font-bold"><option value="50 Kg">50 Kg</option><option value="25 Kg">25 Kg</option><option value="Other">Other</option></select>
           </div>
           <input type="text" id="inputBoatCustomUnit" placeholder="Custom Unit (when Other)" class="hidden w-full h-11 bg-white border border-slate-300 rounded-xl px-3 font-bold">
+          <div class="border border-cyan-200 bg-cyan-50/60 rounded-xl p-2.5 space-y-1.5">
+            <label class="block text-[11px] font-extrabold text-cyan-900 uppercase">Assigned Clients for this Vessel</label>
+            <div id="vesselClientAssignmentList" class="grid grid-cols-1 sm:grid-cols-2 gap-1.5"></div>
+            <p class="text-[10px] text-slate-500">ဒီ Vessel မှာ အသုံးပြုမယ့် Client တွေကိုသာ ရွေးပါ။</p>
+          </div>
           <div class="flex space-x-2">
             <button onclick="saveBoatAccount()" id="btnSaveBoat" class="flex-1 h-11 bg-cyan-600 text-white rounded-xl text-xs font-extrabold">Save</button>
             <button onclick="cancelBoatEdit()" id="btnCancelBoat" class="hidden h-11 px-4 bg-slate-200 text-slate-700 rounded-xl text-xs font-bold">Cancel</button>
@@ -829,7 +834,7 @@
           </div>
           <label class="block text-[11px] font-bold text-slate-600 uppercase mb-1">Cargo Unit for Member Mode</label>
           <select id="inputShipperCargoUnit" onchange="toggleClientCustomUnit()" class="w-full h-11 bg-white border border-slate-300 rounded-xl px-2.5 font-bold">
-            <option value="KG">Kg</option><option value="MT">MT</option><option value="Pcs">Pcs</option><option value="Bundle">Bundle</option><option value="Other">Other</option><option value="Bags">Bags (Legacy)</option>
+            <option value="Bags">Bags (Legacy)</option><option value="KG">Kg</option><option value="MT">MT</option><option value="Pcs">Pcs</option><option value="Bundle">Bundle</option><option value="Other">Other</option>
           </select>
           <input type="text" id="inputShipperCustomUnit" placeholder="Custom Unit (when Other)" class="hidden w-full h-11 bg-white border border-slate-300 rounded-xl px-3 font-bold">
           <p class="text-[10px] text-slate-500">သတ်မှတ်ထားသော Target ကို Client Picker တွင် Balance အဖြစ် အလိုအလျောက်တွက်ပေးပါမည်။</p>
@@ -956,6 +961,12 @@
     function toggleMenu() { document.getElementById('systemMenuDropdown').classList.toggle('hidden'); }
     function closeMenu() { document.getElementById('systemMenuDropdown').classList.add('hidden'); }
 
+    // Account controls are intentionally available only from Data Entry.
+    function updateDataEntryAccountControls(tabId) {
+      const controls = document.getElementById('dataEntryAccountControls');
+      if (controls) controls.style.display = tabId === 'tabEntry' ? '' : 'none';
+    }
+
     // TAB SWITCHING SYSTEM
     function switchTab(tabId) {
       if (appData.currentUser && appData.currentUser.role === 'MEMBER' && tabId !== 'tabEntry') {
@@ -968,6 +979,7 @@
       });
       const activeEl = document.getElementById(tabId);
       if (activeEl) activeEl.classList.remove('hidden');
+      updateDataEntryAccountControls(tabId);
 
       const tabs = [
         { id: 'tabEntry', btn: 'btnTabEntry' },
@@ -1058,6 +1070,7 @@
       }
       if(!appData.shipperTargets || typeof appData.shipperTargets !== 'object') appData.shipperTargets = {};
       if(!appData.shipperUnits || typeof appData.shipperUnits !== 'object') appData.shipperUnits = {};
+      if (Array.isArray(appData.boats) && Array.isArray(appData.shippers)) appData.boats.forEach(b => { if (!Array.isArray(b.clientNames)) b.clientNames = appData.shippers.slice(); });
       if(!appData.deleted || typeof appData.deleted !== 'object') appData.deleted = {};
       if(!appData.notifications) appData.notifications = [];
       if(!appData.chatMessages) appData.chatMessages = [];
@@ -1124,6 +1137,7 @@
         document.getElementById(id).style.display = isMember ? 'none' : '';
       });
       document.getElementById('btnAdminManualEntry').style.display = canManualEntry ? 'flex' : 'none';
+      updateDataEntryAccountControls(document.querySelector('.tab-btn.bg-cyan-600')?.id === 'btnTabEntry' ? 'tabEntry' : 'other');
       if (isMember) switchTab('tabEntry');
     }
 
@@ -1672,26 +1686,37 @@
     }
 
     // Modal Manager Logic
-    function openAccountModal() { renderVesselList(); document.getElementById('modalAccount').classList.remove('hidden'); }
+    function openAccountModal() { renderVesselList(); renderVesselClientAssignments(null); document.getElementById('modalAccount').classList.remove('hidden'); }
     function closeAccountModal() { document.getElementById('modalAccount').classList.add('hidden'); cancelBoatEdit(); }
+    function renderVesselClientAssignments(boat) {
+      const wrap = document.getElementById('vesselClientAssignmentList'); if (!wrap) return;
+      const assigned = Array.isArray(boat?.clientNames) ? boat.clientNames : [];
+      wrap.innerHTML = appData.shippers.length ? appData.shippers.map(name => `<label class="flex items-center gap-2 bg-white border border-slate-200 rounded-lg px-2 py-1.5 text-xs font-bold text-slate-700"><input type="checkbox" class="vessel-client-check accent-cyan-600" value="${esc(name)}" ${assigned.includes(name) ? 'checked' : ''}><span class="break-words">${esc(name)}</span></label>`).join('') : '<span class="text-[10px] text-slate-500 italic">Client မရှိသေးပါ။</span>';
+    }
+    function getSelectedVesselClients() { return [...document.querySelectorAll('.vessel-client-check:checked')].map(x => x.value); }
+    function getActiveVesselClients() {
+      const active = getActiveBoat();
+      const allowed = Array.isArray(active?.clientNames) ? active.clientNames : appData.shippers;
+      return appData.shippers.filter(name => allowed.includes(name));
+    }
     function renderVesselList() {
       const c = document.getElementById('listVessels'); c.innerHTML='';
       appData.boats.forEach(b=>{
         const d = document.createElement('div'); d.className='flex justify-between p-3 bg-white border rounded-xl text-xs';
-        d.innerHTML=`<div class="min-w-0 flex-1 pr-2"><div class="font-bold break-words">${esc(b.name)}</div><div class="text-[10px] text-slate-400 break-words">${esc(b.quality || 'Quality not set')} · Qty: ${Number(b.quantity || 0).toLocaleString()}</div><div class="text-[10px] text-cyan-700 font-semibold">Cargo Unit: ${esc(b.unit || 'KG')}</div></div><div class="flex space-x-1 shrink-0"><button onclick="editBoatAccount('${b.id}')" class="w-8 h-8 rounded bg-slate-50 text-cyan-600"><i class="fa-solid fa-pen"></i></button><button onclick="deleteBoatAccount('${b.id}')" class="w-8 h-8 rounded bg-rose-50 text-rose-500"><i class="fa-solid fa-trash"></i></button></div>`; c.appendChild(d);
+        d.innerHTML=`<div class="min-w-0 flex-1 pr-2"><div class="font-bold break-words">${esc(b.name)}</div><div class="text-[10px] text-slate-400 break-words">${esc(b.quality || 'Quality not set')} · Qty: ${Number(b.quantity || 0).toLocaleString()}</div><div class="text-[10px] text-cyan-700 font-semibold">Cargo Unit: ${esc(b.unit || 'KG')}</div><div class="text-[10px] text-indigo-600 break-words">Clients: ${esc((b.clientNames || []).join(', ') || 'None')}</div></div><div class="flex space-x-1 shrink-0"><button onclick="editBoatAccount('${b.id}')" class="w-8 h-8 rounded bg-slate-50 text-cyan-600"><i class="fa-solid fa-pen"></i></button><button onclick="deleteBoatAccount('${b.id}')" class="w-8 h-8 rounded bg-rose-50 text-rose-500"><i class="fa-solid fa-trash"></i></button></div>`; c.appendChild(d);
       });
     }
     function toggleBoatCustomUnit() { document.getElementById('inputBoatCustomUnit').classList.toggle('hidden', document.getElementById('inputBoatUnit').value !== 'Other'); }
     function toggleClientCustomUnit() { document.getElementById('inputShipperCustomUnit').classList.toggle('hidden', document.getElementById('inputShipperCargoUnit').value !== 'Other'); }
     function saveBoatAccount() {
-      const name = document.getElementById('inputBoatName').value.trim(); const quality = document.getElementById('inputBoatQuality').value.trim(); const quantity = Math.max(0, Number(document.getElementById('inputBoatQuantity').value) || 0); const unit = document.getElementById('inputBoatUnit').value; const unitCustom = unit === 'Other' ? document.getElementById('inputBoatCustomUnit').value.trim() : ''; const weight = document.getElementById('inputBoatWeight').value; const editId = document.getElementById('editBoatId').value;
+      const name = document.getElementById('inputBoatName').value.trim(); const quality = document.getElementById('inputBoatQuality').value.trim(); const quantity = Math.max(0, Number(document.getElementById('inputBoatQuantity').value) || 0); const unit = document.getElementById('inputBoatUnit').value; const unitCustom = unit === 'Other' ? document.getElementById('inputBoatCustomUnit').value.trim() : ''; const weight = document.getElementById('inputBoatWeight').value; const editId = document.getElementById('editBoatId').value; const clientNames = getSelectedVesselClients();
       if(!name) return;
-      if(editId) { const idx = appData.boats.findIndex(b=>b.id===editId); if(idx!==-1) { appData.boats[idx]={...appData.boats[idx], name, quality, quantity, unit, unitCustom, weight, updatedAt: Date.now()}; appData.records.forEach(r=>{if(r.boatId===editId && r.boatName!==name){ r.boatName=name; r.updatedAt=Date.now(); }}); } } 
-      else { const b = { id: 'B-'+Date.now(), name, quality, quantity, unit, unitCustom, weight, updatedAt: Date.now() }; appData.boats.push(b); appData.activeBoatId = b.id; }
+      if(editId) { const idx = appData.boats.findIndex(b=>b.id===editId); if(idx!==-1) { appData.boats[idx]={...appData.boats[idx], name, quality, quantity, unit, unitCustom, weight, clientNames, updatedAt: Date.now()}; appData.records.forEach(r=>{if(r.boatId===editId && r.boatName!==name){ r.boatName=name; r.updatedAt=Date.now(); }}); } } 
+      else { const b = { id: 'B-'+Date.now(), name, quality, quantity, unit, unitCustom, weight, clientNames, updatedAt: Date.now() }; appData.boats.push(b); appData.activeBoatId = b.id; }
       saveData(); cancelBoatEdit(); renderVesselList(); renderAll();
     }
-    function editBoatAccount(id) { const b=appData.boats.find(x=>x.id===id); if(!b) return; document.getElementById('editBoatId').value=b.id; document.getElementById('inputBoatName').value=b.name; document.getElementById('inputBoatQuality').value=b.quality || ''; document.getElementById('inputBoatQuantity').value=b.quantity || ''; document.getElementById('inputBoatUnit').value=b.unit; document.getElementById('inputBoatCustomUnit').value=b.unitCustom || ''; toggleBoatCustomUnit(); document.getElementById('inputBoatWeight').value=b.weight; document.getElementById('btnCancelBoat').classList.remove('hidden'); }
-    function cancelBoatEdit() { document.getElementById('editBoatId').value=''; document.getElementById('inputBoatName').value=''; document.getElementById('inputBoatQuality').value=''; document.getElementById('inputBoatQuantity').value=''; document.getElementById('inputBoatUnit').value='KG'; document.getElementById('inputBoatCustomUnit').value=''; toggleBoatCustomUnit(); document.getElementById('btnCancelBoat').classList.add('hidden'); }
+    function editBoatAccount(id) { const b=appData.boats.find(x=>x.id===id); if(!b) return; document.getElementById('editBoatId').value=b.id; document.getElementById('inputBoatName').value=b.name; document.getElementById('inputBoatQuality').value=b.quality || ''; document.getElementById('inputBoatQuantity').value=b.quantity || ''; document.getElementById('inputBoatUnit').value=b.unit; document.getElementById('inputBoatCustomUnit').value=b.unitCustom || ''; toggleBoatCustomUnit(); document.getElementById('inputBoatWeight').value=b.weight; renderVesselClientAssignments(b); document.getElementById('btnCancelBoat').classList.remove('hidden'); }
+    function cancelBoatEdit() { document.getElementById('editBoatId').value=''; document.getElementById('inputBoatName').value=''; document.getElementById('inputBoatQuality').value=''; document.getElementById('inputBoatQuantity').value=''; document.getElementById('inputBoatUnit').value='KG'; document.getElementById('inputBoatCustomUnit').value=''; toggleBoatCustomUnit(); renderVesselClientAssignments(null); document.getElementById('btnCancelBoat').classList.add('hidden'); }
     function deleteBoatAccount(id) { if(confirm('Delete this vessel and ALL of its records?')) { markDeleted('B:'+id); appData.records.filter(r=>r.boatId===id).forEach(r=>markDeleted('R:'+r.id)); appData.boats=appData.boats.filter(b=>b.id!==id); appData.records=appData.records.filter(r=>r.boatId!==id); if (appData.activeBoatId === id) appData.activeBoatId = appData.boats[0]?.id || null; saveData(); renderVesselList(); renderAll(); } }
 
     function openShipperModal() { renderShipperList(); document.getElementById('modalShipper').classList.remove('hidden'); }
@@ -1748,15 +1773,15 @@
       if(!name) return;
       if(!appData.shipperTargets) appData.shipperTargets = {};
       if(!appData.shipperUnits) appData.shipperUnits = {};
-      if(editIdx!=='') { const idx = parseInt(editIdx); const old = appData.shippers[idx]; appData.shippers[idx]=name; appData.records.forEach(r=>{if(r.shipper===old && old!==name){ r.shipper=name; r.updatedAt=Date.now(); }}); if (old !== name) { markDeleted('S:'+old); delete appData.shipperTargets[old]; delete appData.shipperUnits[old]; } }
-      else { if(!appData.shippers.includes(name)) appData.shippers.push(name); }
+      if(editIdx!=='') { const idx = parseInt(editIdx); const old = appData.shippers[idx]; appData.shippers[idx]=name; appData.records.forEach(r=>{if(r.shipper===old && old!==name){ r.shipper=name; r.updatedAt=Date.now(); }}); if (old !== name) { markDeleted('S:'+old); delete appData.shipperTargets[old]; delete appData.shipperUnits[old]; appData.boats.forEach(b => { if (Array.isArray(b.clientNames)) b.clientNames = b.clientNames.map(x => x === old ? name : x); }); } }
+      else { if(!appData.shippers.includes(name)) appData.shippers.push(name); const active = getActiveBoat(); if (active) { if (!Array.isArray(active.clientNames)) active.clientNames = []; if (!active.clientNames.includes(name)) active.clientNames.push(name); } }
       appData.shipperTargets[name] = { quantity, unit, updatedAt: Date.now() };
       appData.shipperUnits[name] = { unit: cargoUnit, custom: cargoUnitCustom, updatedAt: Date.now() };
       saveData(); cancelShipperEdit(); renderShipperList(); renderAll();
     }
     function startEditShipper(i) { const name=appData.shippers[i]; const q=getShipperTarget(name); document.getElementById('editShipperIndex').value=i; document.getElementById('inputNewShipper').value=name; document.getElementById('inputShipperTarget').value=q.quantity || ''; document.getElementById('inputShipperTargetUnit').value=q.unit; const savedCargo = appData.shipperUnits?.[name]; document.getElementById('inputShipperCargoUnit').value=savedCargo?.unit || savedCargo || 'KG'; document.getElementById('inputShipperCustomUnit').value=savedCargo?.custom || ''; toggleClientCustomUnit(); document.getElementById('btnCancelShipper').classList.remove('hidden'); }
     function cancelShipperEdit() { document.getElementById('editShipperIndex').value=''; document.getElementById('inputNewShipper').value=''; document.getElementById('inputShipperTarget').value=''; document.getElementById('inputShipperTargetUnit').value='MT'; document.getElementById('inputShipperCargoUnit').value='KG'; document.getElementById('inputShipperCustomUnit').value=''; toggleClientCustomUnit(); document.getElementById('btnCancelShipper').classList.add('hidden'); }
-    function deleteShipper(i) { if(confirm('Delete?')) { const name=appData.shippers[i]; markDeleted('S:'+name); appData.shippers.splice(i,1); if(appData.shipperTargets) delete appData.shipperTargets[name]; if(appData.shipperUnits) delete appData.shipperUnits[name]; saveData(); renderShipperList(); renderAll(); } }
+    function deleteShipper(i) { if(confirm('Delete?')) { const name=appData.shippers[i]; markDeleted('S:'+name); appData.shippers.splice(i,1); if(appData.shipperTargets) delete appData.shipperTargets[name]; if(appData.shipperUnits) delete appData.shipperUnits[name]; appData.boats.forEach(b => { if (Array.isArray(b.clientNames)) b.clientNames = b.clientNames.filter(x => x !== name); }); saveData(); renderShipperList(); renderAll(); } }
 
     function openUserManagerModal() { renderTeamUsersList(); document.getElementById('modalUserManager').classList.remove('hidden'); }
     function closeUserManagerModal() { document.getElementById('modalUserManager').classList.add('hidden'); cancelUserEdit(); }
@@ -2135,12 +2160,13 @@
       const sel = document.getElementById('selectShipper');
       const btnContainer = document.getElementById('shipperButtonsContainer');
       const cur = sel.value;
+      const visibleShippers = getActiveVesselClients();
       sel.innerHTML = ''; btnContainer.innerHTML = '';
-      if (appData.shippers.length === 0) {
+      if (visibleShippers.length === 0) {
         const opt = document.createElement('option'); opt.value = ''; opt.textContent = '-- No Clients --'; sel.appendChild(opt);
       } else {
-        const activeShipper = (cur && appData.shippers.includes(cur)) ? cur : appData.shippers[0];
-        appData.shippers.forEach(s => {
+        const activeShipper = (cur && visibleShippers.includes(cur)) ? cur : visibleShippers[0];
+        visibleShippers.forEach(s => {
           const opt = document.createElement('option'); opt.value = s; opt.textContent = s;
           if (s === activeShipper) opt.selected = true;
           sel.appendChild(opt);
@@ -2152,12 +2178,13 @@
           btnContainer.appendChild(btn);
         });
       }
+      if (sel.value && !visibleShippers.includes(sel.value)) sel.value = visibleShippers[0] || '';
       renderSelectedShipperQuota(sel.value);
       if (!document.getElementById('entryRecordId').value) applyConfiguredCargoUnit(sel.value);
       const fSel = document.getElementById('filterPickerShipper');
       if (fSel) {
         const fCur = fSel.value; fSel.innerHTML = '<option value="ALL">All Clients</option>';
-        appData.shippers.forEach(s => { const opt = document.createElement('option'); opt.value = s; opt.textContent = s; fSel.appendChild(opt); });
+        visibleShippers.forEach(s => { const opt = document.createElement('option'); opt.value = s; opt.textContent = s; fSel.appendChild(opt); });
         if (fCur) fSel.value = fCur;
       }
     }
